@@ -6,30 +6,34 @@ const school = [];
 const fishSpeed = 20;
 const fishSize = 40;
 const fishTankSize = 500;
-const pointSize = 50;
-
-
+const pointSize = 20;
+const pointRadius = 50;
 
 const greenPoint = {
-    color: '#0F0',
+    color: 'green',
     x: 30,
     y: 30,
-    size: pointSize,
-}
+    size: pointSize
+};
 
 const bluePoint = {
-    color: '#00F',
+    color: 'blue',
     x: 400,
     y: 200,
-    size: pointSize,
-}
+    size: pointSize
+};
 
 const redPoint = {
-    color: '#F00',
+    color: 'red',
     x: 250,
     y: 400,
-    size: pointSize,
-}
+    size: pointSize
+};
+
+const points = [redPoint, bluePoint, greenPoint];
+const colors = points.map(point => point.color);
+
+const coinFlip = () => !!Math.floor(Math.random() * 2);
 
 class App extends Component {
     state = {
@@ -52,14 +56,12 @@ class App extends Component {
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        this.drawPoint(context, redPoint);
-        this.drawPoint(context, bluePoint);
-        this.drawPoint(context, greenPoint);
+        this.drawPOI(context, redPoint);
+        this.drawPOI(context, bluePoint);
+        this.drawPOI(context, greenPoint);
 
         school.forEach(fish => {
-            !!Math.floor(Math.random() * 2) ? fish.x++ : fish.x--;
-            !!Math.floor(Math.random() * 2) ? fish.y++ : fish.y--;
-            context.drawImage(fish.fish, fish.x, fish.y, fishSize, fishSize);
+            this.moveToFavColor(context, fish);
         });
     }
 
@@ -80,10 +82,15 @@ class App extends Component {
     };
 
     addFish = () => {
+        const favColor = colors[Math.floor(Math.random() * colors.length)];
+        const point = points.find(point => point.color === favColor);
+
         const newFish = {
             fish: this.refs.fish,
             x: Math.floor(Math.random() * fishTankSize),
-            y: Math.floor(Math.random() * fishTankSize)
+            y: Math.floor(Math.random() * fishTankSize),
+            desireX: coinFlip() ? point.x + Math.floor(Math.random() * pointRadius) : point.x - Math.floor(Math.random() * pointRadius),
+            desireY: coinFlip() ? point.y + Math.floor(Math.random() * pointRadius) : point.y - Math.floor(Math.random() * pointRadius),
         };
         school.push(newFish);
     };
@@ -97,10 +104,30 @@ class App extends Component {
         });
     };
 
-    drawPoint = (context, point) => {
+    moveToFavColor = (context, fish) => {
+        // X movement
+        const moveX = fish.desireX - fish.x;
+        if (moveX !== 0) {
+            moveX > 0 ? fish.x++ : fish.x--;
+        } else {
+            coinFlip() ? fish.x++ : fish.x--;
+        }
+
+        // Y movement
+        const moveY = fish.desireY - fish.y;
+        if (moveY !== 0) {
+            moveY > 0 ? fish.y++ : fish.y--;
+        } else {
+            coinFlip() ? fish.y++ : fish.y--;
+        }
+
+        context.drawImage(fish.fish, fish.x, fish.y, fishSize, fishSize);
+    };
+
+    drawPOI = (context, point) => {
         context.fillStyle = point.color;
         context.fillRect(point.x, point.y, point.size, point.size);
-    }
+    };
 
     render() {
         const square = fishTankSize;
