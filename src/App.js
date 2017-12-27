@@ -162,14 +162,39 @@ class App extends Component {
                     this.desireX = coinFlip() ? this.x + boredomRadius : this.x - boredomRadius;
                     this.desireY = coinFlip() ? this.y + boredomRadius : this.y - boredomRadius;
                 } else {
-                    const favFish = findCloseFish(this)[Math.floor(Math.random() * fishThreshold)];
-                    if (favFish) {
+                    //Blue fish logic
+                    if (this.type === 'blueFish') {
+                        const favColor = colors[Math.floor(Math.random() * colors.length)];
+                        const point = points.find(point => point.color === favColor);
+
                         this.desireX = coinFlip()
-                            ? favFish.x + Math.floor(Math.random() * pointRadius)
-                            : favFish.x - Math.floor(Math.random() * pointRadius);
+                            ? point.x + Math.floor(Math.random() * pointRadius)
+                            : point.x - Math.floor(Math.random() * pointRadius);
                         this.desireY = coinFlip()
-                            ? favFish.y + Math.floor(Math.random() * pointRadius)
-                            : favFish.y - Math.floor(Math.random() * pointRadius);
+                            ? point.y + Math.floor(Math.random() * pointRadius)
+                            : point.y - Math.floor(Math.random() * pointRadius);
+                    } else {
+                        const favFish = findCloseFish(this)[
+                            Math.floor(Math.random() * fishThreshold)
+                        ];
+                        if (favFish && favFish.type !== 'shark') {
+                            this.desireX = coinFlip()
+                                ? favFish.x + Math.floor(Math.random() * pointRadius)
+                                : favFish.x - Math.floor(Math.random() * pointRadius);
+                            this.desireY = coinFlip()
+                                ? favFish.y + Math.floor(Math.random() * pointRadius)
+                                : favFish.y - Math.floor(Math.random() * pointRadius);
+                        } else {
+                            //shark
+                            const favColor = colors[Math.floor(Math.random() * colors.length)];
+                            const point = points.find(point => point.color === favColor);
+                            this.desireX = coinFlip()
+                                ? point.x + Math.floor(Math.random() * pointRadius)
+                                : point.x - Math.floor(Math.random() * pointRadius);
+                            this.desireY = coinFlip()
+                                ? point.y + Math.floor(Math.random() * pointRadius)
+                                : point.y - Math.floor(Math.random() * pointRadius);
+                        }
                     }
                 }
             }
