@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import fish from './fish.png';
+import blueFish from './blueFish.png';
+import cheese from './cheese.png';
+import cheeseDeath from './cheeseDeath.png';
+import greenFish from './greenFish.png';
+import orangeFish from './orangeFish.png';
+import redFish from './redFish.png';
+import shark from './shark.png';
+import skelly from './skelly.png';
 import './App.css';
 
 const school = [];
@@ -30,6 +37,7 @@ const redPoint = {
     size: pointSize
 };
 
+const fishTypes = ['redFish', 'blueFish', 'greenFish', 'orangeFish', 'shark'];
 const points = [redPoint, bluePoint, greenPoint];
 const colors = points.map(point => point.color);
 
@@ -41,15 +49,15 @@ class App extends Component {
     };
 
     componentDidMount() {
-        this.initCanvas();
-    }
-
-    initCanvas = () => {
-        const fish = this.refs.fish;
-        fish.onload = () => {
+        const blueFishRef = this.refs.blueFish;
+        const greenFishRef = this.refs.greenFish;
+        const redFishRef = this.refs.redFish;
+        const orangeFishRef = this.refs.orangeFish;
+        const sharkRef = this.refs.shark;
+        Promise.all([blueFishRef, greenFishRef, redFishRef, orangeFishRef, sharkRef]).then(() => {
             this.startTheFish();
-        };
-    };
+        });
+    }
 
     drawAllFish() {
         const canvas = this.refs.canvas;
@@ -61,7 +69,7 @@ class App extends Component {
         this.drawPOI(context, greenPoint);
 
         school.forEach(fish => {
-            this.moveToFavColor(context, fish);
+            this.moveToDesire(context, fish);
         });
     }
 
@@ -84,13 +92,25 @@ class App extends Component {
     addFish = () => {
         const favColor = colors[Math.floor(Math.random() * colors.length)];
         const point = points.find(point => point.color === favColor);
+        const fishType = fishTypes[Math.floor(Math.random() * fishTypes.length)];
 
         const newFish = {
-            fish: this.refs.fish,
+            fish: this.refs[fishType],
+            type: fishType,
             x: Math.floor(Math.random() * fishTankSize),
             y: Math.floor(Math.random() * fishTankSize),
-            desireX: coinFlip() ? point.x + Math.floor(Math.random() * pointRadius) : point.x - Math.floor(Math.random() * pointRadius),
-            desireY: coinFlip() ? point.y + Math.floor(Math.random() * pointRadius) : point.y - Math.floor(Math.random() * pointRadius),
+            desireX: coinFlip()
+                ? point.x + Math.floor(Math.random() * pointRadius)
+                : point.x - Math.floor(Math.random() * pointRadius),
+            desireY: coinFlip()
+                ? point.y + Math.floor(Math.random() * pointRadius)
+                : point.y - Math.floor(Math.random() * pointRadius),
+            restingPeriod: 0,
+            shouldMove: function() {
+                return (
+                    this.restingPeriod === 0 && this.x === this.desireX && this.y === this.desireY
+                );
+            }
         };
         school.push(newFish);
     };
@@ -104,21 +124,17 @@ class App extends Component {
         });
     };
 
-    moveToFavColor = (context, fish) => {
+    moveToDesire = (context, fish) => {
         // X movement
         const moveX = fish.desireX - fish.x;
         if (moveX !== 0) {
             moveX > 0 ? fish.x++ : fish.x--;
-        } else {
-            coinFlip() ? fish.x++ : fish.x--;
         }
 
         // Y movement
         const moveY = fish.desireY - fish.y;
         if (moveY !== 0) {
             moveY > 0 ? fish.y++ : fish.y--;
-        } else {
-            coinFlip() ? fish.y++ : fish.y--;
         }
 
         context.drawImage(fish.fish, fish.x, fish.y, fishSize, fishSize);
@@ -130,7 +146,6 @@ class App extends Component {
     };
 
     render() {
-        const square = fishTankSize;
         return (
             <div className="App">
                 <header className="App-header">
@@ -142,15 +157,47 @@ class App extends Component {
                 </header>
                 <canvas
                     ref="canvas"
-                    height={square}
-                    width={square}
+                    height={fishTankSize}
+                    width={fishTankSize}
                     style={{ border: '1px solid #000' }}
                 />
                 <img
-                    src={fish}
-                    ref="fish"
+                    src={blueFish}
+                    ref="blueFish"
                     style={{ display: 'none' }}
-                    alt="FISH"
+                    alt="blueFish"
+                    width={128}
+                    height={128}
+                />
+                <img
+                    src={redFish}
+                    ref="redFish"
+                    style={{ display: 'none' }}
+                    alt="redFish"
+                    width={128}
+                    height={128}
+                />
+                <img
+                    src={greenFish}
+                    ref="greenFish"
+                    style={{ display: 'none' }}
+                    alt="greenFish"
+                    width={128}
+                    height={128}
+                />
+                <img
+                    src={orangeFish}
+                    ref="orangeFish"
+                    style={{ display: 'none' }}
+                    alt="orangeFish"
+                    width={128}
+                    height={128}
+                />
+                <img
+                    src={shark}
+                    ref="shark"
+                    style={{ display: 'none' }}
+                    alt="shark"
                     width={128}
                     height={128}
                 />
