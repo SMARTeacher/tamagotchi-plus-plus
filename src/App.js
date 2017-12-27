@@ -13,7 +13,7 @@ let id = 1;
 const school = [];
 const fishThreshold = 3;
 
-const fishSpeed = 20;
+const frameRate = 20;
 const fishSize = 40;
 const sharkSize = 80;
 const fishTankSize = 500;
@@ -113,7 +113,7 @@ class App extends Component {
         if (!interval) {
             const interval = setInterval(() => {
                 this.drawAllFish();
-            }, fishSpeed);
+            }, frameRate);
 
             this.setState({ interval });
         }
@@ -124,8 +124,10 @@ class App extends Component {
         this.setState({ interval: null });
     };
 
-    addFish = () => {
-        const fishType = fishTypes[Math.floor(Math.random() * fishTypes.length)];
+    addFish = options => {
+        const { fishType: type } = options;
+        const fishType = type || fishTypes[Math.floor(Math.random() * fishTypes.length)];
+        const speedModifier = fishType === 'shark' ? 1.1 : 1;
 
         const newFish = {
             id: `${fishType}${id}`,
@@ -136,31 +138,38 @@ class App extends Component {
             desireX: 225,
             desireY: 225,
             restingPeriod: 0,
+            speedModifier,
             isBored: function() {
+                const xDiff = Math.abs(this.x - this.desireX);
+                const yDiff = Math.abs(this.y - this.desireY);
+
                 return (
-                    this.restingPeriod === 0 && this.x === this.desireX && this.y === this.desireY
+                    this.restingPeriod === 0 &&
+                    xDiff <= this.speedModifier &&
+                    yDiff <= this.speedModifier
                 );
+            },
+            fidget: function() {
+                this.desireX = coinFlip() ? this.x + boredomRadius : this.x - boredomRadius;
+                this.desireY = coinFlip() ? this.y + boredomRadius : this.y - boredomRadius;
             },
             moveToDesire: function() {
                 // X movement
                 const moveX = this.desireX - this.x;
-                if (moveX !== 0) {
-                    moveX > 0 ? this.x++ : this.x--;
+                if (Math.abs(moveX) > this.speedModifier) {
+                    moveX > 0 ? (this.x += this.speedModifier) : (this.x -= this.speedModifier);
                 }
 
                 // Y movement
                 const moveY = this.desireY - this.y;
-                if (moveY !== 0) {
-                    moveY > 0 ? this.y++ : this.y--;
+                if (Math.abs(moveY) > this.speedModifier) {
+                    moveY > 0 ? (this.y += this.speedModifier) : (this.y -= this.speedModifier);
                 }
             },
             setNewDesire: function(canFidget = true) {
                 if (canFidget && coinFlip()) {
                     this.restingPeriod = fishWaitingPeriod;
-
-                    //fidget
-                    this.desireX = coinFlip() ? this.x + boredomRadius : this.x - boredomRadius;
-                    this.desireY = coinFlip() ? this.y + boredomRadius : this.y - boredomRadius;
+                    this.fidget();
                 } else {
                     //Blue fish logic
                     if (this.type === 'blueFish') {
@@ -184,8 +193,10 @@ class App extends Component {
                             this.desireY = coinFlip()
                                 ? favFish.y + Math.floor(Math.random() * pointRadius)
                                 : favFish.y - Math.floor(Math.random() * pointRadius);
-                        } else {
-                            //shark
+                        } else if (favFish && favFish.type === 'shark' && this.type !== 'shark') {
+                            console.log('Ahhh a shark!');
+                            //shark runaway logic
+                            this.speedModifier = 10;
                             const favColor = colors[Math.floor(Math.random() * colors.length)];
                             const point = points.find(point => point.color === favColor);
                             this.desireX = coinFlip()
@@ -194,6 +205,8 @@ class App extends Component {
                             this.desireY = coinFlip()
                                 ? point.y + Math.floor(Math.random() * pointRadius)
                                 : point.y - Math.floor(Math.random() * pointRadius);
+                        } else {
+                            this.fidget();
                         }
                     }
                 }
@@ -226,8 +239,15 @@ class App extends Component {
                     <button onClick={this.startTheFish}>Start the fish</button>
                     <button onClick={this.stopTheFish}>Stop the fish</button>
                     <button onClick={this.addFish}>Add a fish</button>
+                    <button
+                        onClick={() => {
+                            this.addFish({ fishType: 'shark' });
+                        }}
+                    >
+                        Add a Shark
+                    </button>
                     <button onClick={this.tenEx}>10X the fish</button>
-                    <button onClick={() => findCloseFish(school[0])}>Log</button>
+                    <button onClick={() => console.log(school)}>Log</button>
                 </header>
                 <canvas
                     ref="canvas"
