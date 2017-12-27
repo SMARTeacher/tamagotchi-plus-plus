@@ -12,9 +12,12 @@ import './App.css';
 const school = [];
 const fishSpeed = 20;
 const fishSize = 40;
+const sharkSize = 80;
 const fishTankSize = 500;
 const pointSize = 20;
 const pointRadius = 50;
+const fishWaitingPeriod = 200;
+const boredomRadius = 10;
 
 const greenPoint = {
     color: 'green',
@@ -69,7 +72,14 @@ class App extends Component {
         this.drawPOI(context, greenPoint);
 
         school.forEach(fish => {
-            this.moveToDesire(context, fish);
+            if (fish.restingPeriod !== 0) fish.restingPeriod--;
+            if (!fish.isBored()) {
+                fish.moveToDesire();
+            } else {
+                fish.setNewDesire();
+            }
+            const imageSize = fish.type === 'shark' ? sharkSize : fishSize;
+            context.drawImage(fish.fish, fish.x, fish.y, imageSize, imageSize);
         });
     }
 
@@ -106,10 +116,39 @@ class App extends Component {
                 ? point.y + Math.floor(Math.random() * pointRadius)
                 : point.y - Math.floor(Math.random() * pointRadius),
             restingPeriod: 0,
-            shouldMove: function() {
+            isBored: function() {
                 return (
                     this.restingPeriod === 0 && this.x === this.desireX && this.y === this.desireY
                 );
+            },
+            moveToDesire: function() {
+                // X movement
+                const moveX = this.desireX - this.x;
+                if (moveX !== 0) {
+                    moveX > 0 ? this.x++ : this.x--;
+                }
+
+                // Y movement
+                const moveY = this.desireY - this.y;
+                if (moveY !== 0) {
+                    moveY > 0 ? this.y++ : this.y--;
+                }
+            },
+            setNewDesire: function() {
+                if (coinFlip()) {
+                    this.restingPeriod = fishWaitingPeriod;
+                    this.desireX = coinFlip() ? this.x + boredomRadius : this.x - boredomRadius;
+                    this.desireY = coinFlip() ? this.y + boredomRadius : this.y - boredomRadius;
+                } else {
+                    const favColor = colors[Math.floor(Math.random() * colors.length)];
+                    const point = points.find(point => point.color === favColor);
+                    this.desireX = coinFlip()
+                        ? point.x + Math.floor(Math.random() * pointRadius)
+                        : point.x - Math.floor(Math.random() * pointRadius);
+                    this.desireY = coinFlip()
+                        ? point.y + Math.floor(Math.random() * pointRadius)
+                        : point.y - Math.floor(Math.random() * pointRadius);
+                }
             }
         };
         school.push(newFish);
@@ -122,22 +161,6 @@ class App extends Component {
                 this.addFish();
             }
         });
-    };
-
-    moveToDesire = (context, fish) => {
-        // X movement
-        const moveX = fish.desireX - fish.x;
-        if (moveX !== 0) {
-            moveX > 0 ? fish.x++ : fish.x--;
-        }
-
-        // Y movement
-        const moveY = fish.desireY - fish.y;
-        if (moveY !== 0) {
-            moveY > 0 ? fish.y++ : fish.y--;
-        }
-
-        context.drawImage(fish.fish, fish.x, fish.y, fishSize, fishSize);
     };
 
     drawPOI = (context, point) => {
