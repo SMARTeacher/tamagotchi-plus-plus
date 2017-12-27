@@ -83,6 +83,19 @@ class App extends Component {
         const orangeFishRef = this.refs.orangeFish;
         const sharkRef = this.refs.shark;
         Promise.all([blueFishRef, greenFishRef, redFishRef, orangeFishRef, sharkRef]).then(() => {
+            this.addFish({ fishType: 'redFish' });
+            this.addFish({ fishType: 'redFish' });
+            this.addFish({ fishType: 'redFish' });
+            this.addFish({ fishType: 'blueFish' });
+            this.addFish({ fishType: 'blueFish' });
+            this.addFish({ fishType: 'blueFish' });
+            this.addFish({ fishType: 'greenFish' });
+            this.addFish({ fishType: 'greenFish' });
+            this.addFish({ fishType: 'greenFish' });
+            this.addFish({ fishType: 'orangeFish' });
+            this.addFish({ fishType: 'orangeFish' });
+            this.addFish({ fishType: 'orangeFish' });
+            this.addFish({ fishType: 'shark' });
             this.startTheFish();
         });
     }
@@ -125,7 +138,7 @@ class App extends Component {
     };
 
     addFish = options => {
-        const { fishType: type } = options;
+        const { fishType: type } = options || {};
         const fishType = type || fishTypes[Math.floor(Math.random() * fishTypes.length)];
         const speedModifier = fishType === 'shark' ? 1.1 : 1;
 
@@ -167,6 +180,7 @@ class App extends Component {
                 }
             },
             setNewDesire: function(canFidget = true) {
+                this.speedModifier = fishType === 'shark' ? 1.1 : 1;
                 if (canFidget && coinFlip()) {
                     this.restingPeriod = fishWaitingPeriod;
                     this.fidget();
@@ -210,6 +224,9 @@ class App extends Component {
                         }
                     }
                 }
+
+                this.desireX = Math.abs(this.desireX);
+                this.desireY = Math.abs(this.desireY);
             }
         };
         id++;
