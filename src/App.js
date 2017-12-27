@@ -9,7 +9,10 @@ import shark from './shark.png';
 import skelly from './skelly.png';
 import './App.css';
 
+let id = 1;
 const school = [];
+const fishThreshold = 3;
+
 const fishSpeed = 20;
 const fishSize = 40;
 const sharkSize = 80;
@@ -45,6 +48,28 @@ const points = [redPoint, bluePoint, greenPoint];
 const colors = points.map(point => point.color);
 
 const coinFlip = () => !!Math.floor(Math.random() * 2);
+
+const findCloseFish = fish => {
+    const sortedFish = school
+        .slice(0)
+        .sort((oneFish, twoFish) => {
+            const distanceFromOneFish = Math.sqrt(
+                ((oneFish.x - fish.x) ^ 2) + ((oneFish.y - fish.y) ^ 2)
+            );
+            const distanceFromTwoFish = Math.sqrt(
+                ((twoFish.x - fish.x) ^ 2) + ((twoFish.y - fish.y) ^ 2)
+            );
+            if (distanceFromOneFish < distanceFromTwoFish) {
+                return -1;
+            }
+            if (distanceFromOneFish > distanceFromTwoFish) {
+                return 1;
+            }
+            return 0;
+        })
+        .slice(1);
+    return sortedFish;
+};
 
 class App extends Component {
     state = {
@@ -100,21 +125,16 @@ class App extends Component {
     };
 
     addFish = () => {
-        const favColor = colors[Math.floor(Math.random() * colors.length)];
-        const point = points.find(point => point.color === favColor);
         const fishType = fishTypes[Math.floor(Math.random() * fishTypes.length)];
 
         const newFish = {
+            id: `${fishType}${id}`,
             fish: this.refs[fishType],
             type: fishType,
             x: Math.floor(Math.random() * fishTankSize),
             y: Math.floor(Math.random() * fishTankSize),
-            desireX: coinFlip()
-                ? point.x + Math.floor(Math.random() * pointRadius)
-                : point.x - Math.floor(Math.random() * pointRadius),
-            desireY: coinFlip()
-                ? point.y + Math.floor(Math.random() * pointRadius)
-                : point.y - Math.floor(Math.random() * pointRadius),
+            desireX: 225,
+            desireY: 225,
             restingPeriod: 0,
             isBored: function() {
                 return (
@@ -134,23 +154,28 @@ class App extends Component {
                     moveY > 0 ? this.y++ : this.y--;
                 }
             },
-            setNewDesire: function() {
-                if (coinFlip()) {
+            setNewDesire: function(canFidget = true) {
+                if (canFidget && coinFlip()) {
                     this.restingPeriod = fishWaitingPeriod;
+
+                    //fidget
                     this.desireX = coinFlip() ? this.x + boredomRadius : this.x - boredomRadius;
                     this.desireY = coinFlip() ? this.y + boredomRadius : this.y - boredomRadius;
                 } else {
-                    const favColor = colors[Math.floor(Math.random() * colors.length)];
-                    const point = points.find(point => point.color === favColor);
-                    this.desireX = coinFlip()
-                        ? point.x + Math.floor(Math.random() * pointRadius)
-                        : point.x - Math.floor(Math.random() * pointRadius);
-                    this.desireY = coinFlip()
-                        ? point.y + Math.floor(Math.random() * pointRadius)
-                        : point.y - Math.floor(Math.random() * pointRadius);
+                    const favFish = findCloseFish(this)[Math.floor(Math.random() * fishThreshold)];
+                    if (favFish) {
+                        this.desireX = coinFlip()
+                            ? favFish.x + Math.floor(Math.random() * pointRadius)
+                            : favFish.x - Math.floor(Math.random() * pointRadius);
+                        this.desireY = coinFlip()
+                            ? favFish.y + Math.floor(Math.random() * pointRadius)
+                            : favFish.y - Math.floor(Math.random() * pointRadius);
+                    }
                 }
             }
         };
+        id++;
+        newFish.setNewDesire(false);
         school.push(newFish);
     };
 
@@ -177,6 +202,7 @@ class App extends Component {
                     <button onClick={this.stopTheFish}>Stop the fish</button>
                     <button onClick={this.addFish}>Add a fish</button>
                     <button onClick={this.tenEx}>10X the fish</button>
+                    <button onClick={() => findCloseFish(school[0])}>Log</button>
                 </header>
                 <canvas
                     ref="canvas"
