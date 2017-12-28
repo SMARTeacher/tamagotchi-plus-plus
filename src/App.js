@@ -33,7 +33,7 @@ const sharkWaitingPeriod = 5;
 const boredomRadius = 10;
 const eatingThreshold = 50;
 const dynamiteFallSpeed = 4;
-const dynamiteSize = 120;
+const dynamiteSize = 150;
 let blowyUppy = false;
 const fishEatingThreshold = 50;
 const cheeseEatingThreshold = 50;
@@ -84,7 +84,8 @@ const fishPersonalities = {
     redFish: [
         { type: 'shark', likes: false },
         { type: 'cheese', likes: true },
-        { type: 'blueFish', likes: true }
+        { type: 'blueFish', likes: true },
+        { type: 'redFish', likes: true }
     ],
     blueFish: [
         { type: 'shark', likes: false },
@@ -595,7 +596,7 @@ class App extends Component {
                     school.forEach(fish => kill(fish));
                     dynamites.splice(0);
                 }, 2500);
-            }, 3000);
+            }, 4000);
         }
     }
 
