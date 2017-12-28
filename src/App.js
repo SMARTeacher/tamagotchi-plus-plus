@@ -18,6 +18,7 @@ const fishThreshold = 3;
 const frameRate = 20;
 const fishSize = 40;
 const sharkSize = 80;
+const cheeseSize = 80;
 const sharkSpeed = 0.7;
 const fishTankSize = 500;
 const pointSize = 20;
@@ -151,9 +152,15 @@ class MoveTowardBehaviour {
         this.acceptanceRadius = acceptanceRadius * Math.random();
     }
 
+<<<<<<< HEAD
     start() {}
-
+=======
     update() {
+        this.moveTowardsTarget();
+    }
+>>>>>>> 09b32fbce722e26815dadf4427e57339d0cd9d0f
+
+    moveTowardsTarget() {
         const delta = {
             x: this.destination.x - this.fish.x,
             y: this.destination.y - this.fish.y
@@ -179,9 +186,101 @@ class MoveTowardBehaviour {
 
             const angle = Math.atan2(delta.y, delta.x);
 
+<<<<<<< HEAD
             this.fish.x += this.velocity * Math.cos(angle) * (frameRate * 0.001);
             this.fish.y += this.velocity * Math.sin(angle) * (frameRate * 0.001);
+=======
+            this.fish.x = Math.max(
+                Math.min(
+                    (this.fish.x + this.velocity * Math.cos(angle) * (frameRate * 0.001)),
+                    fishTankSize - this.fish.size
+                ),
+                0
+            );
+            this.fish.y = Math.max(
+                Math.min(
+                    this.fish.y + this.velocity * Math.sin(angle) * (frameRate * 0.001),
+                    fishTankSize - this.fish.size
+                ),
+                0
+            );
         }
+    }
+}
+
+class FidgetBehaviour extends MoveTowardBehaviour {
+    constructor(distance, fish, maxSpeed, acceleration) {
+        let directionVector = { x: 1.0, y: 0.0 };
+        const theta = Math.random() * 360 * Math.PI / 180;
+        const cosAngle = Math.cos(theta);
+        const sinAngle = Math.sin(theta);
+        
+        directionVector.x = directionVector.x * cosAngle - directionVector.y * sinAngle;
+        directionVector.y = directionVector.x * sinAngle + directionVector.y * cosAngle;
+        
+        super(
+            {
+                x: fish.x + (directionVector.x * distance),
+                y: fish.y + (directionVector.y * distance)
+            },
+            fish,
+            maxSpeed,
+            acceleration,
+            0
+        );
+    }
+}
+
+class MoveAwayFromBehaviour extends MoveTowardBehaviour {
+    constructor(fleeFrom, fish, maxSpeed, acceleration, fleeDistance) {
+        super({ x: 0, y: 0 }, fish, maxSpeed, acceleration, 0);
+
+        this.fleeFrom = fleeFrom;
+        this.fleeDistance = fleeDistance;
+    }
+
+    update() {
+        if ( this.velocity === 0 ) {
+            this.updateTarget();
+>>>>>>> 09b32fbce722e26815dadf4427e57339d0cd9d0f
+        }
+        this.moveTowardsTarget();
+    }
+
+    updateTarget() {
+        const direction = this.getRandomDirectionVector();
+
+        this.destination.x = this.fleeFrom.x + (direction.x * this.fleeDistance);
+        this.destination.y = this.fleeFrom.y + (direction.y * this.fleeDistance);
+    }
+
+    getRandomDirectionVector() {
+        let directionVector = { x: 1.0, y: 0.0 };
+        const theta = Math.random() * 360 * Math.PI / 180;
+        const cosAngle = Math.cos(theta);
+        const sinAngle = Math.sin(theta);
+
+        return {
+            x: directionVector.x * cosAngle - directionVector.y * sinAngle,
+            y: directionVector.x * sinAngle + directionVector.y * cosAngle
+        };
+    }
+}
+
+class FleeBehaviour extends MoveTowardBehaviour {
+    constructor(fleeFrom, fish, maxSpeed, acceleration) {
+        const fleeFromQuadrant = {
+            x: fleeFrom.x < (fishTankSize * 0.5) ? 0 : 1,
+            y: fleeFrom.y < (fishTankSize * 0.5) ? 0 : 1
+        };
+        
+        let deltaX = Math.random() * (fishTankSize * 0.25);
+        let deltaY = Math.random() * (fishTankSize * 0.25);
+        
+        super({ 
+            x: fleeFromQuadrant.x === 0 ? deltaX : fishTankSize - deltaX,
+            y: fleeFromQuadrant.y === 0 ? deltaY : fishTankSize - deltaY
+         }, fish, maxSpeed, acceleration, 0)
     }
 }
 
@@ -232,9 +331,9 @@ class App extends Component {
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         // Cheese
-        context.drawImage(this.refs.cheese, redPoint.x, redPoint.y, fishSize, fishSize);
-        context.drawImage(this.refs.cheese, bluePoint.x, bluePoint.y, fishSize, fishSize);
-        context.drawImage(this.refs.cheese, greenPoint.x, greenPoint.y, fishSize, fishSize);
+        context.drawImage(this.refs.cheese, redPoint.x, redPoint.y, cheeseSize, cheeseSize);
+        context.drawImage(this.refs.cheese, bluePoint.x, bluePoint.y, cheeseSize, cheeseSize);
+        context.drawImage(this.refs.cheese, greenPoint.x, greenPoint.y, cheeseSize, cheeseSize);
 
         school.forEach(fish => {
             if (fish.restingPeriod !== 0) fish.restingPeriod--;
@@ -243,8 +342,8 @@ class App extends Component {
             } else {
                 fish.setNewDesire();
             }
-            const imageSize = fish.type === 'shark' ? sharkSize : fishSize;
-            context.drawImage(fish.fish, fish.x, fish.y, imageSize, imageSize);
+            
+            context.drawImage(fish.fish, fish.x, fish.y, fish.size, fish.size);
         });
     }
 
@@ -281,6 +380,7 @@ class App extends Component {
             desireX: 225,
             desireY: 225,
             restingPeriod: 0,
+            size: fishType === 'shark' ? 80 : 40,
             speedModifier,
             isBored: function() {
                 const xDiff = Math.abs(this.x - this.desireX);
@@ -346,6 +446,11 @@ class App extends Component {
                     }
 
                     if (desireObject) {
+<<<<<<< HEAD
+=======
+                        this.behaviour = new FidgetBehaviour(100, this, 500, 200);
+
+>>>>>>> 09b32fbce722e26815dadf4427e57339d0cd9d0f
                         // likes object
                         if (desireMode === true) {
                             this.desireX = coinFlip()
