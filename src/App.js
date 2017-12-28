@@ -139,8 +139,6 @@ class MoveTowardBehaviour {
         this.acceptanceRadius = acceptanceRadius * Math.random();
     }
 
-    start() {}
-
     update() {
         this.moveTowardsTarget();
     }
@@ -247,11 +245,22 @@ class MoveAwayFromBehaviour extends MoveTowardBehaviour {
     }
 }
 
-// class FleeBehaviour extends MoveTowardBehaviour {
-//     constructor(fleeFrom, fish, maxSpeed, acceleration) {
+class FleeBehaviour extends MoveTowardBehaviour {
+    constructor(fleeFrom, fish, maxSpeed, acceleration) {
+        const fleeFromQuadrant = {
+            x: fleeFrom.x < (fishTankSize * 0.5) ? 0 : 1,
+            y: fleeFrom.y < (fishTankSize * 0.5) ? 0 : 1
+        };
         
-//     }
-// }
+        let deltaX = Math.random() * (fishTankSize * 0.25);
+        let deltaY = Math.random() * (fishTankSize * 0.25);
+        
+        super({ 
+            x: fleeFromQuadrant.x === 0 ? deltaX : fishTankSize - deltaX,
+            y: fleeFromQuadrant.y === 0 ? deltaY : fishTankSize - deltaY
+         }, fish, maxSpeed, acceleration, 0)
+    }
+}
 
 class App extends Component {
     state = {
@@ -362,19 +371,16 @@ class App extends Component {
                 this.restingPeriod = fishWaitingPeriod;
             },
             moveToDesire: function() {
-                // // X movement
-                // const moveX = this.desireX - this.x;
-                // if (Math.abs(moveX) > this.speedModifier) {
-                //     moveX > 0 ? (this.x += this.speedModifier) : (this.x -= this.speedModifier);
-                // }
+                // X movement
+                const moveX = this.desireX - this.x;
+                if (Math.abs(moveX) > this.speedModifier) {
+                    moveX > 0 ? (this.x += this.speedModifier) : (this.x -= this.speedModifier);
+                }
 
-                // // Y movement
-                // const moveY = this.desireY - this.y;
-                // if (Math.abs(moveY) > this.speedModifier) {
-                //     moveY > 0 ? (this.y += this.speedModifier) : (this.y -= this.speedModifier);
-                // }
-                if ( this.behaviour ) {
-                    this.behaviour.update();
+                // Y movement
+                const moveY = this.desireY - this.y;
+                if (Math.abs(moveY) > this.speedModifier) {
+                    moveY > 0 ? (this.y += this.speedModifier) : (this.y -= this.speedModifier);
                 }
             },
             setNewDesire: function(canFidget = true) {
