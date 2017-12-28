@@ -156,15 +156,15 @@ class MoveTowardBehaviour {
             const decelerationDistance = (this.velocity ** 2) / (2 * this.acceleration);
 
             if ((distance - this.acceptanceRadius) > decelerationDistance) {
-                this.velocity = Math.min(this.velocity + this.acceleration, this.maxSpeed);
+                this.velocity = Math.min(this.velocity + this.acceleration * (frameRate * 0.001), this.maxSpeed);
             } else {
-                this.velocity = Math.max(this.velocity - this.acceleration, 0);
+                this.velocity = Math.max(this.velocity - this.acceleration* (frameRate * 0.001), 0);
             }
             
             const angle = Math.atan2(delta.y, delta.x);
 
-            this.fish.x += (this.velocity * Math.cos(angle));
-            this.fish.y += (this.velocity * Math.sin(angle));
+            this.fish.x += (this.velocity * Math.cos(angle) * (frameRate * 0.001));
+            this.fish.y += (this.velocity * Math.sin(angle) * (frameRate * 0.001));
         }
     }
 }
@@ -277,21 +277,16 @@ class App extends Component {
                 this.restingPeriod = fishWaitingPeriod;
             },
             moveToDesire: function() {
-                // // X movement
-                // const moveX = this.desireX - this.x;
-                // if (Math.abs(moveX) > this.speedModifier) {
-                //     moveX > 0 ? (this.x += this.speedModifier) : (this.x -= this.speedModifier);
-                // }
+                // X movement
+                const moveX = this.desireX - this.x;
+                if (Math.abs(moveX) > this.speedModifier) {
+                    moveX > 0 ? (this.x += this.speedModifier) : (this.x -= this.speedModifier);
+                }
 
-                // // Y movement
-                // const moveY = this.desireY - this.y;
-                // if (Math.abs(moveY) > this.speedModifier) {
-                //     moveY > 0 ? (this.y += this.speedModifier) : (this.y -= this.speedModifier);
-                // }
-
-                if (this.behaviour) {
-                    console.log(this.behaviour);
-                    this.behaviour.update();
+                // Y movement
+                const moveY = this.desireY - this.y;
+                if (Math.abs(moveY) > this.speedModifier) {
+                    moveY > 0 ? (this.y += this.speedModifier) : (this.y -= this.speedModifier);
                 }
             },
             setNewDesire: function(canFidget = true) {
@@ -321,9 +316,8 @@ class App extends Component {
                     }
 
                     if (desireObject) {
-                        if (this.id == 'redFish1') {
-                            this.behaviour = new MoveTowardBehaviour(desireObject, this, 2, 0.05, 40);
-                        }
+                        // this.behaviour = new MoveTowardBehaviour(desireObject, this, 600, 100, 40);
+                        
                         // likes object
                         if (desireMode === true) {
                             console.log(`moving towards ${desireObject.id}`);
