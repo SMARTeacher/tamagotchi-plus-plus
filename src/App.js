@@ -483,7 +483,6 @@ class App extends Component {
             addFish({ fishType: 'orangeFish' });
             addFish({ fishType: 'orangeFish' });
             addFish({ fishType: 'orangeFish' });
-            addFish({ fishType: 'shark' });
             theBackground = globalRefs[`bck${Math.floor(Math.random() * 4) + 1}`];
             this.startTheFish();
         });
