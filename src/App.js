@@ -130,42 +130,66 @@ const sortDesiresByDistance = (fish, school, cheese) => {
 
 class MoveTowardBehaviour {
     constructor(destination, fish, maxSpeed, acceleration, acceptanceRadius) {
-        this.destination    = destination;
-        this.fish           = fish;
+        this.destination = destination;
+        this.fish = fish;
 
-        this.velocity           = 0;
-        this.maxSpeed           = maxSpeed;
-        this.acceleration       = acceleration;
-        this.acceptanceRadius   = acceptanceRadius * Math.random();
+        this.velocity = 0;
+        this.maxSpeed = maxSpeed;
+        this.acceleration = acceleration;
+        this.acceptanceRadius = acceptanceRadius * Math.random();
     }
 
-    start() {
-
-    }
+    start() {}
 
     update() {
         const delta = {
             x: this.destination.x - this.fish.x,
             y: this.destination.y - this.fish.y
         };
-        const distance = Math.sqrt((delta.x ** 2) + (delta.y ** 2));
+        const distance = Math.sqrt(delta.x ** 2 + delta.y ** 2);
 
         if (distance < this.acceptanceRadius) {
             this.velocity = 0;
         } else {
-            const decelerationDistance = (this.velocity ** 2) / (2 * this.acceleration);
+            const decelerationDistance = this.velocity ** 2 / (2 * this.acceleration);
 
-            if ((distance - this.acceptanceRadius) > decelerationDistance) {
-                this.velocity = Math.min(this.velocity + this.acceleration * (frameRate * 0.001), this.maxSpeed);
+            if (distance - this.acceptanceRadius > decelerationDistance) {
+                this.velocity = Math.min(
+                    this.velocity + this.acceleration * (frameRate * 0.001),
+                    this.maxSpeed
+                );
             } else {
-                this.velocity = Math.max(this.velocity - this.acceleration* (frameRate * 0.001), 0);
+                this.velocity = Math.max(
+                    this.velocity - this.acceleration * (frameRate * 0.001),
+                    0
+                );
             }
-            
+
             const angle = Math.atan2(delta.y, delta.x);
 
-            this.fish.x += (this.velocity * Math.cos(angle) * (frameRate * 0.001));
-            this.fish.y += (this.velocity * Math.sin(angle) * (frameRate * 0.001));
+            this.fish.x += this.velocity * Math.cos(angle) * (frameRate * 0.001);
+            this.fish.y += this.velocity * Math.sin(angle) * (frameRate * 0.001);
         }
+    }
+}
+
+class FidgetBehaviour extends MoveTowardBehaviour {
+    constructor(distance, fish, maxSpeed, acceleration) {
+        let directionVector = { x: 1.0, y: 0.0 };
+        const theta = Math.random() * 360 * Math.PI / 180;
+        const cosAngle = Math.cos(theta);
+        const sinAngle = Math.sin(theta);
+
+        super(
+            {
+                x: fish.x * cosAngle - fish.y * sinAngle,
+                y: fish.x * sinAngle + fish.y * cosAngle
+            },
+            fish,
+            maxSpeed,
+            acceleration,
+            0
+        );
     }
 }
 
@@ -247,7 +271,7 @@ class App extends Component {
     addFish = options => {
         const { fishType: type } = options;
         //all types except shark
-        const fishType = type || fishTypes[Math.floor(Math.random() * (fishTypes.length-1))];
+        const fishType = type || fishTypes[Math.floor(Math.random() * (fishTypes.length - 1))];
         const speedModifier = fishType === 'shark' ? sharkSpeed : 1;
         console.log('New Fish!');
         const newFish = {
@@ -317,7 +341,7 @@ class App extends Component {
 
                     if (desireObject) {
                         // this.behaviour = new MoveTowardBehaviour(desireObject, this, 600, 100, 40);
-                        
+
                         // likes object
                         if (desireMode === true) {
                             console.log(`moving towards ${desireObject.id}`);
@@ -389,7 +413,6 @@ class App extends Component {
                         onClick={() => {
                             this.addFish({ fishType: 'shark' });
                         }}
-
                     >
                         Add a Shark
                     </button>
