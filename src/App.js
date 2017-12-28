@@ -142,6 +142,10 @@ class MoveTowardBehaviour {
     start() {}
 
     update() {
+        this.moveTowardsTarget();
+    }
+
+    moveTowardsTarget() {
         const delta = {
             x: this.destination.x - this.fish.x,
             y: this.destination.y - this.fish.y
@@ -167,8 +171,20 @@ class MoveTowardBehaviour {
 
             const angle = Math.atan2(delta.y, delta.x);
 
-            this.fish.x += this.velocity * Math.cos(angle) * (frameRate * 0.001);
-            this.fish.y += this.velocity * Math.sin(angle) * (frameRate * 0.001);
+            this.fish.x = Math.max(
+                Math.min(
+                    (this.fish.x + this.velocity * Math.cos(angle) * (frameRate * 0.001)),
+                    fishTankSize
+                ),
+                0
+            );
+            this.fish.y = Math.max(
+                Math.min(
+                    this.fish.y + this.velocity * Math.sin(angle) * (frameRate * 0.001),
+                    fishTankSize
+                ),
+                0
+            );
         }
     }
 }
@@ -179,17 +195,55 @@ class FidgetBehaviour extends MoveTowardBehaviour {
         const theta = Math.random() * 360 * Math.PI / 180;
         const cosAngle = Math.cos(theta);
         const sinAngle = Math.sin(theta);
-
+        
+        directionVector.x = directionVector.x * cosAngle - directionVector.y * sinAngle;
+        directionVector.y = directionVector.x * sinAngle + directionVector.y * cosAngle;
+        
         super(
             {
-                x: fish.x * cosAngle - fish.y * sinAngle,
-                y: fish.x * sinAngle + fish.y * cosAngle
+                x: this.fish.x + (directionVector.x * distance),
+                y: this.fish.y + (directionVector.y * distance)
             },
             fish,
             maxSpeed,
             acceleration,
             0
         );
+    }
+}
+
+class MoveAwayFromBehaviour extends MoveTowardBehaviour {
+    constructor(fleeFrom, fish, maxSpeed, acceleration, fleeDistance) {
+        super({ x: 0, y: 0 }, fish, maxSpeed, acceleration, 0);
+
+        this.fleeFrom = fleeFrom;
+        this.fleeDistance = fleeDistance;
+    }
+
+    update() {
+        if ( this.velocity === 0 ) {
+            this.updateTarget();
+        }
+        this.moveTowardsTarget();
+    }
+
+    updateTarget() {
+        const direction = this.getRandomDirectionVector();
+
+        this.destination.x = this.fleeFrom.x + (direction.x * this.fleeDistance);
+        this.destination.y = this.fleeFrom.y + (direction.y * this.fleeDistance);
+    }
+
+    getRandomDirectionVector() {
+        let directionVector = { x: 1.0, y: 0.0 };
+        const theta = Math.random() * 360 * Math.PI / 180;
+        const cosAngle = Math.cos(theta);
+        const sinAngle = Math.sin(theta);
+
+        return {
+            x: directionVector.x * cosAngle - directionVector.y * sinAngle,
+            y: directionVector.x * sinAngle + directionVector.y * cosAngle
+        };
     }
 }
 
