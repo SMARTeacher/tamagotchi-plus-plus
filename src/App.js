@@ -16,6 +16,7 @@ import './App.css';
 let id = 1;
 let globalRefs;
 const theDannyConstant = 1000;
+let theBackground;
 const school = [];
 const fishThreshold = 3;
 
@@ -28,17 +29,45 @@ const pointRadius = 50;
 const fishWaitingPeriod = 100;
 const sharkWaitingPeriod = 5;
 const boredomRadius = 10;
-const eatingThreshold = 50;
+const fishEatingThreshold = 50;
+const cheeseEatingThreshold = 50;
 
 const cheeses = [];
 const addCheese = () => {
     const newCheese = {
+        id: `cheese${id}`,
         type: 'cheese',
+        cheese: globalRefs.cheese,
+        health: 500,
         x: Math.floor(Math.random() * fishTankSize),
         y: Math.floor(Math.random() * fishTankSize),
-        size: pointSize
+        size: pointSize,
+        updateCheese: function() {
+            if (this.health > 0) {
+                let nibble = 0;
+                school.forEach(fish => {
+                    if (
+                        Math.sqrt((fish.x - this.x) ** 2) + Math.sqrt((fish.y - this.y) ** 2) <
+                            cheeseEatingThreshold &&
+                        fish.type !== 'shark'
+                    ) {
+                        nibble++;
+                    }
+                });
+                this.health -= nibble;
+                if (this.health <= 0) {
+                    this.cheese = globalRefs.cheeseDeath;
+                    setTimeout(() => {
+                        const index = cheeses.findIndex(cheese => cheese.id === this.id);
+                        cheeses.splice(index, 1);
+                        addFish({});
+                    }, 5000);
+                }
+            }
+        }
     };
 
+    id++;
     cheeses.push(newCheese);
 };
 
@@ -87,8 +116,9 @@ const kill = fish => {
         fish.restingPeriod = 200000;
         setTimeout(() => {
             const index = school.findIndex(schoolFish => fish.id === schoolFish.id);
-            school.splice(index, 1);
-            addFish({});
+            if (index !== -1) {
+                school.splice(index, 1);
+            }
         }, 5000);
     }
 };
@@ -149,9 +179,10 @@ const addFish = options => {
                 const closestFish = closeFish.filter(fish => fish.type !== 'cheese')[0];
 
                 if (
+                    closestFish &&
                     Math.sqrt((closestFish.x - this.x) ** 2) +
                         Math.sqrt((closestFish.y - this.y) ** 2) <
-                    eatingThreshold
+                        fishEatingThreshold
                 ) {
                     kill(closestFish);
                 }
@@ -391,6 +422,11 @@ class App extends Component {
         const sharkRef = this.refs.shark;
         const cheeseRef = this.refs.cheese;
         const skellyRef = this.refs.skelly;
+        const cheeseDeathRef = this.refs.cheeseDeath;
+        const bck1Ref = this.refs.bck1;
+        const bck2Ref = this.refs.bck2;
+        const bck3Ref = this.refs.bck3;
+        const bck4Ref = this.refs.bck4;
         globalRefs = this.refs;
         Promise.all([
             blueFishRef,
@@ -399,7 +435,12 @@ class App extends Component {
             orangeFishRef,
             sharkRef,
             cheeseRef,
-            skellyRef
+            skellyRef,
+            cheeseDeathRef,
+            bck1Ref,
+            bck2Ref,
+            bck3Ref,
+            bck4Ref
         ]).then(() => {
             addFish({ fishType: 'redFish' });
             addFish({ fishType: 'redFish' });
@@ -414,6 +455,7 @@ class App extends Component {
             addFish({ fishType: 'orangeFish' });
             addFish({ fishType: 'orangeFish' });
             addFish({ fishType: 'shark' });
+            theBackground = globalRefs[`bck${Math.floor(Math.random() * 4) + 1}`];
             this.startTheFish();
         });
     }
@@ -421,12 +463,12 @@ class App extends Component {
     drawAllFish() {
         const canvas = this.refs.canvas;
         const context = canvas.getContext('2d');
-        context.fillStyle = '#80CBC4';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(theBackground, 0, 0, canvas.width, canvas.height);
 
         // Cheese
         cheeses.forEach(cheese => {
-            context.drawImage(this.refs.cheese, cheese.x, cheese.y, cheeseSize, cheeseSize);
+            cheese.updateCheese();
+            context.drawImage(cheese.cheese, cheese.x, cheese.y, cheeseSize, cheeseSize);
         });
 
         school.forEach(fish => {
@@ -471,8 +513,6 @@ class App extends Component {
             <div className="App">
                 <header className="App-header">
                     <h1 className="App-title">AIquatic</h1>
-                    <button onClick={this.startTheFish}>Start the fish</button>
-                    <button onClick={this.stopTheFish}>Stop the fish</button>
                     <button onClick={addFish}>Add a fish</button>
                     <button
                         onClick={() => {
@@ -483,13 +523,6 @@ class App extends Component {
                     </button>
                     <button onClick={this.tenEx}>10X the fish</button>
                     <button onClick={addCheese}>Add Cheese</button>
-                    <button
-                        onClick={() => {
-                            if (school[0]) kill(school[0]);
-                        }}
-                    >
-                        Log
-                    </button>
                 </header>
                 <canvas
                     ref="canvas"
@@ -552,6 +585,46 @@ class App extends Component {
                     alt="skelly"
                     width={128}
                     height={128}
+                />
+                <img
+                    src={cheeseDeath}
+                    ref="cheeseDeath"
+                    style={{ display: 'none' }}
+                    alt="cheeseDeath"
+                    width={128}
+                    height={128}
+                />
+                <img
+                    src={bck1}
+                    ref="bck1"
+                    style={{ display: 'none' }}
+                    alt="bck1"
+                    width={500}
+                    height={500}
+                />
+                <img
+                    src={bck2}
+                    ref="bck2"
+                    style={{ display: 'none' }}
+                    alt="bck2"
+                    width={500}
+                    height={500}
+                />
+                <img
+                    src={bck3}
+                    ref="bck3"
+                    style={{ display: 'none' }}
+                    alt="bck3"
+                    width={500}
+                    height={500}
+                />
+                <img
+                    src={bck4}
+                    ref="bck4"
+                    style={{ display: 'none' }}
+                    alt="bck4"
+                    width={500}
+                    height={500}
                 />
             </div>
         );
