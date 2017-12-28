@@ -24,6 +24,7 @@ const fishWaitingPeriod = 100;
 const boredomRadius = 10;
 
 const greenPoint = {
+    id: 'greenCheese',
     color: 'green',
     type: 'cheese',
     x: 30,
@@ -32,6 +33,7 @@ const greenPoint = {
 };
 
 const bluePoint = {
+    id: 'blueCheese',
     color: 'blue',
     type: 'cheese',
     x: 400,
@@ -40,6 +42,7 @@ const bluePoint = {
 };
 
 const redPoint = {
+    id: 'redCheese',
     color: 'red',
     type: 'cheese',
     x: 250,
@@ -50,34 +53,34 @@ const redPoint = {
 const fishTypes = ['redFish', 'blueFish', 'greenFish', 'orangeFish', 'shark'];
 const fishPersonalities = {
     redFish: [
-        { name: 'shark', likes: false },
-        { name: 'redFish', likes: true },
-        { name: 'greenFish', likes: false },
-        { name: 'cheese', likes: true },
-        { name: 'blueFish', likes: true }
+        { type: 'shark', likes: false },
+        { type: 'redFish', likes: true },
+        { type: 'greenFish', likes: false },
+        { type: 'cheese', likes: true },
+        { type: 'blueFish', likes: true }
     ],
     blueFish: [
-        { name: 'shark', likes: false },
-        { name: 'blueFish', likes: true },
-        { name: 'cheese', likes: true }
+        { type: 'shark', likes: false },
+        { type: 'blueFish', likes: true },
+        { type: 'cheese', likes: true }
     ],
     greenFish: [
-        { name: 'shark', likes: false },
-        { name: 'greenFish', likes: true },
-        { name: 'cheese', likes: true },
-        { name: 'blueFish', likes: true }
+        { type: 'shark', likes: false },
+        { type: 'greenFish', likes: true },
+        { type: 'cheese', likes: true },
+        { type: 'blueFish', likes: true }
     ],
     orangeFish: [
-        { name: 'shark', likes: false },
-        { name: 'orangeFish', likes: true },
-        { name: 'cheese', likes: true },
-        { name: 'redFish', likes: true }
+        { type: 'shark', likes: false },
+        { type: 'orangeFish', likes: true },
+        { type: 'cheese', likes: true },
+        { type: 'redFish', likes: true }
     ],
     shark: [
-        { name: 'blueFish', likes: true },
-        { name: 'greenFish', likes: true },
-        { name: 'orangeFish', likes: true },
-        { name: 'redFish', likes: true }
+        { type: 'blueFish', likes: true },
+        { type: 'greenFish', likes: true },
+        { type: 'orangeFish', likes: true },
+        { type: 'redFish', likes: true }
     ]
 };
 const cheeses = [redPoint, bluePoint, greenPoint];
@@ -110,20 +113,18 @@ const findCloseFish = fish => {
 };
 
 const sortDesiresByDistance = (fish, school, cheese) => {
-    let desires = school.slice(0)
-                .concat(cheese.slice(0));
-                
-    desires.forEach(
-        (val, index, array) => 
-            array[index] = { x: val.x, y: val.y, source: val }
-    );
-    
+    let desires = school.slice(0).concat(cheese.slice(0));
+
+    desires.forEach((val, index, array) => (array[index] = { x: val.x, y: val.y, source: val }));
+
     desires.sort((nodeA, nodeB) => {
-        return ((nodeA.x - fish.x) ** 2) + ((nodeA.y - fish.y) ** 2) <
-                ((nodeB.x - fish.x) ** 2) + ((nodeB.y - fish.y) ** 2) ? -1 : 1;
+        return (nodeA.x - fish.x) ** 2 + (nodeA.y - fish.y) ** 2 <
+            (nodeB.x - fish.x) ** 2 + (nodeB.y - fish.y) ** 2
+            ? -1
+            : 1;
     });
-       
-    desires.forEach((val, index, array) => array[index] = val.source);
+
+    desires.forEach((val, index, array) => (array[index] = val.source));
 
     return desires;
 };
@@ -250,7 +251,10 @@ class App extends Component {
             setNewDesire: function(canFidget = true) {
                 //reset speed
                 this.speedModifier = this.type === 'shark' ? sharkSpeed : 1;
-                const closeFish = findCloseFish(this).slice(0, fishThreshold);
+                const closeFish = sortDesiresByDistance(this, school, cheeses).slice(
+                    0,
+                    fishThreshold
+                );
 
                 if (canFidget && coinFlip()) {
                     this.fidget();
@@ -258,14 +262,14 @@ class App extends Component {
                     let desireObject;
                     let desireMode;
                     let index = 0;
-                    while (!desireObject && index < closeFish.length) {
-                        const currentFish = closeFish[index];
-                        const foundDesire = this.personality.find(
-                            object => object.name === currentFish.type
+                    while (!desireObject && index < this.personality.length) {
+                        const currentFishCheck = this.personality[index];
+                        const foundDesire = closeFish.find(
+                            fish => fish.type === currentFishCheck.type
                         );
                         if (foundDesire) {
-                            desireObject = currentFish;
-                            desireMode = foundDesire.likes;
+                            desireObject = foundDesire;
+                            desireMode = currentFishCheck.likes;
                         }
                         index++;
                     }
@@ -273,6 +277,7 @@ class App extends Component {
                     if (desireObject) {
                         // likes object
                         if (desireMode === true) {
+                            console.log(`moving towards ${desireObject.id}`);
                             this.desireX = coinFlip()
                                 ? desireObject.x + getSmallDistance()
                                 : desireObject.x - getSmallDistance();
@@ -281,7 +286,7 @@ class App extends Component {
                                 : desireObject.y - getSmallDistance();
                         } else if (desireMode === false) {
                             // dislikes object
-                            console.log('icky');
+                            console.log(`moving away from ${desireObject.id}`);
                             this.speedModifier = 10;
 
                             if (desireObject.x > 250 && desireObject.y > 250) {
@@ -309,25 +314,6 @@ class App extends Component {
                     } else {
                         this.fidget();
                     }
-
-                    // //Blue fish logic
-                    // if (this.type === 'blueFish') {
-                    //     const favColor = colors[Math.floor(Math.random() * colors.length)];
-                    //     const point = points.find(point => point.color === favColor);
-
-                    // } else {
-                    //     const favFish = closeFish[Math.floor(Math.random() * fishThreshold)];
-                    //     if (favFish && favFish.type !== 'shark') {
-                    //         this.desireX = coinFlip()
-                    //             ? favFish.x + getSmallDistance()
-                    //             : favFish.x - getSmallDistance();
-                    //         this.desireY = coinFlip()
-                    //             ? favFish.y + getSmallDistance()
-                    //             : favFish.y - getSmallDistance();
-                    //     } else {
-                    //         this.fidget();
-                    //     }
-                    // }
                 }
 
                 this.desireX = Math.abs(this.desireX);
