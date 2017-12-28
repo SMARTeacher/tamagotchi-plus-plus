@@ -85,12 +85,13 @@ const fishPersonalities = {
         { type: 'shark', likes: false },
         { type: 'cheese', likes: true },
         { type: 'redFish', likes: true },
+        { type: 'greenFish', likes: false },
         { type: 'blueFish', likes: true }
     ],
     blueFish: [
         { type: 'shark', likes: false },
         { type: 'redFish', likes: false },
-        { type: 'blueFish', likes: true }      
+        { type: 'blueFish', likes: true }
     ],
     greenFish: [
         { type: 'shark', likes: false },
@@ -100,8 +101,8 @@ const fishPersonalities = {
     ],
     orangeFish: [
         { type: 'cheese', likes: true },
-        { type: 'shark', likes: false }
-
+        { type: 'shark', likes: false },
+        { type: 'redFish', likes: true }
     ],
     shark: [
         { type: 'blueFish', likes: true },
