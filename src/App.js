@@ -16,6 +16,7 @@ import './App.css';
 let id = 1;
 let globalRefs;
 const theDannyConstant = 1000;
+let theBackground;
 const school = [];
 const fishThreshold = 3;
 
@@ -423,6 +424,10 @@ class App extends Component {
         const cheeseRef = this.refs.cheese;
         const skellyRef = this.refs.skelly;
         const cheeseDeathRef = this.refs.cheeseDeath;
+        const bck1Ref = this.refs.bck1;
+        const bck2Ref = this.refs.bck2;
+        const bck3Ref = this.refs.bck3;
+        const bck4Ref = this.refs.bck4;
         globalRefs = this.refs;
         Promise.all([
             blueFishRef,
@@ -432,7 +437,11 @@ class App extends Component {
             sharkRef,
             cheeseRef,
             skellyRef,
-            cheeseDeathRef
+            cheeseDeathRef,
+            bck1Ref,
+            bck2Ref,
+            bck3Ref,
+            bck4Ref
         ]).then(() => {
             addFish({ fishType: 'redFish' });
             addFish({ fishType: 'redFish' });
@@ -447,6 +456,7 @@ class App extends Component {
             addFish({ fishType: 'orangeFish' });
             addFish({ fishType: 'orangeFish' });
             addFish({ fishType: 'shark' });
+            theBackground = globalRefs[`bck${Math.floor(Math.random() * 4) + 1}`];
             this.startTheFish();
         });
     }
@@ -454,8 +464,7 @@ class App extends Component {
     drawAllFish() {
         const canvas = this.refs.canvas;
         const context = canvas.getContext('2d');
-        context.fillStyle = '#80CBC4';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(theBackground, 0, 0, canvas.width, canvas.height);
 
         // Cheese
         cheeses.forEach(cheese => {
@@ -585,6 +594,38 @@ class App extends Component {
                     alt="cheeseDeath"
                     width={128}
                     height={128}
+                />
+                <img
+                    src={bck1}
+                    ref="bck1"
+                    style={{ display: 'none' }}
+                    alt="bck1"
+                    width={500}
+                    height={500}
+                />
+                <img
+                    src={bck2}
+                    ref="bck2"
+                    style={{ display: 'none' }}
+                    alt="bck2"
+                    width={500}
+                    height={500}
+                />
+                <img
+                    src={bck3}
+                    ref="bck3"
+                    style={{ display: 'none' }}
+                    alt="bck3"
+                    width={500}
+                    height={500}
+                />
+                <img
+                    src={bck4}
+                    ref="bck4"
+                    style={{ display: 'none' }}
+                    alt="bck4"
+                    width={500}
+                    height={500}
                 />
             </div>
         );
