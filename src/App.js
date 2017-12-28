@@ -33,7 +33,7 @@ const sharkWaitingPeriod = 5;
 const boredomRadius = 10;
 const eatingThreshold = 50;
 const dynamiteFallSpeed = 4;
-const dynamiteSize = 60;
+const dynamiteSize = 120;
 let blowyUppy = false;
 const fishEatingThreshold = 50;
 const cheeseEatingThreshold = 50;
@@ -613,7 +613,7 @@ class App extends Component {
                     <button onClick={this.feedingFrenzy}>Feeding frenzy</button>
                     <button onClick={this.tenEx}>10X the fish</button>
                     <button onClick={addCheese}>Add Cheese</button>
-                    <button onClick={this.kaboom}>Kaboom</button>
+                    <button onClick={this.kaboom}>Go Fish</button>
                 </header>
                 {!showSteve && <canvas
                     ref="canvas"
