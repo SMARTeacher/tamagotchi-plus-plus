@@ -16,42 +16,26 @@ const school = [];
 const fishThreshold = 3;
 
 const frameRate = 20;
-const fishSize = 40;
-const sharkSize = 80;
 const cheeseSize = 80;
 const sharkSpeed = 0.7;
 const fishTankSize = 500;
 const pointSize = 20;
 const pointRadius = 50;
 const fishWaitingPeriod = 100;
+const sharkWaitingPeriod = 5;
 const boredomRadius = 10;
 const eatingThreshold = 50;
 
-const greenPoint = {
-    id: 'greenCheese',
-    color: 'green',
-    type: 'cheese',
-    x: 30,
-    y: 30,
-    size: pointSize
-};
+const cheeses = [];
+const addCheese = () => {
+    const newCheese = {
+        type: 'cheese',
+        x: Math.floor(Math.random() * fishTankSize),
+        y: Math.floor(Math.random() * fishTankSize),
+        size: pointSize
+    };
 
-const bluePoint = {
-    id: 'blueCheese',
-    color: 'blue',
-    type: 'cheese',
-    x: 400,
-    y: 200,
-    size: pointSize
-};
-
-const redPoint = {
-    id: 'redCheese',
-    color: 'red',
-    type: 'cheese',
-    x: 250,
-    y: 400,
-    size: pointSize
+    cheeses.push(newCheese);
 };
 
 const fishTypes = ['redFish', 'blueFish', 'greenFish', 'orangeFish', 'shark'];
@@ -86,23 +70,24 @@ const fishPersonalities = {
         { type: 'redFish', likes: true }
     ]
 };
-const cheeses = [redPoint, bluePoint, greenPoint];
-const colors = cheeses.map(point => point.color);
 
 const coinFlip = () => !!Math.floor(Math.random() * 2);
 
 const getSmallDistance = () => Math.floor(Math.random() * pointRadius);
 
 const kill = fish => {
-    fish.fish = globalRefs.skelly;
-    fish.desireX = fish.x;
-    fish.desireY = fish.y;
-    fish.restingPeriod = 200000;
-    const index = school.findIndex(schoolFish => fish.id === schoolFish.id);
-    setTimeout(() => {
-        school.splice(index, 1);
-        addFish({});
-    }, 2000);
+    if (!fish.type !== 'skelly') {
+        fish.fish = globalRefs.skelly;
+        fish.type = 'skelly';
+        fish.desireX = fish.x;
+        fish.desireY = fish.y;
+        fish.restingPeriod = 200000;
+        setTimeout(() => {
+            const index = school.findIndex(schoolFish => fish.id === schoolFish.id);
+            school.splice(index, 1);
+            addFish({});
+        }, 5000);
+    }
 };
 
 const addFish = options => {
@@ -137,7 +122,7 @@ const addFish = options => {
         fidget: function() {
             this.desireX = coinFlip() ? this.x + boredomRadius : this.x - boredomRadius;
             this.desireY = coinFlip() ? this.y + boredomRadius : this.y - boredomRadius;
-            this.restingPeriod = fishWaitingPeriod;
+            this.restingPeriod = this.type === 'shark' ? sharkWaitingPeriod : fishWaitingPeriod;
         },
         moveToDesire: function() {
             // X movement
@@ -161,7 +146,8 @@ const addFish = options => {
                 const closestFish = closeFish.filter(fish => fish.type !== 'cheese')[0];
 
                 if (
-                    Math.sqrt(closestFish.x - this.x) ** 2 + (closestFish.y - this.y) ** 2 <
+                    Math.sqrt((closestFish.x - this.x) ** 2) +
+                        Math.sqrt((closestFish.y - this.y) ** 2) <
                     eatingThreshold
                 ) {
                     kill(closestFish);
@@ -227,28 +213,6 @@ const addFish = options => {
     id++;
     newFish.setNewDesire(false);
     school.push(newFish);
-};
-
-const findCloseFish = fish => {
-    const sortedFish = school
-        .slice(0)
-        .sort((oneFish, twoFish) => {
-            const distanceFromOneFish = Math.sqrt(
-                ((oneFish.x - fish.x) ^ 2) + ((oneFish.y - fish.y) ^ 2)
-            );
-            const distanceFromTwoFish = Math.sqrt(
-                ((twoFish.x - fish.x) ^ 2) + ((twoFish.y - fish.y) ^ 2)
-            );
-            if (distanceFromOneFish < distanceFromTwoFish) {
-                return -1;
-            }
-            if (distanceFromOneFish > distanceFromTwoFish) {
-                return 1;
-            }
-            return 0;
-        })
-        .slice(1);
-    return sortedFish;
 };
 
 const sortDesiresByDistance = (fish, school, cheese) => {
@@ -458,9 +422,9 @@ class App extends Component {
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         // Cheese
-        context.drawImage(this.refs.cheese, redPoint.x, redPoint.y, cheeseSize, cheeseSize);
-        context.drawImage(this.refs.cheese, bluePoint.x, bluePoint.y, cheeseSize, cheeseSize);
-        context.drawImage(this.refs.cheese, greenPoint.x, greenPoint.y, cheeseSize, cheeseSize);
+        cheeses.forEach(cheese => {
+            context.drawImage(this.refs.cheese, cheese.x, cheese.y, cheeseSize, cheeseSize);
+        });
 
         school.forEach(fish => {
             if (fish.restingPeriod !== 0) fish.restingPeriod--;
@@ -515,6 +479,7 @@ class App extends Component {
                         Add a Shark
                     </button>
                     <button onClick={this.tenEx}>10X the fish</button>
+                    <button onClick={addCheese}>Add Cheese</button>
                     <button
                         onClick={() => {
                             if (school[0]) kill(school[0]);
