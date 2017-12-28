@@ -63,6 +63,8 @@ const colors = points.map(point => point.color);
 
 const coinFlip = () => !!Math.floor(Math.random() * 2);
 
+const getSmallDistance = () => Math.floor(Math.random() * pointRadius);
+
 const findCloseFish = fish => {
     const sortedFish = school
         .slice(0)
@@ -96,8 +98,15 @@ class App extends Component {
         const redFishRef = this.refs.redFish;
         const orangeFishRef = this.refs.orangeFish;
         const sharkRef = this.refs.shark;
-        const cheeseRef = this.refs.cheese
-        Promise.all([blueFishRef, greenFishRef, redFishRef, orangeFishRef, sharkRef, cheeseRef]).then(() => {
+        const cheeseRef = this.refs.cheese;
+        Promise.all([
+            blueFishRef,
+            greenFishRef,
+            redFishRef,
+            orangeFishRef,
+            sharkRef,
+            cheeseRef
+        ]).then(() => {
             this.addFish({ fishType: 'redFish' });
             this.addFish({ fishType: 'redFish' });
             this.addFish({ fishType: 'redFish' });
@@ -241,11 +250,11 @@ class App extends Component {
                             const point = points.find(point => point.color === favColor);
 
                             this.desireX = coinFlip()
-                                ? point.x + Math.floor(Math.random() * pointRadius)
-                                : point.x - Math.floor(Math.random() * pointRadius);
+                                ? point.x + getSmallDistance()
+                                : point.x - getSmallDistance();
                             this.desireY = coinFlip()
-                                ? point.y + Math.floor(Math.random() * pointRadius)
-                                : point.y - Math.floor(Math.random() * pointRadius);
+                                ? point.y + getSmallDistance()
+                                : point.y - getSmallDistance();
                         } else {
                             let favFish;
                             if (closeFish) {
@@ -253,26 +262,11 @@ class App extends Component {
                             }
                             if (favFish && favFish.type !== 'shark') {
                                 this.desireX = coinFlip()
-                                    ? favFish.x + Math.floor(Math.random() * pointRadius)
-                                    : favFish.x - Math.floor(Math.random() * pointRadius);
+                                    ? favFish.x + getSmallDistance()
+                                    : favFish.x - getSmallDistance();
                                 this.desireY = coinFlip()
-                                    ? favFish.y + Math.floor(Math.random() * pointRadius)
-                                    : favFish.y - Math.floor(Math.random() * pointRadius);
-                            } else if (
-                                favFish &&
-                                favFish.type === 'shark' &&
-                                this.type !== 'shark'
-                            ) {
-                                //shark runaway logic
-                                this.speedModifier = 10;
-                                const favColor = colors[Math.floor(Math.random() * colors.length)];
-                                const point = points.find(point => point.color === favColor);
-                                this.desireX = coinFlip()
-                                    ? point.x + Math.floor(Math.random() * pointRadius)
-                                    : point.x - Math.floor(Math.random() * pointRadius);
-                                this.desireY = coinFlip()
-                                    ? point.y + Math.floor(Math.random() * pointRadius)
-                                    : point.y - Math.floor(Math.random() * pointRadius);
+                                    ? favFish.y + getSmallDistance()
+                                    : favFish.y - getSmallDistance();
                             } else {
                                 this.fidget();
                             }
