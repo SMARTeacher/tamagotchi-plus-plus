@@ -7,12 +7,14 @@ import orangeFish from './orangeFish.png';
 import redFish from './redFish.png';
 import shark from './shark.png';
 import skelly from './skelly.png';
+<<<<<<< HEAD
 import dynamite from './TNT.png';
+=======
 import bck1 from './bck1.png';
 import bck2 from './bck2.png';
 import bck3 from './bck3.png';
 import bck4 from './bck4.png';
-import fishySteve from './FishermanSteve_Anim3.gif'
+>>>>>>> 7da75d4fcb22711c92cc53ead08614ee4829e521
 import './App.css';
 
 let id = 1;
@@ -31,14 +33,17 @@ const pointRadius = 50;
 const fishWaitingPeriod = 100;
 const sharkWaitingPeriod = 5;
 const boredomRadius = 10;
+<<<<<<< HEAD
 const eatingThreshold = 50;
 const dynamiteFallSpeed = 4;
 const dynamiteSize = 60;
 let blowyUppy = false;
-const fishEatingThreshold = 50;
-const cheeseEatingThreshold = 50;
 
 const dynamites = [];
+=======
+const fishEatingThreshold = 50;
+const cheeseEatingThreshold = 50;
+>>>>>>> 7da75d4fcb22711c92cc53ead08614ee4829e521
 
 const cheeses = [];
 const addCheese = () => {
@@ -85,7 +90,7 @@ const fishPersonalities = {
         { type: 'shark', likes: false },
         { type: 'cheese', likes: true },
         { type: 'redFish', likes: true },
-        { type: 'orangeFish', likes: true }
+        { type: 'greenFish', likes: true }
     ],
     blueFish: [
         { type: 'shark', likes: false },
@@ -101,7 +106,8 @@ const fishPersonalities = {
     orangeFish: [
         { type: 'cheese', likes: true },
         { type: 'orangeFish', likes: true },
-        { type: 'redFish', likes: true }
+        { type: 'redFish', likes: true },
+        { type: 'shark', likes: false }
     ],
     shark: [
         { type: 'blueFish', likes: true },
@@ -255,6 +261,29 @@ const addFish = options => {
     id++;
     newFish.setNewDesire(false);
     school.push(newFish);
+};
+
+const kaboom = () => {
+    if (!blowyUppy) {
+        blowyUppy = true;
+
+        const quadrants = (fishTankSize - dynamiteSize) / 7;
+        for (let i = 0; i < 7; ++i) {
+            dynamites.push({
+                x: quadrants * i + (quadrants * Math.random()),
+                y: -dynamiteSize - (Math.random() * 150),
+                targetY: 200 + (Math.random() * 150),
+                rotation: Math.floor(Math.random() * 360)
+            });
+        }
+
+        setTimeout(function() {
+            blowyUppy = false;
+
+            school.forEach(fish => kill(fish));
+            dynamites.splice(0);
+        }, 2500);
+    }
 };
 
 const sortDesiresByDistance = (fish, school, cheese) => {
@@ -439,8 +468,7 @@ class RestBehaviour {
 
 class App extends Component {
     state = {
-        interval: null,
-        showSteve: false
+        interval: null
     };
 
     componentDidMount() {
@@ -490,8 +518,6 @@ class App extends Component {
     }
 
     drawAllFish() {
-        if (this.state.showSteve) return;
-
         const canvas = this.refs.canvas;
         const context = canvas.getContext('2d');
         context.drawImage(theBackground, 0, 0, canvas.width, canvas.height);
@@ -553,51 +579,7 @@ class App extends Component {
         });
     };
 
-    feedingFrenzy = () => {
-        for (let index = 0; index < 30; index++) {
-            addFish({});
-        }
-
-        for (let index = 0; index < 9; index++) {
-            addFish({ fishType: 'shark' });
-        }
-    };
-
-    kaboom = () => {
-        if (!blowyUppy) {
-            this.setState({
-                showSteve: true
-            });
-            
-            setTimeout(() => {
-                blowyUppy = true;
-
-                this.setState({
-                    showSteve: false
-                });
-    
-                const quadrants = (fishTankSize - dynamiteSize) / 7;
-                for (let i = 0; i < 7; ++i) {
-                    dynamites.push({
-                        x: quadrants * i + (quadrants * Math.random()),
-                        y: -dynamiteSize - (Math.random() * 150),
-                        targetY: 200 + (Math.random() * 150),
-                        rotation: Math.floor(Math.random() * 360)
-                    });
-                }
-        
-                setTimeout(function() {
-                    blowyUppy = false;
-        
-                    school.forEach(fish => kill(fish));
-                    dynamites.splice(0);
-                }, 2500);
-            }, 3000);
-        }
-    }
-
     render() {
-        const {showSteve} = this.state;
         return (
             <div className="App">
                 <header className="App-header">
@@ -610,17 +592,26 @@ class App extends Component {
                     >
                         Add a Shark
                     </button>
-                    <button onClick={this.feedingFrenzy}>Feeding frenzy</button>
                     <button onClick={this.tenEx}>10X the fish</button>
                     <button onClick={addCheese}>Add Cheese</button>
-                    <button onClick={this.kaboom}>Kaboom</button>
+<<<<<<< HEAD
+                    <button
+                        onClick={() => {
+                            if (school[0]) kill(school[0]);
+                        }}
+                    >
+                        Log
+                    </button>
+                    <button onClick={kaboom}>Kaboom</button>
+=======
+>>>>>>> 7da75d4fcb22711c92cc53ead08614ee4829e521
                 </header>
-                {!showSteve && <canvas
+                <canvas
                     ref="canvas"
                     height={fishTankSize}
                     width={fishTankSize}
                     style={{ border: '1px solid #000' }}
-                />}
+                />
                 <img
                     src={blueFish}
                     ref="blueFish"
@@ -678,6 +669,15 @@ class App extends Component {
                     height={128}
                 />
                 <img
+<<<<<<< HEAD
+                    src={dynamite}
+                    ref="dynamite"
+                    style={{ display: 'none' }}
+                    alt="dynamite"
+                    width={128}
+                    height={128}
+                />
+=======
                     src={cheeseDeath}
                     ref="cheeseDeath"
                     style={{ display: 'none' }}
@@ -717,21 +717,7 @@ class App extends Component {
                     width={500}
                     height={500}
                 />
-                <img
-                    src={dynamite}
-                    ref="dynamite"
-                    style={{ display: 'none' }}
-                    alt="dynamite"
-                    width={128}
-                    height={128}
-                />
-                {showSteve && <img
-                    src={fishySteve}
-                    ref="fishySteve"
-                    alt="fishySteve"
-                    width={fishTankSize}
-                    height={fishTankSize}
-                />}
+>>>>>>> 7da75d4fcb22711c92cc53ead08614ee4829e521
             </div>
         );
     }
