@@ -152,13 +152,9 @@ class MoveTowardBehaviour {
         this.acceptanceRadius = acceptanceRadius * Math.random();
     }
 
-<<<<<<< HEAD
-    start() {}
-=======
     update() {
         this.moveTowardsTarget();
     }
->>>>>>> 09b32fbce722e26815dadf4427e57339d0cd9d0f
 
     moveTowardsTarget() {
         const delta = {
@@ -186,10 +182,6 @@ class MoveTowardBehaviour {
 
             const angle = Math.atan2(delta.y, delta.x);
 
-<<<<<<< HEAD
-            this.fish.x += this.velocity * Math.cos(angle) * (frameRate * 0.001);
-            this.fish.y += this.velocity * Math.sin(angle) * (frameRate * 0.001);
-=======
             this.fish.x = Math.max(
                 Math.min(
                     (this.fish.x + this.velocity * Math.cos(angle) * (frameRate * 0.001)),
@@ -242,7 +234,6 @@ class MoveAwayFromBehaviour extends MoveTowardBehaviour {
     update() {
         if ( this.velocity === 0 ) {
             this.updateTarget();
->>>>>>> 09b32fbce722e26815dadf4427e57339d0cd9d0f
         }
         this.moveTowardsTarget();
     }
@@ -423,7 +414,6 @@ class App extends Component {
 
                     if((Math.sqrt(closestFish.x - this.x) ** 2 + (closestFish.y - this.y) ** 2) < eatingThreshold){
                         kill(closestFish);
-                        setTimeout(() => this.addFish({}), 2000);
                     }
                 }
 
@@ -446,11 +436,6 @@ class App extends Component {
                     }
 
                     if (desireObject) {
-<<<<<<< HEAD
-=======
-                        this.behaviour = new FidgetBehaviour(100, this, 500, 200);
-
->>>>>>> 09b32fbce722e26815dadf4427e57339d0cd9d0f
                         // likes object
                         if (desireMode === true) {
                             this.desireX = coinFlip()
