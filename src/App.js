@@ -54,15 +54,14 @@ const fishTypes = ['redFish', 'blueFish', 'greenFish', 'orangeFish', 'shark'];
 const fishPersonalities = {
     redFish: [
         { type: 'shark', likes: false },
-        { type: 'redFish', likes: true },
-        { type: 'greenFish', likes: false },
         { type: 'cheese', likes: true },
-        { type: 'blueFish', likes: true }
+        { type: 'redFish', likes: true },
+        { type: 'greenFish', likes: true }
     ],
     blueFish: [
         { type: 'shark', likes: false },
-        { type: 'blueFish', likes: true },
-        { type: 'cheese', likes: true }
+        { type: 'cheese', likes: true },
+        { type: 'blueFish', likes: true }
     ],
     greenFish: [
         { type: 'shark', likes: false },
@@ -205,10 +204,11 @@ class App extends Component {
     };
 
     addFish = options => {
-        const { fishType: type } = options || {};
-        const fishType = type || fishTypes[Math.floor(Math.random() * (fishTypes.length - 1))];
+        const { fishType: type } = options;
+        //all types except shark
+        const fishType = type || fishTypes[Math.floor(Math.random() * (fishTypes.length-1))];
         const speedModifier = fishType === 'shark' ? sharkSpeed : 1;
-
+        console.log('New Fish!');
         const newFish = {
             id: `${fishType}${id}`,
             fish: this.refs[fishType],
@@ -346,6 +346,7 @@ class App extends Component {
                         onClick={() => {
                             this.addFish({ fishType: 'shark' });
                         }}
+
                     >
                         Add a Shark
                     </button>
