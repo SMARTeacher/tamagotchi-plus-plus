@@ -47,8 +47,8 @@ const addCheese = () => {
         type: 'cheese',
         cheese: globalRefs.cheese,
         health: 500,
-        x: Math.floor(Math.random() * fishTankSize),
-        y: Math.floor(Math.random() * fishTankSize),
+        x: Math.floor(Math.random() * (fishTankSize - cheeseSize)),
+        y: Math.floor(Math.random() * (fishTankSize - cheeseSize)),
         size: pointSize,
         updateCheese: function() {
             if (this.health > 0) {
@@ -143,8 +143,8 @@ const addFish = options => {
         fish: globalRefs[fishType],
         type: fishType,
         personality: fishPersonalities[fishType],
-        x: Math.floor(Math.random() * fishTankSize),
-        y: Math.floor(Math.random() * fishTankSize),
+        x: Math.floor(Math.random() * (fishTankSize - (fishType === 'shark' ? 80 : 40))),
+        y: Math.floor(Math.random() * (fishTankSize - (fishType === 'shark' ? 80 : 40))),
         desireX: 225,
         desireY: 225,
         restingPeriod: 0,
