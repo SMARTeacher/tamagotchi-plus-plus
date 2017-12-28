@@ -25,6 +25,7 @@ const boredomRadius = 10;
 
 const greenPoint = {
     color: 'green',
+    type: 'cheese',
     x: 30,
     y: 30,
     size: pointSize
@@ -32,6 +33,7 @@ const greenPoint = {
 
 const bluePoint = {
     color: 'blue',
+    type: 'cheese',
     x: 400,
     y: 200,
     size: pointSize
@@ -39,6 +41,7 @@ const bluePoint = {
 
 const redPoint = {
     color: 'red',
+    type: 'cheese',
     x: 250,
     y: 400,
     size: pointSize
@@ -58,8 +61,8 @@ const fishPersonality = {
     orangeFish: [],
     shark: []
 };
-const points = [redPoint, bluePoint, greenPoint];
-const colors = points.map(point => point.color);
+const cheeses = [redPoint, bluePoint, greenPoint];
+const colors = cheeses.map(point => point.color);
 
 const coinFlip = () => !!Math.floor(Math.random() * 2);
 
@@ -228,15 +231,8 @@ class App extends Component {
                 this.speedModifier = this.type === 'shark' ? sharkSpeed : 1;
                 const closeFish = findCloseFish(this).slice(0, fishThreshold);
                 
-                let sortedDesires = sortDesiresByDistance(this, school, [redPoint, greenPoint, bluePoint]);
-                console.log('Distance dump');
-                for (let i = 0; i < sortedDesires.length; ++i) {
-                    console.log('Distance = ', Math.sqrt(
-                        ((this.x - sortedDesires[i].x) ** 2) +
-                        ((this.y - sortedDesires[i].y) ** 2)
-                    ));
-                }
-
+                let sortedDesires = sortDesiresByDistance(this, school, cheeses);
+            
                 let shark;
                 if (closeFish) {
                     shark = closeFish.find(fish => fish.type === 'shark');
@@ -275,7 +271,7 @@ class App extends Component {
                         //Blue fish logic
                         if (this.type === 'blueFish') {
                             const favColor = colors[Math.floor(Math.random() * colors.length)];
-                            const point = points.find(point => point.color === favColor);
+                            const point = cheeses.find(point => point.color === favColor);
 
                             this.desireX = coinFlip()
                                 ? point.x + getSmallDistance()
