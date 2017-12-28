@@ -45,6 +45,19 @@ const redPoint = {
 };
 
 const fishTypes = ['redFish', 'blueFish', 'greenFish', 'orangeFish', 'shark'];
+const fishPersonality = {
+    redFish: [
+        { name: 'shark', likes: false },
+        { name: 'redFish', likes: true },
+        { name: 'greenFish', likes: false },
+        { name: 'cheese', likes: true },
+        { name: 'blueFish', likes: true }
+    ],
+    blueFish: [],
+    greenFish: [],
+    orangeFish: [],
+    shark: []
+};
 const points = [redPoint, bluePoint, greenPoint];
 const colors = points.map(point => point.color);
 
@@ -83,7 +96,8 @@ class App extends Component {
         const redFishRef = this.refs.redFish;
         const orangeFishRef = this.refs.orangeFish;
         const sharkRef = this.refs.shark;
-        Promise.all([blueFishRef, greenFishRef, redFishRef, orangeFishRef, sharkRef]).then(() => {
+        const cheeseRef = this.refs.cheese
+        Promise.all([blueFishRef, greenFishRef, redFishRef, orangeFishRef, sharkRef, cheeseRef]).then(() => {
             this.addFish({ fishType: 'redFish' });
             this.addFish({ fishType: 'redFish' });
             this.addFish({ fishType: 'redFish' });
@@ -106,9 +120,10 @@ class App extends Component {
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        this.drawPOI(context, redPoint);
-        this.drawPOI(context, bluePoint);
-        this.drawPOI(context, greenPoint);
+        // Cheese
+        context.drawImage(this.refs.cheese, redPoint.x, redPoint.y, fishSize, fishSize);
+        context.drawImage(this.refs.cheese, bluePoint.x, bluePoint.y, fishSize, fishSize);
+        context.drawImage(this.refs.cheese, greenPoint.x, greenPoint.y, fishSize, fishSize);
 
         school.forEach(fish => {
             if (fish.restingPeriod !== 0) fish.restingPeriod--;
@@ -140,7 +155,7 @@ class App extends Component {
 
     addFish = options => {
         const { fishType: type } = options || {};
-        const fishType = type || fishTypes[Math.floor(Math.random() * fishTypes.length)];
+        const fishType = type || fishTypes[Math.floor(Math.random() * (fishTypes.length - 1))];
         const speedModifier = fishType === 'shark' ? sharkSpeed : 1;
 
         const newFish = {
@@ -283,11 +298,6 @@ class App extends Component {
         });
     };
 
-    drawPOI = (context, point) => {
-        context.fillStyle = point.color;
-        context.fillRect(point.x, point.y, point.size, point.size);
-    };
-
     render() {
         return (
             <div className="App">
@@ -349,6 +359,14 @@ class App extends Component {
                     ref="shark"
                     style={{ display: 'none' }}
                     alt="shark"
+                    width={128}
+                    height={128}
+                />
+                <img
+                    src={cheese}
+                    ref="cheese"
+                    style={{ display: 'none' }}
+                    alt="cheese"
                     width={128}
                     height={128}
                 />
