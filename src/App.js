@@ -25,6 +25,7 @@ const boredomRadius = 10;
 
 const greenPoint = {
     color: 'green',
+    type: 'cheese',
     x: 30,
     y: 30,
     size: pointSize
@@ -32,6 +33,7 @@ const greenPoint = {
 
 const bluePoint = {
     color: 'blue',
+    type: 'cheese',
     x: 400,
     y: 200,
     size: pointSize
@@ -39,6 +41,7 @@ const bluePoint = {
 
 const redPoint = {
     color: 'red',
+    type: 'cheese',
     x: 250,
     y: 400,
     size: pointSize
@@ -77,8 +80,8 @@ const fishPersonalities = {
         { name: 'redFish', likes: true }
     ]
 };
-const points = [redPoint, bluePoint, greenPoint];
-const colors = points.map(point => point.color);
+const cheeses = [redPoint, bluePoint, greenPoint];
+const colors = cheeses.map(point => point.color);
 
 const coinFlip = () => !!Math.floor(Math.random() * 2);
 
@@ -104,6 +107,25 @@ const findCloseFish = fish => {
         })
         .slice(1);
     return sortedFish;
+};
+
+const sortDesiresByDistance = (fish, school, cheese) => {
+    let desires = school.slice(0)
+                .concat(cheese.slice(0));
+                
+    desires.forEach(
+        (val, index, array) => 
+            array[index] = { x: val.x, y: val.y, source: val }
+    );
+    
+    desires.sort((nodeA, nodeB) => {
+        return ((nodeA.x - fish.x) ** 2) + ((nodeA.y - fish.y) ** 2) <
+                ((nodeB.x - fish.x) ** 2) + ((nodeB.y - fish.y) ** 2) ? -1 : 1;
+    });
+       
+    desires.forEach((val, index, array) => array[index] = val.source);
+
+    return desires;
 };
 
 class App extends Component {
@@ -229,6 +251,7 @@ class App extends Component {
                 //reset speed
                 this.speedModifier = this.type === 'shark' ? sharkSpeed : 1;
                 const closeFish = findCloseFish(this).slice(0, fishThreshold);
+<<<<<<< HEAD
 
                 if (canFidget && coinFlip()) {
                     this.fidget();
@@ -247,6 +270,50 @@ class App extends Component {
                         }
                         index++;
                     }
+=======
+                
+                let sortedDesires = sortDesiresByDistance(this, school, cheeses);
+            
+                let shark;
+                if (closeFish) {
+                    shark = closeFish.find(fish => fish.type === 'shark');
+                }
+
+                //shark runaway logic
+                if (shark && this.type !== 'shark') {
+                    this.speedModifier = 10;
+
+                    // Shark in lower right Q
+                    if (shark.x > 250 && shark.y > 250) {
+                        this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
+                        this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
+                    } else if (shark.x <= 250 && shark.y > 250) {
+                        // Shark in lower left Q
+                        this.desireX =
+                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
+                        this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
+                    } else if (shark.x > 250 && shark.y <= 250) {
+                        // Shark in upper right Q
+                        this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
+                        this.desireY =
+                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
+                    } else if (shark.x <= 250 && shark.y <= 250) {
+                        // Shark in upper left Q
+                        this.desireX =
+                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
+                        this.desireY =
+                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
+                    }
+                } else {
+                    if (canFidget && coinFlip()) {
+                        this.restingPeriod = fishWaitingPeriod;
+                        this.fidget();
+                    } else {
+                        //Blue fish logic
+                        if (this.type === 'blueFish') {
+                            const favColor = colors[Math.floor(Math.random() * colors.length)];
+                            const point = cheeses.find(point => point.color === favColor);
+>>>>>>> e38fa12df12a632ac8be3ed27dce9b472c4d6fa1
 
                     if (desireObject) {
                         // likes object
