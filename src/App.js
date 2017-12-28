@@ -133,34 +133,42 @@ const moveTowardBehaviour = (destination, fish, maxSpeed, acceleration) => {
     this.destination    = destination;
     this.fish           = fish;
 
-    this.velocity       = { x: 0, y: 0 };
+    this.velocity       = 0;
     this.maxSpeed       = maxSpeed;
     this.acceleration   = acceleration;
 
     this.start = () => {};
 
     this.update = () => {
-        const timeToStop = this.
         let delta = {
             x: this.destination.x - this.fish.x,
             y: this.destination.y - this.fish.y
         };
         const distance = Math.sqrt((delta.x ** 2) + (delta.y ** 2));
-        const deltaVelocity = {
-            x: delta.x * this.maxSpeed / distance,
-            y: delta.y * this.maxSpeed / distance
-        };
-        delta.x = deltaVelocity.x - this.velocity.x;
-        delta.y = deltaVelocity.y - this.velocity.y;
 
-        const diffSize = Math.sqrt((delta.x ** 2) + (delta.y ** 2));
-        const acceleration = {
-            x: this.acceleration * delta.x / diffSize,
-            y: this.acceleration * delta.y / diffSize
-        };
+        if (distance < this.velocity) {
+            this.fish.x = this.destination.x;
+            this.fish.y = this.destination.y;
 
-        this.velocity.x += (acceleration.x * (frameRate * 0.001));
-        this.velocity.y += (acceleration.y * (frameRate * 0.001));
+            this.velocity = 0;
+        } else {
+            const decelerationDistance = (this.velocity ** 2) / (2 * this.acceleration);
+
+            if (distance > decelerationDistance) {
+                this.velocity = Math.min(
+                    this.velocity + this.acceleration, this.maxSpeed
+                );
+            } else {
+                this.velocity = Math.max(this.velocity - this.acceleration, 0);
+            }
+            
+            const angle     = Math.atan2(delta.x, delta.y);
+            const cosAngle  = Math.cos(angle);
+            const sinAngle  = Math.sin(angle);
+
+            this.fish.x += (this.velocity * cosAngle);
+            this.fish.y += (this.velocity * sinAngle);
+        }
     };
 };
 
