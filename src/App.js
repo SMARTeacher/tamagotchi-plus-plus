@@ -16,6 +16,7 @@ const fishThreshold = 3;
 const frameRate = 20;
 const fishSize = 40;
 const sharkSize = 80;
+const cheeseSize = 80;
 const sharkSpeed = 0.7;
 const fishTankSize = 500;
 const pointSize = 20;
@@ -305,9 +306,9 @@ class App extends Component {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         // Cheese
-        context.drawImage(this.refs.cheese, redPoint.x, redPoint.y, fishSize, fishSize);
-        context.drawImage(this.refs.cheese, bluePoint.x, bluePoint.y, fishSize, fishSize);
-        context.drawImage(this.refs.cheese, greenPoint.x, greenPoint.y, fishSize, fishSize);
+        context.drawImage(this.refs.cheese, redPoint.x, redPoint.y, cheeseSize, cheeseSize);
+        context.drawImage(this.refs.cheese, bluePoint.x, bluePoint.y, cheeseSize, cheeseSize);
+        context.drawImage(this.refs.cheese, greenPoint.x, greenPoint.y, cheeseSize, cheeseSize);
 
         school.forEach(fish => {
             if (fish.restingPeriod !== 0) fish.restingPeriod--;
