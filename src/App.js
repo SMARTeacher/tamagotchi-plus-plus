@@ -7,6 +7,10 @@ import orangeFish from './orangeFish.png';
 import redFish from './redFish.png';
 import shark from './shark.png';
 import skelly from './skelly.png';
+import bck1 from './bck1.png';
+import bck2 from './bck2.png';
+import bck3 from './bck3.png';
+import bck4 from './bck4.png';
 import './App.css';
 
 let id = 1;
