@@ -87,6 +87,25 @@ const findCloseFish = fish => {
     return sortedFish;
 };
 
+const sortDesiresByDistance = (fish, school, cheese) => {
+    let desires = school.slice(0)
+                .concat(cheese.slice(0));
+                
+    desires.forEach(
+        (val, index, array) => 
+            array[index] = { x: val.x, y: val.y, source: val }
+    );
+    
+    desires.sort((nodeA, nodeB) => {
+        return ((nodeA.x - fish.x) ** 2) + ((nodeA.y - fish.y) ** 2) <
+                ((nodeB.x - fish.x) ** 2) + ((nodeB.y - fish.y) ** 2) ? -1 : 1;
+    });
+       
+    desires.forEach((val, index, array) => array[index] = val.source);
+
+    return desires;
+};
+
 class App extends Component {
     state = {
         interval: null
@@ -208,6 +227,15 @@ class App extends Component {
                 //reset speed
                 this.speedModifier = this.type === 'shark' ? sharkSpeed : 1;
                 const closeFish = findCloseFish(this).slice(0, fishThreshold);
+                
+                let sortedDesires = sortDesiresByDistance(this, school, [redPoint, greenPoint, bluePoint]);
+                console.log('Distance dump');
+                for (let i = 0; i < sortedDesires.length; ++i) {
+                    console.log('Distance = ', Math.sqrt(
+                        ((this.x - sortedDesires[i].x) ** 2) +
+                        ((this.y - sortedDesires[i].y) ** 2)
+                    ));
+                }
 
                 let shark;
                 if (closeFish) {
