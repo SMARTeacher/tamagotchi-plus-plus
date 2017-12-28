@@ -10,6 +10,8 @@ import skelly from './skelly.png';
 import './App.css';
 
 let id = 1;
+let globalSkelly;
+const theDannyConstant = 1000;
 const school = [];
 const fishThreshold = 3;
 
@@ -22,6 +24,7 @@ const pointSize = 20;
 const pointRadius = 50;
 const fishWaitingPeriod = 100;
 const boredomRadius = 10;
+const eatingThreshold = 50;
 
 const greenPoint = {
     id: 'greenCheese',
@@ -89,6 +92,15 @@ const coinFlip = () => !!Math.floor(Math.random() * 2);
 
 const getSmallDistance = () => Math.floor(Math.random() * pointRadius);
 
+const kill = fish => {
+    fish.fish = globalSkelly;
+    fish.desireX = fish.x;
+    fish.desireY = fish.y;
+    fish.restingPeriod = 200000;
+    const index = school.findIndex(schoolFish => fish.id === schoolFish.id);
+    setTimeout(() => school.splice(index, 1), 2000);
+};
+
 const findCloseFish = fish => {
     const sortedFish = school
         .slice(0)
@@ -112,7 +124,7 @@ const findCloseFish = fish => {
 };
 
 const sortDesiresByDistance = (fish, school, cheese) => {
-    let desires = school.slice(0).concat(cheese.slice(0));
+    let desires = school.slice(0).filter(val => val !== fish).concat(cheese.slice(0));
 
     desires.forEach((val, index, array) => (array[index] = { x: val.x, y: val.y, source: val }));
 
@@ -130,41 +142,45 @@ const sortDesiresByDistance = (fish, school, cheese) => {
 
 class MoveTowardBehaviour {
     constructor(destination, fish, maxSpeed, acceleration, acceptanceRadius) {
-        this.destination    = destination;
-        this.fish           = fish;
+        this.destination = destination;
+        this.fish = fish;
 
-        this.velocity           = 0;
-        this.maxSpeed           = maxSpeed;
-        this.acceleration       = acceleration;
-        this.acceptanceRadius   = acceptanceRadius * Math.random();
+        this.velocity = 0;
+        this.maxSpeed = maxSpeed;
+        this.acceleration = acceleration;
+        this.acceptanceRadius = acceptanceRadius * Math.random();
     }
 
-    start() {
-
-    }
+    start() {}
 
     update() {
         const delta = {
             x: this.destination.x - this.fish.x,
             y: this.destination.y - this.fish.y
         };
-        const distance = Math.sqrt((delta.x ** 2) + (delta.y ** 2));
+        const distance = Math.sqrt(delta.x ** 2 + delta.y ** 2);
 
         if (distance < this.acceptanceRadius) {
             this.velocity = 0;
         } else {
-            const decelerationDistance = (this.velocity ** 2) / (2 * this.acceleration);
+            const decelerationDistance = this.velocity ** 2 / (2 * this.acceleration);
 
-            if ((distance - this.acceptanceRadius) > decelerationDistance) {
-                this.velocity = Math.min(this.velocity + this.acceleration * (frameRate * 0.001), this.maxSpeed);
+            if (distance - this.acceptanceRadius > decelerationDistance) {
+                this.velocity = Math.min(
+                    this.velocity + this.acceleration * (frameRate * 0.001),
+                    this.maxSpeed
+                );
             } else {
-                this.velocity = Math.max(this.velocity - this.acceleration* (frameRate * 0.001), 0);
+                this.velocity = Math.max(
+                    this.velocity - this.acceleration * (frameRate * 0.001),
+                    0
+                );
             }
-            
+
             const angle = Math.atan2(delta.y, delta.x);
 
-            this.fish.x += (this.velocity * Math.cos(angle) * (frameRate * 0.001));
-            this.fish.y += (this.velocity * Math.sin(angle) * (frameRate * 0.001));
+            this.fish.x += this.velocity * Math.cos(angle) * (frameRate * 0.001);
+            this.fish.y += this.velocity * Math.sin(angle) * (frameRate * 0.001);
         }
     }
 }
@@ -181,13 +197,16 @@ class App extends Component {
         const orangeFishRef = this.refs.orangeFish;
         const sharkRef = this.refs.shark;
         const cheeseRef = this.refs.cheese;
+        const skellyRef = this.refs.skelly;
+        globalSkelly = this.refs.skelly;
         Promise.all([
             blueFishRef,
             greenFishRef,
             redFishRef,
             orangeFishRef,
             sharkRef,
-            cheeseRef
+            cheeseRef,
+            skellyRef
         ]).then(() => {
             this.addFish({ fishType: 'redFish' });
             this.addFish({ fishType: 'redFish' });
@@ -209,7 +228,8 @@ class App extends Component {
     drawAllFish() {
         const canvas = this.refs.canvas;
         const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = '#80CBC4';
+        context.fillRect(0, 0, canvas.width, canvas.height);
 
         // Cheese
         context.drawImage(this.refs.cheese, redPoint.x, redPoint.y, fishSize, fishSize);
@@ -245,9 +265,10 @@ class App extends Component {
     };
 
     addFish = options => {
+        if (school.length >= theDannyConstant) return;
         const { fishType: type } = options;
         //all types except shark
-        const fishType = type || fishTypes[Math.floor(Math.random() * (fishTypes.length-1))];
+        const fishType = type || fishTypes[Math.floor(Math.random() * (fishTypes.length - 1))];
         const speedModifier = fishType === 'shark' ? sharkSpeed : 1;
         console.log('New Fish!');
         const newFish = {
@@ -297,6 +318,15 @@ class App extends Component {
                     fishThreshold
                 );
 
+                if (this.type === 'shark') {
+                    const closestFish = closeFish.filter(fish => fish.type !== 'cheese')[0];
+
+                    if((Math.sqrt(closestFish.x - this.x) ** 2 + (closestFish.y - this.y) ** 2) < eatingThreshold){
+                        kill(closestFish);
+                        setTimeout(() => this.addFish({}), 2000);
+                    }
+                }
+
                 if (canFidget && coinFlip()) {
                     this.fidget();
                 } else {
@@ -316,11 +346,8 @@ class App extends Component {
                     }
 
                     if (desireObject) {
-                        // this.behaviour = new MoveTowardBehaviour(desireObject, this, 600, 100, 40);
-                        
                         // likes object
                         if (desireMode === true) {
-                            console.log(`moving towards ${desireObject.id}`);
                             this.desireX = coinFlip()
                                 ? desireObject.x + getSmallDistance()
                                 : desireObject.x - getSmallDistance();
@@ -329,7 +356,6 @@ class App extends Component {
                                 : desireObject.y - getSmallDistance();
                         } else if (desireMode === false) {
                             // dislikes object
-                            console.log(`moving away from ${desireObject.id}`);
                             this.speedModifier = 10;
 
                             if (desireObject.x > 250 && desireObject.y > 250) {
@@ -381,7 +407,7 @@ class App extends Component {
         return (
             <div className="App">
                 <header className="App-header">
-                    <h1 className="App-title">Welcome to THE FISHTANK</h1>
+                    <h1 className="App-title">AIquatic</h1>
                     <button onClick={this.startTheFish}>Start the fish</button>
                     <button onClick={this.stopTheFish}>Stop the fish</button>
                     <button onClick={this.addFish}>Add a fish</button>
@@ -389,12 +415,17 @@ class App extends Component {
                         onClick={() => {
                             this.addFish({ fishType: 'shark' });
                         }}
-
                     >
                         Add a Shark
                     </button>
                     <button onClick={this.tenEx}>10X the fish</button>
-                    <button onClick={() => console.log(school)}>Log</button>
+                    <button
+                        onClick={() => {
+                            if (school[0]) this.kill(school[0]);
+                        }}
+                    >
+                        Log
+                    </button>
                 </header>
                 <canvas
                     ref="canvas"
@@ -447,6 +478,14 @@ class App extends Component {
                     ref="cheese"
                     style={{ display: 'none' }}
                     alt="cheese"
+                    width={128}
+                    height={128}
+                />
+                <img
+                    src={skelly}
+                    ref="skelly"
+                    style={{ display: 'none' }}
+                    alt="skelly"
                     width={128}
                     height={128}
                 />
