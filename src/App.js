@@ -109,6 +109,41 @@ const sortDesiresByDistance = (fish, school, cheese) => {
     return desires;
 };
 
+const moveTowardBehaviour = (destination, fish, maxSpeed, acceleration) => {
+    this.destination    = destination;
+    this.fish           = fish;
+
+    this.velocity       = { x: 0, y: 0 };
+    this.maxSpeed       = maxSpeed;
+    this.acceleration   = acceleration;
+
+    this.start = () => {};
+
+    this.update = () => {
+        const timeToStop = this.
+        let delta = {
+            x: this.destination.x - this.fish.x,
+            y: this.destination.y - this.fish.y
+        };
+        const distance = Math.sqrt((delta.x ** 2) + (delta.y ** 2));
+        const deltaVelocity = {
+            x: delta.x * this.maxSpeed / distance,
+            y: delta.y * this.maxSpeed / distance
+        };
+        delta.x = deltaVelocity.x - this.velocity.x;
+        delta.y = deltaVelocity.y - this.velocity.y;
+
+        const diffSize = Math.sqrt((delta.x ** 2) + (delta.y ** 2));
+        const acceleration = {
+            x: this.acceleration * delta.x / diffSize,
+            y: this.acceleration * delta.y / diffSize
+        };
+
+        this.velocity.x += (acceleration.x * (frameRate * 0.001));
+        this.velocity.y += (acceleration.y * (frameRate * 0.001));
+    };
+};
+
 class App extends Component {
     state = {
         interval: null
