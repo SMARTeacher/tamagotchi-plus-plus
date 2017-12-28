@@ -508,6 +508,16 @@ class App extends Component {
         });
     };
 
+    feedingFrenzy = () => {
+        for (let index = 0; index < 30; index++) {
+            addFish({});
+        }
+
+        for (let index = 0; index < 9; index++) {
+            addFish({ fishType: 'shark' });
+        }
+    };
+
     render() {
         return (
             <div className="App">
@@ -521,6 +531,7 @@ class App extends Component {
                     >
                         Add a Shark
                     </button>
+                    <button onClick={this.feedingFrenzy}>Feeding frenzy</button>
                     <button onClick={this.tenEx}>10X the fish</button>
                     <button onClick={addCheese}>Add Cheese</button>
                 </header>
