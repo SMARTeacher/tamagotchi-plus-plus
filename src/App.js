@@ -28,17 +28,45 @@ const pointRadius = 50;
 const fishWaitingPeriod = 100;
 const sharkWaitingPeriod = 5;
 const boredomRadius = 10;
-const eatingThreshold = 50;
+const fishEatingThreshold = 50;
+const cheeseEatingThreshold = 50;
 
 const cheeses = [];
 const addCheese = () => {
     const newCheese = {
+        id: `cheese${id}`,
         type: 'cheese',
+        cheese: globalRefs.cheese,
+        health: 500,
         x: Math.floor(Math.random() * fishTankSize),
         y: Math.floor(Math.random() * fishTankSize),
-        size: pointSize
+        size: pointSize,
+        updateCheese: function() {
+            if (this.health > 0) {
+                let nibble = 0;
+                school.forEach(fish => {
+                    if (
+                        Math.sqrt((fish.x - this.x) ** 2) + Math.sqrt((fish.y - this.y) ** 2) <
+                            cheeseEatingThreshold &&
+                        fish.type !== 'shark'
+                    ) {
+                        nibble++;
+                    }
+                });
+                this.health -= nibble;
+                if (this.health <= 0) {
+                    this.cheese = globalRefs.cheeseDeath;
+                    setTimeout(() => {
+                        const index = cheeses.findIndex(cheese => cheese.id === this.id);
+                        cheeses.splice(index, 1);
+                        addFish({});
+                    }, 5000);
+                }
+            }
+        }
     };
 
+    id++;
     cheeses.push(newCheese);
 };
 
@@ -62,10 +90,10 @@ const fishPersonalities = {
         { type: 'blueFish', likes: true }
     ],
     orangeFish: [
-        { type: 'shark', likes: false },
-        { type: 'orangeFish', likes: true },
         { type: 'cheese', likes: true },
-        { type: 'redFish', likes: true }
+        { type: 'orangeFish', likes: true },
+        { type: 'redFish', likes: true },
+        { type: 'shark', likes: false }
     ],
     shark: [
         { type: 'blueFish', likes: true },
@@ -88,8 +116,9 @@ const kill = fish => {
         fish.restingPeriod = 200000;
         setTimeout(() => {
             const index = school.findIndex(schoolFish => fish.id === schoolFish.id);
-            school.splice(index, 1);
-            addFish({});
+            if (index !== -1) {
+                school.splice(index, 1);
+            }
         }, 5000);
     }
 };
@@ -150,9 +179,10 @@ const addFish = options => {
                 const closestFish = closeFish.filter(fish => fish.type !== 'cheese')[0];
 
                 if (
+                    closestFish &&
                     Math.sqrt((closestFish.x - this.x) ** 2) +
                         Math.sqrt((closestFish.y - this.y) ** 2) <
-                    eatingThreshold
+                        fishEatingThreshold
                 ) {
                     kill(closestFish);
                 }
@@ -392,6 +422,7 @@ class App extends Component {
         const sharkRef = this.refs.shark;
         const cheeseRef = this.refs.cheese;
         const skellyRef = this.refs.skelly;
+        const cheeseDeathRef = this.refs.cheeseDeath;
         globalRefs = this.refs;
         Promise.all([
             blueFishRef,
@@ -400,7 +431,8 @@ class App extends Component {
             orangeFishRef,
             sharkRef,
             cheeseRef,
-            skellyRef
+            skellyRef,
+            cheeseDeathRef
         ]).then(() => {
             addFish({ fishType: 'redFish' });
             addFish({ fishType: 'redFish' });
@@ -427,7 +459,8 @@ class App extends Component {
 
         // Cheese
         cheeses.forEach(cheese => {
-            context.drawImage(this.refs.cheese, cheese.x, cheese.y, cheeseSize, cheeseSize);
+            cheese.updateCheese();
+            context.drawImage(cheese.cheese, cheese.x, cheese.y, cheeseSize, cheeseSize);
         });
 
         school.forEach(fish => {
@@ -472,8 +505,6 @@ class App extends Component {
             <div className="App">
                 <header className="App-header">
                     <h1 className="App-title">AIquatic</h1>
-                    <button onClick={this.startTheFish}>Start the fish</button>
-                    <button onClick={this.stopTheFish}>Stop the fish</button>
                     <button onClick={addFish}>Add a fish</button>
                     <button
                         onClick={() => {
@@ -484,13 +515,6 @@ class App extends Component {
                     </button>
                     <button onClick={this.tenEx}>10X the fish</button>
                     <button onClick={addCheese}>Add Cheese</button>
-                    <button
-                        onClick={() => {
-                            if (school[0]) kill(school[0]);
-                        }}
-                    >
-                        Log
-                    </button>
                 </header>
                 <canvas
                     ref="canvas"
@@ -551,6 +575,14 @@ class App extends Component {
                     ref="skelly"
                     style={{ display: 'none' }}
                     alt="skelly"
+                    width={128}
+                    height={128}
+                />
+                <img
+                    src={cheeseDeath}
+                    ref="cheeseDeath"
+                    style={{ display: 'none' }}
+                    alt="cheeseDeath"
                     width={128}
                     height={128}
                 />
