@@ -7,6 +7,7 @@ import orangeFish from './orangeFish.png';
 import redFish from './redFish.png';
 import shark from './shark.png';
 import skelly from './skelly.png';
+import dynamite from './TNT.png';
 import './App.css';
 
 let id = 1;
@@ -25,6 +26,11 @@ const fishWaitingPeriod = 100;
 const sharkWaitingPeriod = 5;
 const boredomRadius = 10;
 const eatingThreshold = 50;
+const dynamiteFallSpeed = 4;
+const dynamiteSize = 60;
+let blowyUppy = false;
+
+const dynamites = [];
 
 const cheeses = [];
 const addCheese = () => {
@@ -215,6 +221,29 @@ const addFish = options => {
     school.push(newFish);
 };
 
+const kaboom = () => {
+    if (!blowyUppy) {
+        blowyUppy = true;
+
+        const quadrants = (fishTankSize - dynamiteSize) / 7;
+        for (let i = 0; i < 7; ++i) {
+            dynamites.push({
+                x: quadrants * i + (quadrants * Math.random()),
+                y: -dynamiteSize - (Math.random() * 150),
+                targetY: 200 + (Math.random() * 150),
+                rotation: Math.floor(Math.random() * 360)
+            });
+        }
+
+        setTimeout(function() {
+            blowyUppy = false;
+
+            school.forEach(fish => kill(fish));
+            dynamites.splice(0);
+        }, 2500);
+    }
+};
+
 const sortDesiresByDistance = (fish, school, cheese) => {
     let desires = school
         .slice(0)
@@ -381,13 +410,13 @@ class FleeBehaviour extends MoveTowardBehaviour {
 
 class RestBehaviour {
     constructor(minDuration, maxDuration) {
-        this.restDuration = minDuration + (Math.random() * (maxDuration - minDuration));
-        this.running = true
+        this.restDuration = minDuration + Math.random() * (maxDuration - minDuration);
+        this.running = true;
     }
 
     update() {
         if (this.running) {
-            this.restDuration -= (frameRate * 0.001);
+            this.restDuration -= frameRate * 0.001;
             if (this.restDuration < 0) {
                 this.running = false;
             }
@@ -456,6 +485,20 @@ class App extends Component {
 
             context.drawImage(fish.fish, fish.x, fish.y, fish.size, fish.size);
         });
+
+        dynamites.forEach(element => {
+            if (element.y < element.targetY) {
+                element.y += dynamiteFallSpeed;
+            }
+
+            element.rotation += 4;
+
+            context.translate(element.x, element.y);
+            context.rotate(element.rotation * (Math.PI / 180));
+            context.drawImage(this.refs.dynamite, -dynamiteSize * 0.5, -dynamiteSize * 0.5, dynamiteSize, dynamiteSize);
+            context.rotate(-element.rotation * (Math.PI / 180));
+            context.translate(-element.x, -element.y);
+        });
     }
 
     startTheFish = () => {
@@ -507,6 +550,7 @@ class App extends Component {
                     >
                         Log
                     </button>
+                    <button onClick={kaboom}>Kaboom</button>
                 </header>
                 <canvas
                     ref="canvas"
@@ -567,6 +611,14 @@ class App extends Component {
                     ref="skelly"
                     style={{ display: 'none' }}
                     alt="skelly"
+                    width={128}
+                    height={128}
+                />
+                <img
+                    src={dynamite}
+                    ref="dynamite"
+                    style={{ display: 'none' }}
+                    alt="dynamite"
                     width={128}
                     height={128}
                 />
