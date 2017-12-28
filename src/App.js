@@ -16,10 +16,11 @@ const fishThreshold = 3;
 const frameRate = 20;
 const fishSize = 40;
 const sharkSize = 80;
+const sharkSpeed = 0.7;
 const fishTankSize = 500;
 const pointSize = 20;
 const pointRadius = 50;
-const fishWaitingPeriod = 200;
+const fishWaitingPeriod = 100;
 const boredomRadius = 10;
 
 const greenPoint = {
@@ -140,7 +141,7 @@ class App extends Component {
     addFish = options => {
         const { fishType: type } = options || {};
         const fishType = type || fishTypes[Math.floor(Math.random() * fishTypes.length)];
-        const speedModifier = fishType === 'shark' ? 1.1 : 1;
+        const speedModifier = fishType === 'shark' ? sharkSpeed : 1;
 
         const newFish = {
             id: `${fishType}${id}`,
@@ -180,39 +181,50 @@ class App extends Component {
                 }
             },
             setNewDesire: function(canFidget = true) {
-                this.speedModifier = fishType === 'shark' ? 1.1 : 1;
-                if (canFidget && coinFlip()) {
-                    this.restingPeriod = fishWaitingPeriod;
-                    this.fidget();
-                } else {
-                    //Blue fish logic
-                    if (this.type === 'blueFish') {
-                        const favColor = colors[Math.floor(Math.random() * colors.length)];
-                        const point = points.find(point => point.color === favColor);
+                //reset speed
+                this.speedModifier = this.type === 'shark' ? sharkSpeed : 1;
+                const closeFish = findCloseFish(this).slice(0, fishThreshold);
 
-                        this.desireX = coinFlip()
-                            ? point.x + Math.floor(Math.random() * pointRadius)
-                            : point.x - Math.floor(Math.random() * pointRadius);
-                        this.desireY = coinFlip()
-                            ? point.y + Math.floor(Math.random() * pointRadius)
-                            : point.y - Math.floor(Math.random() * pointRadius);
+                let shark;
+                if (closeFish) {
+                    shark = closeFish.find(fish => fish.type === 'shark');
+                }
+
+                //shark runaway logic
+                if (shark && this.type !== 'shark') {
+                    this.speedModifier = 10;
+
+                    // Shark in lower right Q
+                    if (shark.x > 250 && shark.y > 250) {
+                        this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
+                        this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
+                    } else if (shark.x <= 250 && shark.y > 250) {
+                        // Shark in lower left Q
+                        this.desireX =
+                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
+                        this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
+                    } else if (shark.x > 250 && shark.y <= 250) {
+                        // Shark in upper right Q
+                        this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
+                        this.desireY =
+                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
+                    } else if (shark.x <= 250 && shark.y <= 250) {
+                        // Shark in upper left Q
+                        this.desireX =
+                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
+                        this.desireY =
+                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
+                    }
+                } else {
+                    if (canFidget && coinFlip()) {
+                        this.restingPeriod = fishWaitingPeriod;
+                        this.fidget();
                     } else {
-                        const favFish = findCloseFish(this)[
-                            Math.floor(Math.random() * fishThreshold)
-                        ];
-                        if (favFish && favFish.type !== 'shark') {
-                            this.desireX = coinFlip()
-                                ? favFish.x + Math.floor(Math.random() * pointRadius)
-                                : favFish.x - Math.floor(Math.random() * pointRadius);
-                            this.desireY = coinFlip()
-                                ? favFish.y + Math.floor(Math.random() * pointRadius)
-                                : favFish.y - Math.floor(Math.random() * pointRadius);
-                        } else if (favFish && favFish.type === 'shark' && this.type !== 'shark') {
-                            console.log('Ahhh a shark!');
-                            //shark runaway logic
-                            this.speedModifier = 10;
+                        //Blue fish logic
+                        if (this.type === 'blueFish') {
                             const favColor = colors[Math.floor(Math.random() * colors.length)];
                             const point = points.find(point => point.color === favColor);
+
                             this.desireX = coinFlip()
                                 ? point.x + Math.floor(Math.random() * pointRadius)
                                 : point.x - Math.floor(Math.random() * pointRadius);
@@ -220,7 +232,35 @@ class App extends Component {
                                 ? point.y + Math.floor(Math.random() * pointRadius)
                                 : point.y - Math.floor(Math.random() * pointRadius);
                         } else {
-                            this.fidget();
+                            let favFish;
+                            if (closeFish) {
+                                favFish = closeFish[Math.floor(Math.random() * fishThreshold)];
+                            }
+                            if (favFish && favFish.type !== 'shark') {
+                                this.desireX = coinFlip()
+                                    ? favFish.x + Math.floor(Math.random() * pointRadius)
+                                    : favFish.x - Math.floor(Math.random() * pointRadius);
+                                this.desireY = coinFlip()
+                                    ? favFish.y + Math.floor(Math.random() * pointRadius)
+                                    : favFish.y - Math.floor(Math.random() * pointRadius);
+                            } else if (
+                                favFish &&
+                                favFish.type === 'shark' &&
+                                this.type !== 'shark'
+                            ) {
+                                //shark runaway logic
+                                this.speedModifier = 10;
+                                const favColor = colors[Math.floor(Math.random() * colors.length)];
+                                const point = points.find(point => point.color === favColor);
+                                this.desireX = coinFlip()
+                                    ? point.x + Math.floor(Math.random() * pointRadius)
+                                    : point.x - Math.floor(Math.random() * pointRadius);
+                                this.desireY = coinFlip()
+                                    ? point.y + Math.floor(Math.random() * pointRadius)
+                                    : point.y - Math.floor(Math.random() * pointRadius);
+                            } else {
+                                this.fidget();
+                            }
                         }
                     }
                 }
