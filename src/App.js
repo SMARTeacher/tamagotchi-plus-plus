@@ -45,7 +45,7 @@ const redPoint = {
 };
 
 const fishTypes = ['redFish', 'blueFish', 'greenFish', 'orangeFish', 'shark'];
-const fishPersonality = {
+const fishPersonalities = {
     redFish: [
         { name: 'shark', likes: false },
         { name: 'redFish', likes: true },
@@ -53,10 +53,29 @@ const fishPersonality = {
         { name: 'cheese', likes: true },
         { name: 'blueFish', likes: true }
     ],
-    blueFish: [],
-    greenFish: [],
-    orangeFish: [],
-    shark: []
+    blueFish: [
+        { name: 'shark', likes: false },
+        { name: 'blueFish', likes: true },
+        { name: 'cheese', likes: true }
+    ],
+    greenFish: [
+        { name: 'shark', likes: false },
+        { name: 'greenFish', likes: true },
+        { name: 'cheese', likes: true },
+        { name: 'blueFish', likes: true }
+    ],
+    orangeFish: [
+        { name: 'shark', likes: false },
+        { name: 'orangeFish', likes: true },
+        { name: 'cheese', likes: true },
+        { name: 'redFish', likes: true }
+    ],
+    shark: [
+        { name: 'blueFish', likes: true },
+        { name: 'greenFish', likes: true },
+        { name: 'orangeFish', likes: true },
+        { name: 'redFish', likes: true }
+    ]
 };
 const points = [redPoint, bluePoint, greenPoint];
 const colors = points.map(point => point.color);
@@ -171,6 +190,7 @@ class App extends Component {
             id: `${fishType}${id}`,
             fish: this.refs[fishType],
             type: fishType,
+            personality: fishPersonalities[fishType],
             x: Math.floor(Math.random() * fishTankSize),
             y: Math.floor(Math.random() * fishTankSize),
             desireX: 225,
@@ -190,6 +210,7 @@ class App extends Component {
             fidget: function() {
                 this.desireX = coinFlip() ? this.x + boredomRadius : this.x - boredomRadius;
                 this.desireY = coinFlip() ? this.y + boredomRadius : this.y - boredomRadius;
+                this.restingPeriod = fishWaitingPeriod;
             },
             moveToDesire: function() {
                 // X movement
@@ -209,69 +230,82 @@ class App extends Component {
                 this.speedModifier = this.type === 'shark' ? sharkSpeed : 1;
                 const closeFish = findCloseFish(this).slice(0, fishThreshold);
 
-                let shark;
-                if (closeFish) {
-                    shark = closeFish.find(fish => fish.type === 'shark');
-                }
-
-                //shark runaway logic
-                if (shark && this.type !== 'shark') {
-                    this.speedModifier = 10;
-
-                    // Shark in lower right Q
-                    if (shark.x > 250 && shark.y > 250) {
-                        this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
-                        this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
-                    } else if (shark.x <= 250 && shark.y > 250) {
-                        // Shark in lower left Q
-                        this.desireX =
-                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
-                        this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
-                    } else if (shark.x > 250 && shark.y <= 250) {
-                        // Shark in upper right Q
-                        this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
-                        this.desireY =
-                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
-                    } else if (shark.x <= 250 && shark.y <= 250) {
-                        // Shark in upper left Q
-                        this.desireX =
-                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
-                        this.desireY =
-                            Math.floor(Math.random() * (fishTankSize / 4)) + fishTankSize / 2;
-                    }
+                if (canFidget && coinFlip()) {
+                    this.fidget();
                 } else {
-                    if (canFidget && coinFlip()) {
-                        this.restingPeriod = fishWaitingPeriod;
-                        this.fidget();
-                    } else {
-                        //Blue fish logic
-                        if (this.type === 'blueFish') {
-                            const favColor = colors[Math.floor(Math.random() * colors.length)];
-                            const point = points.find(point => point.color === favColor);
+                    let desireObject;
+                    let desireMode;
+                    let index = 0;
+                    while (!desireObject && index < closeFish.length) {
+                        const currentFish = closeFish[index];
+                        const foundDesire = this.personality.find(
+                            object => object.name === currentFish.type
+                        );
+                        if (foundDesire) {
+                            desireObject = currentFish;
+                            desireMode = foundDesire.likes;
+                        }
+                        index++;
+                    }
 
+                    if (desireObject) {
+                        // likes object
+                        if (desireMode === true) {
                             this.desireX = coinFlip()
-                                ? point.x + getSmallDistance()
-                                : point.x - getSmallDistance();
+                                ? desireObject.x + getSmallDistance()
+                                : desireObject.x - getSmallDistance();
                             this.desireY = coinFlip()
-                                ? point.y + getSmallDistance()
-                                : point.y - getSmallDistance();
-                        } else {
-                            let favFish;
-                            if (closeFish) {
-                                favFish = closeFish[Math.floor(Math.random() * fishThreshold)];
-                            }
-                            if (favFish && favFish.type !== 'shark') {
-                                this.desireX = coinFlip()
-                                    ? favFish.x + getSmallDistance()
-                                    : favFish.x - getSmallDistance();
-                                this.desireY = coinFlip()
-                                    ? favFish.y + getSmallDistance()
-                                    : favFish.y - getSmallDistance();
-                            } else {
-                                this.fidget();
+                                ? desireObject.y + getSmallDistance()
+                                : desireObject.y - getSmallDistance();
+                        } else if (desireMode === false) {
+                            // dislikes object
+                            console.log('icky');
+                            this.speedModifier = 10;
+
+                            if (desireObject.x > 250 && desireObject.y > 250) {
+                                this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
+                                this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
+                            } else if (desireObject.x <= 250 && desireObject.y > 250) {
+                                this.desireX =
+                                    Math.floor(Math.random() * (fishTankSize / 4)) +
+                                    fishTankSize / 2;
+                                this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
+                            } else if (desireObject.x > 250 && desireObject.y <= 250) {
+                                this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
+                                this.desireY =
+                                    Math.floor(Math.random() * (fishTankSize / 4)) +
+                                    fishTankSize / 2;
+                            } else if (desireObject.x <= 250 && desireObject.y <= 250) {
+                                this.desireX =
+                                    Math.floor(Math.random() * (fishTankSize / 4)) +
+                                    fishTankSize / 2;
+                                this.desireY =
+                                    Math.floor(Math.random() * (fishTankSize / 4)) +
+                                    fishTankSize / 2;
                             }
                         }
+                    } else {
+                        this.fidget();
                     }
+
+                    // //Blue fish logic
+                    // if (this.type === 'blueFish') {
+                    //     const favColor = colors[Math.floor(Math.random() * colors.length)];
+                    //     const point = points.find(point => point.color === favColor);
+
+                    // } else {
+                    //     const favFish = closeFish[Math.floor(Math.random() * fishThreshold)];
+                    //     if (favFish && favFish.type !== 'shark') {
+                    //         this.desireX = coinFlip()
+                    //             ? favFish.x + getSmallDistance()
+                    //             : favFish.x - getSmallDistance();
+                    //         this.desireY = coinFlip()
+                    //             ? favFish.y + getSmallDistance()
+                    //             : favFish.y - getSmallDistance();
+                    //     } else {
+                    //         this.fidget();
+                    //     }
+                    // }
                 }
 
                 this.desireX = Math.abs(this.desireX);
