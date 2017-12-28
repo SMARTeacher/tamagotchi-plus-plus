@@ -7,6 +7,7 @@ import orangeFish from './orangeFish.png';
 import redFish from './redFish.png';
 import shark from './shark.png';
 import skelly from './skelly.png';
+import dynamite from './TNT.png';
 import bck1 from './bck1.png';
 import bck2 from './bck2.png';
 import bck3 from './bck3.png';
@@ -29,8 +30,14 @@ const pointRadius = 50;
 const fishWaitingPeriod = 100;
 const sharkWaitingPeriod = 5;
 const boredomRadius = 10;
+const eatingThreshold = 50;
+const dynamiteFallSpeed = 4;
+const dynamiteSize = 60;
+let blowyUppy = false;
 const fishEatingThreshold = 50;
 const cheeseEatingThreshold = 50;
+
+const dynamites = [];
 
 const cheeses = [];
 const addCheese = () => {
@@ -249,6 +256,29 @@ const addFish = options => {
     school.push(newFish);
 };
 
+const kaboom = () => {
+    if (!blowyUppy) {
+        blowyUppy = true;
+
+        const quadrants = (fishTankSize - dynamiteSize) / 7;
+        for (let i = 0; i < 7; ++i) {
+            dynamites.push({
+                x: quadrants * i + (quadrants * Math.random()),
+                y: -dynamiteSize - (Math.random() * 150),
+                targetY: 200 + (Math.random() * 150),
+                rotation: Math.floor(Math.random() * 360)
+            });
+        }
+
+        setTimeout(function() {
+            blowyUppy = false;
+
+            school.forEach(fish => kill(fish));
+            dynamites.splice(0);
+        }, 2500);
+    }
+};
+
 const sortDesiresByDistance = (fish, school, cheese) => {
     let desires = school
         .slice(0)
@@ -273,6 +303,7 @@ class MoveTowardBehaviour {
     constructor(destination, fish, maxSpeed, acceleration, acceptanceRadius) {
         this.destination = destination;
         this.fish = fish;
+        this.running = true;
 
         this.velocity = 0;
         this.maxSpeed = maxSpeed;
@@ -281,7 +312,9 @@ class MoveTowardBehaviour {
     }
 
     update() {
-        this.moveTowardsTarget();
+        if (this.running) {
+            this.moveTowardsTarget();
+        }
     }
 
     moveTowardsTarget() {
@@ -293,6 +326,7 @@ class MoveTowardBehaviour {
 
         if (distance < this.acceptanceRadius) {
             this.velocity = 0;
+            this.running = false;
         } else {
             const decelerationDistance = this.velocity ** 2 / (2 * this.acceleration);
 
@@ -409,6 +443,22 @@ class FleeBehaviour extends MoveTowardBehaviour {
     }
 }
 
+class RestBehaviour {
+    constructor(minDuration, maxDuration) {
+        this.restDuration = minDuration + Math.random() * (maxDuration - minDuration);
+        this.running = true;
+    }
+
+    update() {
+        if (this.running) {
+            this.restDuration -= frameRate * 0.001;
+            if (this.restDuration < 0) {
+                this.running = false;
+            }
+        }
+    }
+}
+
 class App extends Component {
     state = {
         interval: null
@@ -481,6 +531,20 @@ class App extends Component {
 
             context.drawImage(fish.fish, fish.x, fish.y, fish.size, fish.size);
         });
+
+        dynamites.forEach(element => {
+            if (element.y < element.targetY) {
+                element.y += dynamiteFallSpeed;
+            }
+
+            element.rotation += 4;
+
+            context.translate(element.x, element.y);
+            context.rotate(element.rotation * (Math.PI / 180));
+            context.drawImage(this.refs.dynamite, -dynamiteSize * 0.5, -dynamiteSize * 0.5, dynamiteSize, dynamiteSize);
+            context.rotate(-element.rotation * (Math.PI / 180));
+            context.translate(-element.x, -element.y);
+        });
     }
 
     startTheFish = () => {
@@ -534,6 +598,7 @@ class App extends Component {
                     <button onClick={this.feedingFrenzy}>Feeding frenzy</button>
                     <button onClick={this.tenEx}>10X the fish</button>
                     <button onClick={addCheese}>Add Cheese</button>
+                    <button onClick={kaboom}>Kaboom</button>
                 </header>
                 <canvas
                     ref="canvas"
@@ -636,6 +701,14 @@ class App extends Component {
                     alt="bck4"
                     width={500}
                     height={500}
+                />
+                <img
+                    src={dynamite}
+                    ref="dynamite"
+                    style={{ display: 'none' }}
+                    alt="dynamite"
+                    width={128}
+                    height={128}
                 />
             </div>
         );
