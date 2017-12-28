@@ -174,14 +174,14 @@ class MoveTowardBehaviour {
             this.fish.x = Math.max(
                 Math.min(
                     (this.fish.x + this.velocity * Math.cos(angle) * (frameRate * 0.001)),
-                    fishTankSize
+                    fishTankSize - this.fish.size
                 ),
                 0
             );
             this.fish.y = Math.max(
                 Math.min(
                     this.fish.y + this.velocity * Math.sin(angle) * (frameRate * 0.001),
-                    fishTankSize
+                    fishTankSize - this.fish.size
                 ),
                 0
             );
@@ -201,8 +201,8 @@ class FidgetBehaviour extends MoveTowardBehaviour {
         
         super(
             {
-                x: this.fish.x + (directionVector.x * distance),
-                y: this.fish.y + (directionVector.y * distance)
+                x: fish.x + (directionVector.x * distance),
+                y: fish.y + (directionVector.y * distance)
             },
             fish,
             maxSpeed,
@@ -246,6 +246,12 @@ class MoveAwayFromBehaviour extends MoveTowardBehaviour {
         };
     }
 }
+
+// class FleeBehaviour extends MoveTowardBehaviour {
+//     constructor(fleeFrom, fish, maxSpeed, acceleration) {
+        
+//     }
+// }
 
 class App extends Component {
     state = {
@@ -301,8 +307,8 @@ class App extends Component {
             } else {
                 fish.setNewDesire();
             }
-            const imageSize = fish.type === 'shark' ? sharkSize : fishSize;
-            context.drawImage(fish.fish, fish.x, fish.y, imageSize, imageSize);
+            
+            context.drawImage(fish.fish, fish.x, fish.y, fish.size, fish.size);
         });
     }
 
@@ -338,6 +344,7 @@ class App extends Component {
             desireX: 225,
             desireY: 225,
             restingPeriod: 0,
+            size: fishType === 'shark' ? 80 : 40,
             speedModifier,
             isBored: function() {
                 const xDiff = Math.abs(this.x - this.desireX);
@@ -355,16 +362,19 @@ class App extends Component {
                 this.restingPeriod = fishWaitingPeriod;
             },
             moveToDesire: function() {
-                // X movement
-                const moveX = this.desireX - this.x;
-                if (Math.abs(moveX) > this.speedModifier) {
-                    moveX > 0 ? (this.x += this.speedModifier) : (this.x -= this.speedModifier);
-                }
+                // // X movement
+                // const moveX = this.desireX - this.x;
+                // if (Math.abs(moveX) > this.speedModifier) {
+                //     moveX > 0 ? (this.x += this.speedModifier) : (this.x -= this.speedModifier);
+                // }
 
-                // Y movement
-                const moveY = this.desireY - this.y;
-                if (Math.abs(moveY) > this.speedModifier) {
-                    moveY > 0 ? (this.y += this.speedModifier) : (this.y -= this.speedModifier);
+                // // Y movement
+                // const moveY = this.desireY - this.y;
+                // if (Math.abs(moveY) > this.speedModifier) {
+                //     moveY > 0 ? (this.y += this.speedModifier) : (this.y -= this.speedModifier);
+                // }
+                if ( this.behaviour ) {
+                    this.behaviour.update();
                 }
             },
             setNewDesire: function(canFidget = true) {
@@ -394,7 +404,7 @@ class App extends Component {
                     }
 
                     if (desireObject) {
-                        // this.behaviour = new MoveTowardBehaviour(desireObject, this, 600, 100, 40);
+                        this.behaviour = new FidgetBehaviour(100, this, 500, 200);
 
                         // likes object
                         if (desireMode === true) {
