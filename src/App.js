@@ -115,6 +115,10 @@ const coinFlip = () => !!Math.floor(Math.random() * 2);
 
 const getSmallDistance = () => Math.floor(Math.random() * pointRadius);
 
+const clamp = (val, min, max) => {
+    return Math.max(min, Math.min(val, max));
+};
+
 const kill = fish => {
     if (!fish.type !== 'skelly') {
         fish.fish = globalRefs.skelly;
@@ -248,8 +252,8 @@ const addFish = options => {
                 }
             }
 
-            this.desireX = Math.abs(this.desireX);
-            this.desireY = Math.abs(this.desireY);
+            this.desireX = clamp(this.desireX, 0, fishTankSize - this.size);
+            this.desireY = clamp(this.desireY, 0, fishTankSize - this.size);
         }
     };
     id++;
