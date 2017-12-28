@@ -568,14 +568,14 @@ class App extends Component {
             this.setState({
                 showSteve: true
             });
-            
+
             setTimeout(() => {
                 blowyUppy = true;
 
                 this.setState({
                     showSteve: false
                 });
-    
+
                 const quadrants = (fishTankSize - dynamiteSize) / 7;
                 for (let i = 0; i < 7; ++i) {
                     dynamites.push({
@@ -585,10 +585,10 @@ class App extends Component {
                         rotation: Math.floor(Math.random() * 360)
                     });
                 }
-        
+
                 setTimeout(function() {
                     blowyUppy = false;
-        
+
                     school.forEach(fish => kill(fish));
                     dynamites.splice(0);
                 }, 2500);
