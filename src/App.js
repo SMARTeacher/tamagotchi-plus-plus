@@ -372,7 +372,7 @@ class App extends Component {
         school.forEach(fish => {
             let index;
             for (index = 0; index < 9; index++) {
-                this.addFish();
+                this.addFish({});
             }
         });
     };
