@@ -129,48 +129,46 @@ const sortDesiresByDistance = (fish, school, cheese) => {
     return desires;
 };
 
-const moveTowardBehaviour = (destination, fish, maxSpeed, acceleration) => {
-    this.destination    = destination;
-    this.fish           = fish;
+class MoveTowardBehaviour {
+    constructor(destination, fish, maxSpeed, acceleration, acceptanceRadius) {
+        this.destination    = destination;
+        this.fish           = fish;
 
-    this.velocity       = 0;
-    this.maxSpeed       = maxSpeed;
-    this.acceleration   = acceleration;
+        this.velocity           = 0;
+        this.maxSpeed           = maxSpeed;
+        this.acceleration       = acceleration;
+        this.acceptanceRadius   = acceptanceRadius * Math.random();
+    }
 
-    this.start = () => {};
+    start() {
 
-    this.update = () => {
-        let delta = {
+    }
+
+    update() {
+        const delta = {
             x: this.destination.x - this.fish.x,
             y: this.destination.y - this.fish.y
         };
         const distance = Math.sqrt((delta.x ** 2) + (delta.y ** 2));
 
-        if (distance < this.velocity) {
-            this.fish.x = this.destination.x;
-            this.fish.y = this.destination.y;
-
+        if (distance < this.acceptanceRadius) {
             this.velocity = 0;
         } else {
             const decelerationDistance = (this.velocity ** 2) / (2 * this.acceleration);
 
-            if (distance > decelerationDistance) {
-                this.velocity = Math.min(
-                    this.velocity + this.acceleration, this.maxSpeed
-                );
+            if ((distance - this.acceptanceRadius) > decelerationDistance) {
+                this.velocity = Math.min(this.velocity + this.acceleration, this.maxSpeed);
             } else {
                 this.velocity = Math.max(this.velocity - this.acceleration, 0);
             }
             
-            const angle     = Math.atan2(delta.x, delta.y);
-            const cosAngle  = Math.cos(angle);
-            const sinAngle  = Math.sin(angle);
+            const angle = Math.atan2(delta.y, delta.x);
 
-            this.fish.x += (this.velocity * cosAngle);
-            this.fish.y += (this.velocity * sinAngle);
+            this.fish.x += (this.velocity * Math.cos(angle));
+            this.fish.y += (this.velocity * Math.sin(angle));
         }
-    };
-};
+    }
+}
 
 class App extends Component {
     state = {
@@ -279,16 +277,21 @@ class App extends Component {
                 this.restingPeriod = fishWaitingPeriod;
             },
             moveToDesire: function() {
-                // X movement
-                const moveX = this.desireX - this.x;
-                if (Math.abs(moveX) > this.speedModifier) {
-                    moveX > 0 ? (this.x += this.speedModifier) : (this.x -= this.speedModifier);
-                }
+                // // X movement
+                // const moveX = this.desireX - this.x;
+                // if (Math.abs(moveX) > this.speedModifier) {
+                //     moveX > 0 ? (this.x += this.speedModifier) : (this.x -= this.speedModifier);
+                // }
 
-                // Y movement
-                const moveY = this.desireY - this.y;
-                if (Math.abs(moveY) > this.speedModifier) {
-                    moveY > 0 ? (this.y += this.speedModifier) : (this.y -= this.speedModifier);
+                // // Y movement
+                // const moveY = this.desireY - this.y;
+                // if (Math.abs(moveY) > this.speedModifier) {
+                //     moveY > 0 ? (this.y += this.speedModifier) : (this.y -= this.speedModifier);
+                // }
+
+                if (this.behaviour) {
+                    console.log(this.behaviour);
+                    this.behaviour.update();
                 }
             },
             setNewDesire: function(canFidget = true) {
@@ -318,6 +321,9 @@ class App extends Component {
                     }
 
                     if (desireObject) {
+                        if (this.id == 'redFish1') {
+                            this.behaviour = new MoveTowardBehaviour(desireObject, this, 2, 0.05, 40);
+                        }
                         // likes object
                         if (desireMode === true) {
                             console.log(`moving towards ${desireObject.id}`);
