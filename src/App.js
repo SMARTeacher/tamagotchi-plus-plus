@@ -275,6 +275,7 @@ class MoveTowardBehaviour {
     constructor(destination, fish, maxSpeed, acceleration, acceptanceRadius) {
         this.destination = destination;
         this.fish = fish;
+        this.running = true;
 
         this.velocity = 0;
         this.maxSpeed = maxSpeed;
@@ -283,7 +284,9 @@ class MoveTowardBehaviour {
     }
 
     update() {
-        this.moveTowardsTarget();
+        if (this.running) {
+            this.moveTowardsTarget();
+        }
     }
 
     moveTowardsTarget() {
@@ -295,6 +298,7 @@ class MoveTowardBehaviour {
 
         if (distance < this.acceptanceRadius) {
             this.velocity = 0;
+            this.running = false;
         } else {
             const decelerationDistance = this.velocity ** 2 / (2 * this.acceleration);
 
