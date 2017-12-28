@@ -129,6 +129,47 @@ const sortDesiresByDistance = (fish, school, cheese) => {
     return desires;
 };
 
+class MoveTowardBehaviour {
+    constructor(destination, fish, maxSpeed, acceleration, acceptanceRadius) {
+        this.destination    = destination;
+        this.fish           = fish;
+
+        this.velocity           = 0;
+        this.maxSpeed           = maxSpeed;
+        this.acceleration       = acceleration;
+        this.acceptanceRadius   = acceptanceRadius * Math.random();
+    }
+
+    start() {
+
+    }
+
+    update() {
+        const delta = {
+            x: this.destination.x - this.fish.x,
+            y: this.destination.y - this.fish.y
+        };
+        const distance = Math.sqrt((delta.x ** 2) + (delta.y ** 2));
+
+        if (distance < this.acceptanceRadius) {
+            this.velocity = 0;
+        } else {
+            const decelerationDistance = (this.velocity ** 2) / (2 * this.acceleration);
+
+            if ((distance - this.acceptanceRadius) > decelerationDistance) {
+                this.velocity = Math.min(this.velocity + this.acceleration * (frameRate * 0.001), this.maxSpeed);
+            } else {
+                this.velocity = Math.max(this.velocity - this.acceleration* (frameRate * 0.001), 0);
+            }
+            
+            const angle = Math.atan2(delta.y, delta.x);
+
+            this.fish.x += (this.velocity * Math.cos(angle) * (frameRate * 0.001));
+            this.fish.y += (this.velocity * Math.sin(angle) * (frameRate * 0.001));
+        }
+    }
+}
+
 class App extends Component {
     state = {
         interval: null
@@ -276,6 +317,8 @@ class App extends Component {
                     }
 
                     if (desireObject) {
+                        // this.behaviour = new MoveTowardBehaviour(desireObject, this, 600, 100, 40);
+                        
                         // likes object
                         if (desireMode === true) {
                             console.log(`moving towards ${desireObject.id}`);
