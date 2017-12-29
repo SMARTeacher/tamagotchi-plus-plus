@@ -46,7 +46,7 @@ const addCheese = () => {
         id: `cheese${id}`,
         type: 'cheese',
         cheese: globalRefs.cheese,
-        health: 500,
+        health: 1000,
         x: Math.floor(Math.random() * (fishTankSize - cheeseSize)),
         y: Math.floor(Math.random() * (fishTankSize - cheeseSize)),
         size: pointSize,
