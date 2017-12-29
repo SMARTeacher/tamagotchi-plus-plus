@@ -22,15 +22,15 @@ let theBackground;
 const school = [];
 const fishThreshold = 3;
 
-const frameRate = 15;
+const frameRate = 45;
 const cheeseSize = 80;
 const sharkSpeed = 0.7;
 const fishTankSize = 500;
 const pointSize = 20;
 const pointRadius = 50;
-const fishWaitingPeriod = 100;
+const fishWaitingPeriod = 20;
 const sharkWaitingPeriod = 5;
-const boredomRadius = 20;
+const boredomRadius = 30;
 const eatingThreshold = 50;
 const dynamiteFallSpeed = 4;
 const dynamiteSize = 150;
@@ -86,7 +86,7 @@ const fishPersonalities = {
         { type: 'cheese', likes: true },
         { type: 'redFish', likes: true },
     //    { type: 'greenFish', likes: false },
-        { type: 'blueFish', likes: true }
+    //    { type: 'blueFish', likes: true }
     ],
     blueFish: [
         { type: 'shark', likes: false },
@@ -103,7 +103,7 @@ const fishPersonalities = {
     orangeFish: [
         { type: 'cheese', likes: true },
         { type: 'shark', likes: false },
-        { type: 'redFish', likes: true }
+    //    { type: 'redFish', likes: true }
     ],
     shark: [
         { type: 'blueFish', likes: true },
@@ -606,7 +606,7 @@ class App extends Component {
         return (
             <div className="App">
                 <header className="App-header">
-                    <h1 className="App-title">AIquatic</h1>
+                    <h1 className="App-title">A.I.quatic</h1>
                     <button onClick={addCheese}>Add Cheese</button>
                     <button onClick={addFish}>Add a fish</button>
                     <button
