@@ -22,7 +22,7 @@ let theBackground;
 const school = [];
 const fishThreshold = 3;
 
-const frameRate = 20;
+const frameRate = 15;
 const cheeseSize = 80;
 const sharkSpeed = 0.7;
 const fishTankSize = 500;
@@ -30,7 +30,7 @@ const pointSize = 20;
 const pointRadius = 50;
 const fishWaitingPeriod = 100;
 const sharkWaitingPeriod = 5;
-const boredomRadius = 10;
+const boredomRadius = 20;
 const eatingThreshold = 50;
 const dynamiteFallSpeed = 4;
 const dynamiteSize = 150;
@@ -85,13 +85,14 @@ const fishPersonalities = {
         { type: 'shark', likes: false },
         { type: 'cheese', likes: true },
         { type: 'redFish', likes: true },
-        { type: 'greenFish', likes: false },
+    //    { type: 'greenFish', likes: false },
         { type: 'blueFish', likes: true }
     ],
     blueFish: [
         { type: 'shark', likes: false },
         { type: 'redFish', likes: false },
-        { type: 'blueFish', likes: true }
+        { type: 'blueFish', likes: true },
+        { type: 'cheese', likes: true }
     ],
     greenFish: [
         { type: 'shark', likes: false },
@@ -606,6 +607,7 @@ class App extends Component {
             <div className="App">
                 <header className="App-header">
                     <h1 className="App-title">AIquatic</h1>
+                    <button onClick={addCheese}>Add Cheese</button>
                     <button onClick={addFish}>Add a fish</button>
                     <button
                         onClick={() => {
@@ -616,7 +618,6 @@ class App extends Component {
                     </button>
                     <button onClick={this.feedingFrenzy}>Feeding frenzy</button>
                     <button onClick={this.tenEx}>10X the fish</button>
-                    <button onClick={addCheese}>Add Cheese</button>
                     <button onClick={this.kaboom}>Go Fish</button>
                 </header>
                 {!showSteve && <canvas
