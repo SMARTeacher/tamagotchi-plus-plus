@@ -29,10 +29,10 @@ const fishTankSize = 650;
 const pointSize = 20;
 const pointRadius = 50;
 const fishWaitingPeriod = 20;
-const sharkWaitingPeriod = 3;
+const sharkWaitingPeriod = 2;
 const boredomRadius = 30;
 const eatingThreshold = 50;
-const dynamiteFallSpeed = 4;
+const dynamiteFallSpeed = 6;
 const dynamiteSize = 150;
 let blowyUppy = false;
 const fishEatingThreshold = 50;
@@ -132,7 +132,7 @@ const kill = fish => {
             if (index !== -1) {
                 school.splice(index, 1);
             }
-        }, 5000);
+        }, 10000);
     }
 };
 
@@ -141,7 +141,7 @@ const addFish = options => {
     const { fishType: type } = options;
     //all types except shark
     const fishType = type || fishTypes[Math.floor(Math.random() * (fishTypes.length - 1))];
-    const speedModifier = fishType === 'shark' ? sharkSpeed : 1;
+    const speedModifier = fishType === 'shark' ? sharkSpeed : 2;
     console.log('New Fish!');
     const newFish = {
         id: `${fishType}${id}`,
