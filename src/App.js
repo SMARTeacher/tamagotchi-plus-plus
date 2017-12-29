@@ -20,9 +20,9 @@ let globalRefs;
 const theDannyConstant = 1000;
 let theBackground;
 const school = [];
-const fishThreshold = 3;
+const fishThreshold = 5;
 
-const frameRate = 45;
+const frameRate = 40;
 const cheeseSize = 80;
 const sharkSpeed = 0.7;
 const fishTankSize = 500;
@@ -90,10 +90,9 @@ const fishPersonalities = {
     ],
     blueFish: [
         { type: 'shark', likes: false },
-        { type: 'redFish', likes: false },
-        { type: 'blueFish', likes: true },
-        { type: 'cheese', likes: true }
-    ],
+        { type: 'cheese', likes: false },
+        { type: 'blueFish', likes: true }
+      ],
     greenFish: [
         { type: 'shark', likes: false },
         { type: 'cheese', likes: true },
@@ -103,7 +102,7 @@ const fishPersonalities = {
     orangeFish: [
         { type: 'cheese', likes: true },
         { type: 'shark', likes: false },
-    //    { type: 'redFish', likes: true }
+        { type: 'orangeFish', likes: true }
     ],
     shark: [
         { type: 'blueFish', likes: true },
