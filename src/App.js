@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
+
+import Duder from './components/Duder';
 
 import blueFish from './blueFish.png';
 import cheese from './cheese.png';
@@ -26,7 +30,7 @@ const fishThreshold = 10;
 const frameRate = 30;
 const cheeseSize = 80;
 const sharkSpeed = 0.7;
-const fishTankSize = 650;
+const fishTankSize = 550;
 const pointSize = 20;
 const pointRadius = 50;
 const fishWaitingPeriod = 20;
@@ -643,7 +647,9 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">A.I.quatic</h1>
+          <h1 className="App-title" style={{ margin: 0 }}>
+            A.I.quatic
+          </h1>
           <button onClick={addCheese}>Add Cheese</button>
           <button onClick={addFish}>Add a fish</button>
           <button
@@ -658,12 +664,17 @@ class App extends Component {
           <button onClick={this.kaboom}>Go Fish</button>
         </header>
         {!showSteve && (
-          <canvas
-            ref="canvas"
-            height={fishTankSize}
-            width={fishTankSize}
-            style={{ border: '1px solid #000' }}
-          />
+          <div>
+            <div style={{ height: '50px' }}>
+              {fishes.map(fish => <Duder key={fish.type} {...fish} />)}
+            </div>
+            <canvas
+              ref="canvas"
+              height={fishTankSize}
+              width={fishTankSize}
+              style={{ border: '1px solid #000' }}
+            />
+          </div>
         )}
         {fishFactory()}
         {backgroundFactory()}
@@ -682,4 +693,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default DragDropContext(HTML5Backend)(App)
