@@ -30,7 +30,7 @@ class Duder extends Component {
         src={src}
         height={50}
         width={50}
-        style={{ margin: '0 5px', cursor: 'pointer', opacity: isDragging ? 0.5 : 1 }}
+        style={{ margin: '0 5px', cursor: 'pointer', opacity: isDragging ? 0 : 1 }}
       />
     );
   }
