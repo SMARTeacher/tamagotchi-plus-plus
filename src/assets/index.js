@@ -4,7 +4,6 @@ import cheeseDeath from './images/cheeseDeath.png';
 import greenFish from './images/greenFish.png';
 import orangeFish from './images/orangeFish.png';
 import redFish from './images/redFish.png';
-import shark from './images/shark.png';
 import skelly from './images/skelly.png';
 import bck1 from './images/bck1.png';
 import bck2 from './images/bck2.png';
@@ -19,7 +18,6 @@ export {
     greenFish,
     orangeFish,
     redFish,
-    shark,
     skelly,
     bck1,
     bck2,

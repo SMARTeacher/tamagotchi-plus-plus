@@ -45,7 +45,6 @@ class App extends Component {
     const greenFishRef = this.refs.greenFish;
     const redFishRef = this.refs.redFish;
     const orangeFishRef = this.refs.orangeFish;
-    const sharkRef = this.refs.shark;
     const cheeseRef = this.refs.cheese;
     const skellyRef = this.refs.skelly;
     const cheeseDeathRef = this.refs.cheeseDeath;
@@ -59,7 +58,6 @@ class App extends Component {
       greenFishRef,
       redFishRef,
       orangeFishRef,
-      sharkRef,
       cheeseRef,
       skellyRef,
       cheeseDeathRef,
