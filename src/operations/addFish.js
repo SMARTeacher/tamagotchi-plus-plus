@@ -36,7 +36,7 @@ const addFish = (options) => {
     desireY: 225,
     currentDesireType: null,
     restingPeriod: 0,
-    size: 40,
+    size: 75,
     speedModifier,
     isBored: function () {
       const xDiff = Math.abs(this.x - this.desireX);

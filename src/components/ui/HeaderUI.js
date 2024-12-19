@@ -11,7 +11,7 @@ class HeaderUI extends Component {
         return (
           <header className="App-header">
             <h1 className="App-title" style={{ margin: 0 }}>
-              A.I.quatic
+              Tamagotchi++
             </h1>
             <AddCheese school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
             <AddFish school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />

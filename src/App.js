@@ -19,7 +19,8 @@ import { fishes } from './constants/fishConstants';
 import {
   fishFactory,
   backgroundFactory,
-  otherFactory
+  otherFactory, 
+  desireFactory
 } from './factories';
 
 import {
@@ -32,7 +33,7 @@ let globalRefs;
 let school = [];
 let cheeses = [];
 let theBackground;
-const speechBubbleBaseSize = 40;
+const speechBubbleBaseSize = 45;
 
 class App extends Component {
   state = {
@@ -108,7 +109,7 @@ class App extends Component {
       // render desire bubble
       if(globalRefs[fish.currentDesireType]){
         context.drawImage(globalRefs.speechBubble, fish.x + 40, fish.y - 15, speechBubbleBaseSize, speechBubbleBaseSize)
-        context.drawImage(globalRefs[fish.currentDesireType], fish.x + 50, fish.y - 10, speechBubbleBaseSize /2 , speechBubbleBaseSize /2 )
+        context.drawImage(globalRefs[fish.currentDesireType], fish.x + 53, fish.y - 5, speechBubbleBaseSize /2 , speechBubbleBaseSize /2 )
       }
     });
   }
@@ -147,6 +148,7 @@ class App extends Component {
         {fishFactory()}
         {backgroundFactory()}
         {otherFactory()}
+        {desireFactory()}
       </div>
     );
   }

@@ -1,4 +1,9 @@
-import { redFish, blueFish, greenFish, orangeFish } from "../assets";
+import { redFish, blueFish, greenFish, orangeFish,
+  food,
+  sleep,
+  coins,
+  water
+ } from "../assets";
 
 const fishes = [
   { src: redFish, type: "redFish" },
@@ -7,29 +12,40 @@ const fishes = [
   { src: orangeFish, type: "orangeFish" },
 ];
 
+const desires = [
+  { src: food, type: "food" },
+  { src: sleep, type: "sleep" },
+  { src: coins, type: "coins" },
+  { src: water, type: "water" },
+];
+
 const fishTypes = fishes.map((fish) => fish.type);
 
 const fishPersonalities = {
   redFish: [
-    { type: "cheese", desirePoints: 40 },
-    { type: "redFish", desirePoints: 10 },
-    { type: "greenFish", desirePoints: 10 },
-    { type: "blueFish", desirePoints: 10 },
+    { type: "food", desirePoints: 40 },
+    { type: "sleep", desirePoints: 10 },
+    { type: "coins", desirePoints: 60 },
+    { type: "water", desirePoints: 40 },
   ],
   blueFish: [
-    { type: "cheese", desirePoints: 20 },
-    { type: "blueFish", desirePoints: 20 },
-    { type: "rest", desirePoints: 50 },
+    { type: "food", desirePoints: 20 },
+    { type: "sleep", desirePoints: 80 },
+    { type: "coins", desirePoints: 50 },
+    { type: "water", desirePoints: 10 },
   ],
   greenFish: [
-    { type: "cheese", desirePoints: 100 },
-    { type: "orangeFish", desirePoints: 30 },
-    { type: "greenFish", desirePoints: 60 },
+    { type: "food", desirePoints: 100 },
+    { type: "sleep", desirePoints: 30 },
+    { type: "coins", desirePoints: 60 },
+    { type: "water", desirePoints: 10 },
   ],
   orangeFish: [
-    { type: "cheese", desirePoints: 30 },
-    { type: "orangeFish", desirePoints: 70 },
+    { type: "food", desirePoints: 30 },
+    { type: "sleep", desirePoints: 70 },
+    { type: "coins", desirePoints: 60 },
+    { type: "water", desirePoints: 10 },
   ],
 };
 
-export { fishTypes, fishPersonalities, fishes };
+export { fishTypes, fishPersonalities, fishes, desires };
