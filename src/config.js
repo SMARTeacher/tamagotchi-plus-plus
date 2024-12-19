@@ -10,12 +10,8 @@ const fishWaitingPeriod = 20;
 const sharkWaitingPeriod = 2;
 const boredomRadius = 30;
 const eatingThreshold = 50;
-const dynamiteFallSpeed = 6;
-const dynamiteSize = 150;
 const fishEatingThreshold = 50;
 const cheeseEatingThreshold = 50;
-
-const dynamites = [];
 
 export {
     fishThreshold,
@@ -30,9 +26,6 @@ export {
     sharkWaitingPeriod,
     boredomRadius,
     eatingThreshold,
-    dynamiteFallSpeed,
-    dynamiteSize,
     fishEatingThreshold,
     cheeseEatingThreshold,
-    dynamites
     };

@@ -4,7 +4,6 @@ import { DragDropContext } from 'react-dnd';
 
 import {
   Duder,
-  Steve,
   HeaderUI
 } from './components';
 
@@ -26,10 +25,7 @@ import {
 import {
   fishTankSize,
   cheeseSize,
-  dynamiteSize,
-  dynamiteFallSpeed,
   frameRate,
-  dynamites,
 } from './config';
 
 let globalRefs;
@@ -41,7 +37,6 @@ const speechBubbleBaseSize = 40;
 class App extends Component {
   state = {
     interval: null,
-    showSteve: false,
     turnOff: false
   };
 
@@ -91,8 +86,6 @@ class App extends Component {
   }
 
   drawAllFish() {
-    if (this.state.showSteve) return;
-
     const canvas = this.refs.canvas;
     const context = canvas.getContext('2d');
     context.drawImage(theBackground, 0, 0, canvas.width, canvas.height);
@@ -118,26 +111,6 @@ class App extends Component {
         context.drawImage(globalRefs[fish.currentDesireType], fish.x + 50, fish.y - 10, speechBubbleBaseSize /2 , speechBubbleBaseSize /2 )
       }
     });
-
-    dynamites.forEach(element => {
-      if (element.y < element.targetY) {
-        element.y += dynamiteFallSpeed;
-      }
-
-      element.rotation += 4;
-
-      context.translate(element.x, element.y);
-      context.rotate(element.rotation * (Math.PI / 180));
-      context.drawImage(
-        this.refs.dynamite,
-        -dynamiteSize * 0.5,
-        -dynamiteSize * 0.5,
-        dynamiteSize,
-        dynamiteSize
-      );
-      context.rotate(-element.rotation * (Math.PI / 180));
-      context.translate(-element.x, -element.y);
-    });
   }
 
   startTheFish = () => {
@@ -156,18 +129,10 @@ class App extends Component {
     this.setState({ interval: null });
   };
 
-  updateShowSteveState = (newState) => {
-    this.setState({
-      showSteve: newState
-    });
-  }
-
   render() {
-    const { showSteve } = this.state;
     return (
       <div className="App">
-        <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} updateShowSteveState={this.updateShowSteveState} />
-        {!showSteve && (
+        <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} />
           <div>
             <div style={{ height: '50px' }}>
               {fishes.map(fish => <Duder key={fish.type} {...fish} />)}
@@ -179,11 +144,9 @@ class App extends Component {
               style={{ border: '1px solid #000' }}
             />
           </div>
-        )}
         {fishFactory()}
         {backgroundFactory()}
         {otherFactory()}
-        {showSteve && (<Steve />)}
       </div>
     );
   }

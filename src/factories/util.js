@@ -3,7 +3,6 @@ import {
     cheese,
     cheeseDeath,
     skelly,
-    dynamite,
     bck1,
     bck2,
     bck3,
@@ -22,7 +21,6 @@ const otherAssets = [
   { src: cheese, type: 'cheese' },
   { src: cheeseDeath, type: 'cheeseDeath' },
   { src: skelly, type: 'skelly' },
-  { src: dynamite, type: 'dynamite' },
   { src: speechBubble, type: 'speechBubble' }
 ];
 

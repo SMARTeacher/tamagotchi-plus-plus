@@ -4,9 +4,7 @@ import {
   AddFish,
   AddShark,
   AddCheese,
-  Duder,
   FeedingFrenzy,
-  GoFish,
   TenX
 } from './buttons';
 
@@ -26,7 +24,6 @@ class HeaderUI extends Component {
             <AddShark school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
             <FeedingFrenzy school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
             <TenX school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
-            <GoFish school={this.props.school} globalRefs={this.props.globalRefs} updateShowSteveState={this.props.updateShowSteveState} />
           </header>
         );
     }
