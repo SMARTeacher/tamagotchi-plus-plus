@@ -5,7 +5,8 @@ import { DragDropContext } from 'react-dnd';
 import {
   GoFish,
   Duder,
-  Steve
+  Steve,
+  TenX
 } from './components';
 
 import '../src/assets/styles/App.css';
@@ -151,15 +152,6 @@ class App extends Component {
     this.setState({ interval: null });
   };
 
-  tenEx = () => {
-    school.forEach(fish => {
-      let index;
-      for (index = 0; index < 9; index++) {
-        addFish({globalRefs, school, cheeses });
-      }
-    });
-  };
-
   feedingFrenzy = () => {
     for (let index = 0; index < 30; index++) {
       addFish({globalRefs, school, cheeses });
@@ -194,7 +186,7 @@ class App extends Component {
             Add a Shark
           </button>
           <button onClick={this.feedingFrenzy}>Feeding frenzy</button>
-          <button onClick={this.tenEx}>10X the fish</button>
+          <TenX school={school} globalRefs={globalRefs} cheeses={cheeses} />
           <GoFish school={school} globalRefs={globalRefs} updateShowSteveState={this.updateShowSteveState} />
         </header>
         {!showSteve && (
