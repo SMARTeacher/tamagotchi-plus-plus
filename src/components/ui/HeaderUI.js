@@ -2,19 +2,11 @@ import React, { Component } from 'react';
 
 import {
   AddFish,
-  AddShark,
   AddCheese,
-  Duder,
-  FeedingFrenzy,
-  GoFish,
   TenX
 } from './buttons';
 
 class HeaderUI extends Component {
-    constructor(props) {
-        super(props);    
-    }
-
     render() {
         return (
           <header className="App-header">
@@ -23,10 +15,7 @@ class HeaderUI extends Component {
             </h1>
             <AddCheese school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
             <AddFish school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
-            <AddShark school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
-            <FeedingFrenzy school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
             <TenX school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
-            <GoFish school={this.props.school} globalRefs={this.props.globalRefs} updateShowSteveState={this.props.updateShowSteveState} />
           </header>
         );
     }

@@ -1,15 +1,11 @@
 import { fishTypes, fishPersonalities } from '../constants/fishConstants';
-import killFish from './killFish';
 
 import {
     fishTankSize,
     boredomRadius,
     fishWaitingPeriod,
-    sharkWaitingPeriod,
     fishThreshold,
-    fishEatingThreshold,
     theDannyConstant,
-    sharkSpeed
 } from '../config';
 import {
     coinFlip,
@@ -24,22 +20,22 @@ const addFish = options => {
   const { school, globalRefs, fishType: type, cheeses } = options;
   if (school.length >= theDannyConstant) return;
   if (globalRefs === undefined) return;
-  //all types except shark
+  //all types
   const fishType = type || fishTypes[Math.floor(Math.random() * (fishTypes.length - 1))];
-  const speedModifier = fishType === 'shark' ? sharkSpeed : 2;
+  const speedModifier = 2;
   console.log('New Fish!');
   const newFish = {
     id: `${fishType}${id}`,
     fish: globalRefs[fishType],
     type: fishType,
     personality: fishPersonalities[fishType],
-    x: Math.floor(Math.random() * (fishTankSize - (fishType === 'shark' ? 80 : 40))),
-    y: Math.floor(Math.random() * (fishTankSize - (fishType === 'shark' ? 80 : 40))),
+    x: Math.floor(Math.random() * (fishTankSize - 40)),
+    y: Math.floor(Math.random() * (fishTankSize - 40)),
     desireX: 225,
     desireY: 225,
     currentDesireType: null,
     restingPeriod: 0,
-    size: fishType === 'shark' ? 80 : 40,
+    size: 40,
     speedModifier,
     isBored: function() {
       const xDiff = Math.abs(this.x - this.desireX);
@@ -50,7 +46,7 @@ const addFish = options => {
     fidget: function() {
       this.desireX = coinFlip() ? this.x + boredomRadius : this.x - boredomRadius;
       this.desireY = coinFlip() ? this.y + boredomRadius : this.y - boredomRadius;
-      this.restingPeriod = this.type === 'shark' ? sharkWaitingPeriod : fishWaitingPeriod;
+      this.restingPeriod = fishWaitingPeriod;
     },
     moveToDesire: function() {
       // X movement
@@ -67,20 +63,8 @@ const addFish = options => {
     },
     setNewDesire: function(canFidget = true) {
       //reset speed
-      this.speedModifier = this.type === 'shark' ? sharkSpeed : 1;
+      this.speedModifier = 1;
       const closeFish = sortDesiresByDistance(this, school, cheeses).slice(0, fishThreshold);
-
-      if (this.type === 'shark') {
-        const closestFish = closeFish.filter(fish => fish.type !== 'cheese')[0];
-
-        if (
-          closestFish &&
-          Math.sqrt((closestFish.x - this.x) ** 2) + Math.sqrt((closestFish.y - this.y) ** 2) <
-            fishEatingThreshold
-        ) {
-           killFish(globalRefs, school, closestFish);
-        }
-      }
 
       if (canFidget && coinFlip()) {
         this.fidget();

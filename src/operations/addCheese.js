@@ -26,8 +26,7 @@ const addCheese = options => {
           school.forEach(fish => {
             if (
               Math.sqrt((fish.x - this.x) ** 2) + Math.sqrt((fish.y - this.y) ** 2) <
-                cheeseEatingThreshold &&
-              fish.type !== 'shark'
+                cheeseEatingThreshold
             ) {
               nibble++;
             }
