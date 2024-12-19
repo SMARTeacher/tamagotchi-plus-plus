@@ -7,7 +7,8 @@ import {
   Duder,
   Steve,
   TenX,
-  FeedingFrenzy
+  FeedingFrenzy,
+  AddShark
 } from './components';
 
 import '../src/assets/styles/App.css';
@@ -169,13 +170,7 @@ class App extends Component {
           </h1>
           <button onClick={() => addCheese({ globalRefs, school, cheeses })}>Add Cheese</button>
           <button onClick={() => addFish({ globalRefs, school, cheeses })}>Add a fish</button>
-          <button
-            onClick={() => {
-              addFish({ globalRefs, school, fishType: 'shark', cheeses });
-            }}
-          >
-            Add a Shark
-          </button>
+          <AddShark school={school} globalRefs={globalRefs} cheeses={cheeses} />
           <FeedingFrenzy school={school} globalRefs={globalRefs} cheeses={cheeses} />
           <TenX school={school} globalRefs={globalRefs} cheeses={cheeses} />
           <GoFish school={school} globalRefs={globalRefs} updateShowSteveState={this.updateShowSteveState} />
