@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 
 import {
     fishySteve
-  } from '../assets';
+  } from '../../assets';
 
 import {
     fishTankSize
-  } from '../config';
+  } from '../../config';
 
 class Steve extends Component {
     render() {

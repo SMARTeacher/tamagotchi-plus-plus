@@ -1,9 +1,12 @@
-import Duder from './Duder';
-import GoFish from './GoFish';
-import Steve from './Steve';
-import TenX from './TenX';
-import FeedingFrenzy from './FeedingFrenzy';
-import AddShark from './AddShark';
+import GoFish from './ui/GoFish';
+import FeedingFrenzy from './ui/FeedingFrenzy';
+import AddShark from './ui/AddShark';   
+import TenX from './ui/TenX';
+import Duder from './ui/Duder';
+import AddFish from './ui/AddFish';
+import AddCheese from './ui/AddCheese';
+
+import Steve from './popups/Steve';
 
 export {
     Duder,
@@ -11,5 +14,7 @@ export {
     Steve,
     TenX,
     FeedingFrenzy,
-    AddShark
+    AddShark,
+    AddFish,
+    AddCheese
     };

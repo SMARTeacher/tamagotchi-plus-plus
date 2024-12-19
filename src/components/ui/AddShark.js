@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
     addFish
-} from '../operations';
+} from '../../operations';
 
 class AddShark extends Component {
     constructor(props) {

@@ -8,7 +8,9 @@ import {
   Steve,
   TenX,
   FeedingFrenzy,
-  AddShark
+  AddShark,
+  AddFish,
+  AddCheese
 } from './components';
 
 import '../src/assets/styles/App.css';
@@ -168,8 +170,8 @@ class App extends Component {
           <h1 className="App-title" style={{ margin: 0 }}>
             A.I.quatic
           </h1>
-          <button onClick={() => addCheese({ globalRefs, school, cheeses })}>Add Cheese</button>
-          <button onClick={() => addFish({ globalRefs, school, cheeses })}>Add a fish</button>
+          <AddCheese school={school} globalRefs={globalRefs} cheeses={cheeses} />
+          <AddFish school={school} globalRefs={globalRefs} cheeses={cheeses} />
           <AddShark school={school} globalRefs={globalRefs} cheeses={cheeses} />
           <FeedingFrenzy school={school} globalRefs={globalRefs} cheeses={cheeses} />
           <TenX school={school} globalRefs={globalRefs} cheeses={cheeses} />
