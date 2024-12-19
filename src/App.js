@@ -42,6 +42,8 @@ let globalRefs;
 let school = [];
 let cheeses = [];
 let theBackground;
+const speechBubbleBaseSize = 40;
+
 class App extends Component {
   state = {
     interval: null,
@@ -117,6 +119,10 @@ class App extends Component {
       }
 
       context.drawImage(fish.fish, fish.x, fish.y, fish.size, fish.size);
+      if(globalRefs[fish.currentDesireType]){
+        context.drawImage(globalRefs.speechBubble, fish.x + 40, fish.y - 15, speechBubbleBaseSize, speechBubbleBaseSize)
+        context.drawImage(globalRefs[fish.currentDesireType], fish.x + 50, fish.y - 10, speechBubbleBaseSize /2 , speechBubbleBaseSize /2 )
+      }
     });
 
     dynamites.forEach(element => {

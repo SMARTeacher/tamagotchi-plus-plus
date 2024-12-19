@@ -12,6 +12,7 @@ import bck2 from './images/bck2.png';
 import bck3 from './images/bck3.png';
 import bck4 from './images/bck4.png';
 import fishySteve from './images/FishermanSteve_Anim3.gif';
+import speechBubble from './images/speechBubble2.png'
 
 export {
     blueFish,
@@ -27,5 +28,6 @@ export {
     bck2,
     bck3,
     bck4,
-    fishySteve
+    fishySteve,
+    speechBubble
     };

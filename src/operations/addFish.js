@@ -37,6 +37,7 @@ const addFish = options => {
     y: Math.floor(Math.random() * (fishTankSize - (fishType === 'shark' ? 80 : 40))),
     desireX: 225,
     desireY: 225,
+    currentDesireType: null,
     restingPeriod: 0,
     size: fishType === 'shark' ? 80 : 40,
     speedModifier,
@@ -100,6 +101,8 @@ const addFish = options => {
         if (desireObject) {
           // likes object
           if (desireMode === true) {
+            this.currentDesireType = desireObject.type;
+            
             this.desireX = coinFlip()
               ? desireObject.x + getSmallDistance()
               : desireObject.x - getSmallDistance();

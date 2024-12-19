@@ -8,6 +8,7 @@ import {
     bck2,
     bck3,
     bck4,
+    speechBubble
   } from '../assets';
 
 const backgrounds = [
@@ -21,7 +22,8 @@ const otherAssets = [
   { src: cheese, type: 'cheese' },
   { src: cheeseDeath, type: 'cheeseDeath' },
   { src: skelly, type: 'skelly' },
-  { src: dynamite, type: 'dynamite' }
+  { src: dynamite, type: 'dynamite' },
+  { src: speechBubble, type: 'speechBubble' }
 ];
 
 const buildImg = ({ src, type, size }) => (
