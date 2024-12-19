@@ -38,7 +38,7 @@ const addCheese = options => {
             setTimeout(() => {
               const index = cheeses.findIndex(cheese => cheese.id === this.id);
               cheeses.splice(index, 1);
-              addFish({globalRefs, school });
+              addFish({globalRefs, school, cheeses });
             }, 5000);
           }
         }
