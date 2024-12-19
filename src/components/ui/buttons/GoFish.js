@@ -4,11 +4,11 @@ import {
     fishTankSize,
     dynamiteSize,
 
-} from '../../config';
+} from '../../../config';
 
 import {
     killFish
-} from '../../operations';
+} from '../../../operations';
 
 class GoFish extends Component {
     constructor(props) {

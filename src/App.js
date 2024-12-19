@@ -3,20 +3,14 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 
 import {
-  GoFish,
   Duder,
   Steve,
-  TenX,
-  FeedingFrenzy,
-  AddShark,
-  AddFish,
-  AddCheese
+  HeaderUI
 } from './components';
 
 import '../src/assets/styles/App.css';
 import {
   addFish,
-  addCheese
 } from './operations';
 
 
@@ -166,17 +160,7 @@ class App extends Component {
     const { showSteve } = this.state;
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="App-title" style={{ margin: 0 }}>
-            A.I.quatic
-          </h1>
-          <AddCheese school={school} globalRefs={globalRefs} cheeses={cheeses} />
-          <AddFish school={school} globalRefs={globalRefs} cheeses={cheeses} />
-          <AddShark school={school} globalRefs={globalRefs} cheeses={cheeses} />
-          <FeedingFrenzy school={school} globalRefs={globalRefs} cheeses={cheeses} />
-          <TenX school={school} globalRefs={globalRefs} cheeses={cheeses} />
-          <GoFish school={school} globalRefs={globalRefs} updateShowSteveState={this.updateShowSteveState} />
-        </header>
+        <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} updateShowSteveState={this.updateShowSteveState} />
         {!showSteve && (
           <div>
             <div style={{ height: '50px' }}>

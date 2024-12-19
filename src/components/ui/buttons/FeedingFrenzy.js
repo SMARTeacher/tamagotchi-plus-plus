@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {
   addFish
-} from '../../operations';
+} from '../../../operations';
 
 class FeedingFrenzy extends Component {
     constructor(props) {
