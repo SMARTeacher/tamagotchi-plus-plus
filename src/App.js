@@ -4,21 +4,21 @@ import { DragDropContext } from 'react-dnd';
 
 import Duder from './components/Duder';
 
-import blueFish from './blueFish.png';
-import cheese from './cheese.png';
-import cheeseDeath from './cheeseDeath.png';
-import greenFish from './greenFish.png';
-import orangeFish from './orangeFish.png';
-import redFish from './redFish.png';
-import shark from './shark.png';
-import skelly from './skelly.png';
-import dynamite from './TNT.png';
-import bck1 from './bck1.png';
-import bck2 from './bck2.png';
-import bck3 from './bck3.png';
-import bck4 from './bck4.png';
-import fishySteve from './FishermanSteve_Anim3.gif';
-import './App.css';
+import blueFish from '../src/assets/images/blueFish.png';
+import cheese from '../src/assets/images/cheese.png';
+import cheeseDeath from '../src/assets/images/cheeseDeath.png';
+import greenFish from '../src/assets/images/greenFish.png';
+import orangeFish from '../src/assets/images/orangeFish.png';
+import redFish from '../src/assets/images/redFish.png';
+import shark from '../src/assets/images/shark.png';
+import skelly from '../src/assets/images/skelly.png';
+import dynamite from '../src/assets/images/TNT.png';
+import bck1 from '../src/assets/images/bck1.png';
+import bck2 from '../src/assets/images/bck2.png';
+import bck3 from '../src/assets/images/bck3.png';
+import bck4 from '../src/assets/images/bck4.png';
+import fishySteve from '../src/assets/images/FishermanSteve_Anim3.gif';
+import '../src/assets/styles/App.css';
 
 let id = 1;
 let globalRefs;
