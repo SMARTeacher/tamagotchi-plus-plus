@@ -4,8 +4,11 @@ import { DragDropContext } from 'react-dnd';
 
 import Duder from './components/Duder';
 import '../src/assets/styles/App.css';
-import kill from './operations/kill';
-import addFish from './operations/addFish';
+import {
+  addFish,
+  addCheese,
+  killFish
+} from './operations';
 
 import {
   cheese,
@@ -24,60 +27,17 @@ import { fishes } from './constants/fishConstants';
 import {
   fishTankSize,
   cheeseSize,
-  cheeseEatingThreshold,
   dynamiteSize,
   dynamiteFallSpeed,
   frameRate,
-  pointSize,
   dynamites,
-  cheeses
 } from './config';
 
-let id = 1;
 let globalRefs;
 let school = [];
+let cheeses = [];
 let theBackground;
 let blowyUppy = false;
-
-const addCheese = () => {
-  const newCheese = {
-    id: `cheese${id}`,
-    type: 'cheese',
-    cheese: globalRefs.cheese,
-    health: 1000,
-    x: Math.floor(Math.random() * (fishTankSize - cheeseSize)),
-    y: Math.floor(Math.random() * (fishTankSize - cheeseSize)),
-    size: pointSize,
-    updateCheese: function() {
-      if (this.health > 0) {
-        let nibble = 0;
-        school.forEach(fish => {
-          if (
-            Math.sqrt((fish.x - this.x) ** 2) + Math.sqrt((fish.y - this.y) ** 2) <
-              cheeseEatingThreshold &&
-            fish.type !== 'shark'
-          ) {
-            nibble++;
-          }
-        });
-        this.health -= nibble;
-        if (this.health <= 0) {
-          this.cheese = globalRefs.cheeseDeath;
-          setTimeout(() => {
-            const index = cheeses.findIndex(cheese => cheese.id === this.id);
-            cheeses.splice(index, 1);
-            addFish({globalRefs, school });
-          }, 5000);
-        }
-      }
-    }
-  };
-
-  id++;
-  cheeses.push(newCheese);
-};
-
-
 
 const backgrounds = [
   { src: bck1, type: 'bck1' },
@@ -146,18 +106,18 @@ class App extends Component {
       bck3Ref,
       bck4Ref
     ]).then(() => {
-      addFish({ globalRefs, school, fishType: 'redFish' });
-      addFish({ globalRefs, school, fishType: 'redFish' });
-      addFish({ globalRefs, school, fishType: 'redFish' });
-      addFish({ globalRefs, school, fishType: 'blueFish' });
-      addFish({ globalRefs, school, fishType: 'blueFish' });
-      addFish({ globalRefs, school, fishType: 'blueFish' });
-      addFish({ globalRefs, school, fishType: 'greenFish' });
-      addFish({ globalRefs, school, fishType: 'greenFish' });
-      addFish({ globalRefs, school, fishType: 'greenFish' });
-      addFish({ globalRefs, school, fishType: 'orangeFish' });
-      addFish({ globalRefs, school, fishType: 'orangeFish' });
-      addFish({ globalRefs, school, fishType: 'orangeFish' });
+      addFish({ globalRefs, school, fishType: 'redFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'redFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'redFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'blueFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'blueFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'blueFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'greenFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'greenFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'greenFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'orangeFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'orangeFish', cheeses });
+      addFish({ globalRefs, school, fishType: 'orangeFish', cheeses });
       theBackground = globalRefs[`bck${Math.floor(Math.random() * 4) + 1}`];
       this.startTheFish();
     });
@@ -229,18 +189,18 @@ class App extends Component {
     school.forEach(fish => {
       let index;
       for (index = 0; index < 9; index++) {
-        addFish({globalRefs, school });
+        addFish({globalRefs, school, cheeses });
       }
     });
   };
 
   feedingFrenzy = () => {
     for (let index = 0; index < 30; index++) {
-      addFish({globalRefs, school });
+      addFish({globalRefs, school, cheeses });
     }
 
     for (let index = 0; index < 9; index++) {
-      addFish({ globalRefs, school, fishType: 'shark' });
+      addFish({ globalRefs, school, fishType: 'shark', cheeses });
     }
   };
 
@@ -270,7 +230,7 @@ class App extends Component {
         setTimeout(function() {
           blowyUppy = false;
 
-          school.forEach(fish => kill(globalRefs, school, fish));
+          school.forEach(fish => killFish(globalRefs, school, fish));
           dynamites.splice(0);
         }, 2500);
       }, 4000);
@@ -285,11 +245,11 @@ class App extends Component {
           <h1 className="App-title" style={{ margin: 0 }}>
             A.I.quatic
           </h1>
-          <button onClick={addCheese}>Add Cheese</button>
-          <button onClick={addFish({ globalRefs, school })}>Add a fish</button>
+          <button onClick={() => addCheese({ globalRefs, school, cheeses })}>Add Cheese</button>
+          <button onClick={() => addFish({ globalRefs, school, cheeses })}>Add a fish</button>
           <button
             onClick={() => {
-              addFish({ globalRefs, school, fishType: 'shark' });
+              addFish({ globalRefs, school, fishType: 'shark', cheeses });
             }}
           >
             Add a Shark

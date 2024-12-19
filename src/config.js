@@ -16,7 +16,6 @@ const fishEatingThreshold = 50;
 const cheeseEatingThreshold = 50;
 
 const dynamites = [];
-const cheeses = [];
 
 export {
     fishThreshold,
@@ -35,6 +34,5 @@ export {
     dynamiteSize,
     fishEatingThreshold,
     cheeseEatingThreshold,
-    dynamites,
-    cheeses
+    dynamites
     };

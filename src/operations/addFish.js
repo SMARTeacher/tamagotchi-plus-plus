@@ -1,5 +1,6 @@
 import { fishTypes, fishPersonalities } from '../constants/fishConstants';
-import kill from './kill';
+import killFish from './killFish';
+
 import {
     fishTankSize,
     boredomRadius,
@@ -8,8 +9,7 @@ import {
     fishThreshold,
     fishEatingThreshold,
     theDannyConstant,
-    sharkSpeed,
-    cheeses,
+    sharkSpeed
 } from '../config';
 import {
     coinFlip,
@@ -21,7 +21,7 @@ import {
 let id = 1;
 
 const addFish = options => {
-  const { school, globalRefs, fishType: type } = options;
+  const { school, globalRefs, fishType: type, cheeses } = options;
   if (school.length >= theDannyConstant) return;
   if (globalRefs === undefined) return;
   //all types except shark
@@ -77,7 +77,7 @@ const addFish = options => {
           Math.sqrt((closestFish.x - this.x) ** 2) + Math.sqrt((closestFish.y - this.y) ** 2) <
             fishEatingThreshold
         ) {
-          kill(globalRefs, school, closestFish);
+           killFish(globalRefs, school, closestFish);
         }
       }
 
