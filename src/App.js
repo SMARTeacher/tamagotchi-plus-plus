@@ -4,7 +4,8 @@ import { DragDropContext } from 'react-dnd';
 
 import {
   GoFish,
-  Duder
+  Duder,
+  Steve
 } from './components';
 
 import '../src/assets/styles/App.css';
@@ -13,9 +14,7 @@ import {
   addCheese
 } from './operations';
 
-import {
-  fishySteve
-} from './assets';
+
 
 import { fishes } from './constants/fishConstants';
 
@@ -214,15 +213,7 @@ class App extends Component {
         {fishFactory()}
         {backgroundFactory()}
         {otherFactory()}
-        {showSteve && (
-          <img
-            src={fishySteve}
-            ref="fishySteve"
-            alt="fishySteve"
-            width={fishTankSize}
-            height={fishTankSize}
-          />
-        )}
+        {showSteve && (<Steve />)}
       </div>
     );
   }
