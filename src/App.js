@@ -6,7 +6,8 @@ import {
   GoFish,
   Duder,
   Steve,
-  TenX
+  TenX,
+  FeedingFrenzy
 } from './components';
 
 import '../src/assets/styles/App.css';
@@ -152,16 +153,6 @@ class App extends Component {
     this.setState({ interval: null });
   };
 
-  feedingFrenzy = () => {
-    for (let index = 0; index < 30; index++) {
-      addFish({globalRefs, school, cheeses });
-    }
-
-    for (let index = 0; index < 9; index++) {
-      addFish({ globalRefs, school, fishType: 'shark', cheeses });
-    }
-  };
-
   updateShowSteveState = (newState) => {
     this.setState({
       showSteve: newState
@@ -185,7 +176,7 @@ class App extends Component {
           >
             Add a Shark
           </button>
-          <button onClick={this.feedingFrenzy}>Feeding frenzy</button>
+          <FeedingFrenzy school={school} globalRefs={globalRefs} cheeses={cheeses} />
           <TenX school={school} globalRefs={globalRefs} cheeses={cheeses} />
           <GoFish school={school} globalRefs={globalRefs} updateShowSteveState={this.updateShowSteveState} />
         </header>
