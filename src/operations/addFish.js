@@ -77,87 +77,22 @@ const addFish = (options) => {
     setNewDesire: function (canFidget = true) {
       //reset speed
       this.speedModifier = 1;
-      const closeFish = sortDesiresByDistance(this, school, cheeses).slice(
-        0,
-        fishThreshold
-      );
 
       if (canFidget && coinFlip()) {
         this.fidget();
       } else {
-        let desireObject;
-        let desireMode;
-        let index = 0;
-        let desireObjectType;
-
-        // const totalDesirePoints = this.personality.reduce(
-        //   (prev, curr) => prev + curr.desirePoints,
-        //   0
-        // );
-        // const desireRoll = Math.ceil(Math.random() * totalDesirePoints); // 47
-        // let sum = 0;
-        // for (let personalityRow of this.personality) {
-        //   sum += personalityRow.desirePoints;
-        //   if (sum - desireRoll <= 0) {
-        //     desireObjectType = personalityRow.type;
-        //     break;
-        //   }
-        // }
-
-        console.log(desireObjectType)
-
-        if (!desireObject)
-          while (!desireObject && index < this.personality.length) {
-            const currentFishCheck = this.personality[index];
-            const foundDesire = closeFish.find(
-              (fish) => fish.type === currentFishCheck.type
-            );
-            if (foundDesire) {
-              desireObject = foundDesire;
-              desireMode = currentFishCheck.likes;
-            }
-            index++;
+        const totalDesirePoints = this.personality.reduce(
+          (prev, curr) => prev + curr.desirePoints,
+          0
+        );
+        const desireRoll = Math.ceil(Math.random() * totalDesirePoints);
+        let sum = 0;
+        for (let personalityRow of this.personality) {
+          sum += personalityRow.desirePoints;
+          if (sum - desireRoll >= 0) {
+            this.currentDesireType = personalityRow.type;
+            break;
           }
-
-        if (desireObject) {
-          // likes object
-          if (desireMode === true) {
-            this.currentDesireType = desireObject.type;
-
-            this.desireX = coinFlip()
-              ? desireObject.x + getSmallDistance()
-              : desireObject.x - getSmallDistance();
-            this.desireY = coinFlip()
-              ? desireObject.y + getSmallDistance()
-              : desireObject.y - getSmallDistance();
-          } else if (desireMode === false) {
-            // dislikes object
-            this.speedModifier = 10;
-
-            if (desireObject.x > 250 && desireObject.y > 250) {
-              this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
-              this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
-            } else if (desireObject.x <= 250 && desireObject.y > 250) {
-              this.desireX =
-                Math.floor(Math.random() * (fishTankSize / 4)) +
-                fishTankSize / 2;
-              this.desireY = Math.floor(Math.random() * (fishTankSize / 4));
-            } else if (desireObject.x > 250 && desireObject.y <= 250) {
-              this.desireX = Math.floor(Math.random() * (fishTankSize / 4));
-              this.desireY =
-                Math.floor(Math.random() * (fishTankSize / 4)) +
-                fishTankSize / 2;
-            } else if (desireObject.x <= 250 && desireObject.y <= 250) {
-              this.desireX =
-                Math.floor(Math.random() * (fishTankSize / 4)) +
-                fishTankSize / 2;
-              this.desireY =
-                Math.floor(Math.random() * (fishTankSize / 4)) +
-                fishTankSize / 2;
-            }
-          }
-        } else {
-          this.fidget();
         }
       }
 
