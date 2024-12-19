@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 
-import Duder from './components/Duder';
+import {
+  GoFish,
+  Duder
+} from './components';
+
 import '../src/assets/styles/App.css';
 import {
   addFish,
-  addCheese,
-  killFish
+  addCheese
 } from './operations';
 
 import {
@@ -35,7 +38,6 @@ let globalRefs;
 let school = [];
 let cheeses = [];
 let theBackground;
-let blowyUppy = false;
 class App extends Component {
   state = {
     interval: null,
@@ -169,38 +171,11 @@ class App extends Component {
     }
   };
 
-  kaboom = () => {
-    if (!blowyUppy) {
-      this.setState({
-        showSteve: true
-      });
-
-      setTimeout(() => {
-        blowyUppy = true;
-
-        this.setState({
-          showSteve: false
-        });
-
-        const quadrants = (fishTankSize - dynamiteSize) / 7;
-        for (let i = 0; i < 7; ++i) {
-          dynamites.push({
-            x: quadrants * i + quadrants * Math.random(),
-            y: -dynamiteSize - Math.random() * 150,
-            targetY: 200 + Math.random() * 150,
-            rotation: Math.floor(Math.random() * 360)
-          });
-        }
-
-        setTimeout(function() {
-          blowyUppy = false;
-
-          school.forEach(fish => killFish(globalRefs, school, fish));
-          dynamites.splice(0);
-        }, 2500);
-      }, 4000);
-    }
-  };
+  updateShowSteveState = (newState) => {
+    this.setState({
+      showSteve: newState
+    });
+  }
 
   render() {
     const { showSteve } = this.state;
@@ -221,7 +196,7 @@ class App extends Component {
           </button>
           <button onClick={this.feedingFrenzy}>Feeding frenzy</button>
           <button onClick={this.tenEx}>10X the fish</button>
-          <button onClick={this.kaboom}>Go Fish</button>
+          <GoFish school={school} globalRefs={globalRefs} updateShowSteveState={this.updateShowSteveState} />
         </header>
         {!showSteve && (
           <div>
