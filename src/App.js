@@ -9,8 +9,8 @@ import bck3 from "./assets/images/bck3.png";
 import bck4 from "./assets/images/bck4.png";
 
 import "../src/assets/styles/App.css";
-import { addPet } from "./operations";
-import { newActionNode, newConditionalNode } from "./operations/commands";
+import { addCheese, addPet } from "./operations";
+import { script, newActionNode, newConditionalNode } from "./operations/commands";
 
 import { pets } from "./constants/petConstants";
 
@@ -34,15 +34,22 @@ let beds = [];
 const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
 
-
 const mapCommands = (commands) => {
+  const nodes = [];
   commands.forEach((command) => {
     if (command.type === "if") {
-      // school.find((pet) => 
-      // newConditionalNode
+      const actors = school.filter(
+        (pet) =>
+          pet.type === command.petName &&
+          pet.currentDesire.type === command.desireName
+      );
+      if (actors.length) {
+        nodes.push(newActionNode(() => addCheese({ globalRefs, school, cheeses })));
+      }
     }
   });
-}
+  return script(nodes);
+};
 
 class App extends Component {
   state = {
@@ -152,19 +159,21 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <HeaderUI
-          globalRefs={globalRefs}
-          school={school}
-          cheeses={cheeses}
-          beds={beds}
-        />
+        <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} />
 
         <button
           onClick={() => {
+            const secondsBetweenUpdates = 1;
             const { interval } = this.state;
+            const script = mapCommands(this.state.commands);
+            let lastUpdate = 0;
             if (!interval) {
               const interval = setInterval(() => {
-                mapCommands(this.state.commands)
+                let currSec = Math.floor(Date.now() / 1000);
+                if (currSec % secondsBetweenUpdates === 0 && currSec > lastUpdate) {
+                  script.run();
+                  lastUpdate = currSec;
+                }
                 this.drawAllPets();
               }, frameRate);
 

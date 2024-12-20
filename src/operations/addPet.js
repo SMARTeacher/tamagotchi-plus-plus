@@ -116,8 +116,7 @@ const addPet = (options) => {
       if (this.currentDesireType) {
         this.currentDesire = desires.filter((desire) => desire.type === this.currentDesireType)[0];
         
-        if (this.currentDesire === 'cheese' && !findTheObjectOfMyDesire(this, cheeses)) {
-          console.log(`I could not find any ${this.currentDesire.type}`)
+        if (!findTheObjectOfMyDesire(this, cheeses)) {
           this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
           this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
         }
