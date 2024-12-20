@@ -15,6 +15,11 @@ import sleep from './images/sleep.png';
 import coins from './images/coins.png';
 import water from './images/water.png';
 
+import bbq from './images/bbq.png';
+import bed from './images/bed.png';
+import office from './images/office.png';
+import fountain from './images/fountain.png';
+
 export {
     cheese,
     cheeseDeath,
@@ -31,5 +36,10 @@ export {
     food,
     sleep,
     coins,
-    water
+    water,
+
+    bbq,
+    bed,
+    office,
+    fountain
     };

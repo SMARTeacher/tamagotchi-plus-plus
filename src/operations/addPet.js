@@ -14,17 +14,17 @@ import {
 let id = 1;
 
 // TODO Move this in a proper place
-const findTheObjectOfMyDesire = (pet, cheeses) => {
-  if (pet.currentDesire.type === "food" && cheeses.length > 0) {
+const findTheObjectOfMyDesire = (pet, objs) => {
+  if (pet.currentDesire.type === "food" && objs.length > 0) {
     // Get closest CHEESE
-    const targetCheese = cheeses[0];
+    const targetObj = objs[0];
 
     // Set desire pos to closest CHEESE
-    pet.desireX = targetCheese.x;
-    pet.desireY = targetCheese.y;
+    pet.desireX = targetObj.x;
+    pet.desireY = targetObj.y;
     
     // Return target found.
-    console.log(`FATHER I CRAVE THE FORBIDDEN CHEESE`)
+    console.log(`FATHER I CRAVE THE FORBIDDEN ${pet.currentDesire.type}`)
     return true;
   }
 
@@ -33,7 +33,7 @@ const findTheObjectOfMyDesire = (pet, cheeses) => {
 };
 
 const addPet = (options) => {
-  const { school, globalRefs, petType: type, cheeses } = options;
+  const { school, globalRefs, petType: type, cheeses, beds } = options;
   if (school.length >= theDannyConstant) return;
   if (globalRefs === undefined) return;
   //all types
@@ -120,6 +120,12 @@ const addPet = (options) => {
           this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
           this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
         }
+      }
+
+      if (this.currentDesire === 'bed' && !findTheObjectOfMyDesire(this, beds)) {
+        console.log(`I could not find any ${this.currentDesire.type}`)
+        this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
+        this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
       }
     },
   };
