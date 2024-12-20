@@ -13,6 +13,25 @@ import {
 
 let id = 1;
 
+// TODO Move this in a proper place
+const findTheObjectOfMyDesire = (pet, cheeses) => {
+  if (pet.currentDesire.type === "food" && cheeses.length > 0) {
+    // Get closest CHEESE
+    const targetCheese = cheeses[0];
+
+    // Set desire pos to closest CHEESE
+    pet.desireX = targetCheese.x;
+    pet.desireY = targetCheese.y;
+    
+    // Return target found.
+    console.log(`FATHER I CRAVE THE FORBIDDEN CHEESE`)
+    return true;
+  }
+
+  // No object of my desire was found :(
+  return false;
+};
+
 const addPet = (options) => {
   const { school, globalRefs, petType: type, cheeses } = options;
   if (school.length >= theDannyConstant) return;
@@ -97,10 +116,11 @@ const addPet = (options) => {
       if (this.currentDesireType) {
         this.currentDesire = desires.filter((desire) => desire.type === this.currentDesireType)[0];
         
-        // TODO find the object of the pet's desire
-  
-        this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
-        this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
+        if (!findTheObjectOfMyDesire(this, cheeses)) {
+          console.log(`I could not find any ${this.currentDesire.type}`)
+          this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
+          this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
+        }
       }
     },
   };
