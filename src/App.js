@@ -1,46 +1,37 @@
-import React, { Component } from 'react';
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
+import React, { Component } from "react";
+import HTML5Backend from "react-dnd-html5-backend";
+import { DragDropContext } from "react-dnd";
 
-import {
-  Duder,
-  HeaderUI
-} from './components';
+import { Duder, HeaderUI } from "./components";
+import bck1 from "./assets/images/bck1.png";
+import bck2 from "./assets/images/bck2.png";
+import bck3 from "./assets/images/bck3.png";
+import bck4 from "./assets/images/bck4.png";
 
-import '../src/assets/styles/App.css';
-import {
-  addPet,
-} from './operations';
+import "../src/assets/styles/App.css";
+import { addPet } from "./operations";
 
-
-
-import { pets } from './constants/petConstants';
+import { pets } from "./constants/petConstants";
 
 import {
   petFactory,
   backgroundFactory,
-  otherFactory, 
-  desireFactory
-} from './factories';
+  otherFactory,
+  desireFactory,
+} from "./factories";
 
-import {
-  petTankSize,
-  cheeseSize,
-  frameRate,
-} from './config';
+import { petTankSize, cheeseSize, frameRate } from "./config";
 
 let globalRefs;
 let school = [];
 let cheeses = [];
-let theBackground;
+const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)]
 const speechBubbleBaseSize = 45;
 
 class App extends Component {
   state = {
     interval: null,
-    turnOff: false
   };
-
   componentDidMount() {
     const blueFishRef = this.refs.blueFish;
     const greenFishRef = this.refs.greenFish;
@@ -65,38 +56,41 @@ class App extends Component {
       bck1Ref,
       bck2Ref,
       bck3Ref,
-      bck4Ref
+      bck4Ref,
     ]).then(() => {
-      addPet({ globalRefs, school, petType: 'redFish', cheeses });
-      addPet({ globalRefs, school, petType: 'redFish', cheeses });
-      addPet({ globalRefs, school, petType: 'redFish', cheeses });
-      addPet({ globalRefs, school, petType: 'blueFish', cheeses });
-      addPet({ globalRefs, school, petType: 'blueFish', cheeses });
-      addPet({ globalRefs, school, petType: 'blueFish', cheeses });
-      addPet({ globalRefs, school, petType: 'greenFish', cheeses });
-      addPet({ globalRefs, school, petType: 'greenFish', cheeses });
-      addPet({ globalRefs, school, petType: 'greenFish', cheeses });
-      addPet({ globalRefs, school, petType: 'orangeFish', cheeses });
-      addPet({ globalRefs, school, petType: 'orangeFish', cheeses });
-      addPet({ globalRefs, school, petType: 'orangeFish', cheeses });
-      theBackground = globalRefs[`bck${Math.floor(Math.random() * 4) + 1}`];
-      this.startThePets();
+      addPet({ globalRefs, school, petType: "redFish", cheeses });
+      addPet({ globalRefs, school, petType: "redFish", cheeses });
+      addPet({ globalRefs, school, petType: "redFish", cheeses });
+      addPet({ globalRefs, school, petType: "blueFish", cheeses });
+      addPet({ globalRefs, school, petType: "blueFish", cheeses });
+      addPet({ globalRefs, school, petType: "blueFish", cheeses });
+      addPet({ globalRefs, school, petType: "greenFish", cheeses });
+      addPet({ globalRefs, school, petType: "greenFish", cheeses });
+      addPet({ globalRefs, school, petType: "greenFish", cheeses });
+      addPet({ globalRefs, school, petType: "orangeFish", cheeses });
+      addPet({ globalRefs, school, petType: "orangeFish", cheeses });
+      addPet({ globalRefs, school, petType: "orangeFish", cheeses });
     });
   }
 
   drawAllPets() {
-    const petCanvas = this.refs.petCanvas;
-    const context = petCanvas.getContext('2d');
-    context.drawImage(theBackground, 0, 0, petCanvas.width, petCanvas.height);
+    const petCanvas = globalRefs.petCanvas;
+    const context = petCanvas.getContext("2d");
+    context.clearRect(0, 0, petCanvas.width, petCanvas.height);
 
-    if (this.state.turnOff) return;
     // Cheese
-    cheeses.forEach(cheese => {
+    cheeses.forEach((cheese) => {
       cheese.updateCheese();
-      context.drawImage(cheese.cheese, cheese.x, cheese.y, cheeseSize, cheeseSize);
+      context.drawImage(
+        cheese.cheese,
+        cheese.x,
+        cheese.y,
+        cheeseSize,
+        cheeseSize
+      );
     });
 
-    school.forEach(pet => {
+    school.forEach((pet) => {
       if (pet.restingPeriod !== 0) pet.restingPeriod--;
       if (!pet.isBored()) {
         pet.moveToDesire();
@@ -107,50 +101,68 @@ class App extends Component {
       context.drawImage(pet.pet, pet.x, pet.y, pet.size, pet.size);
 
       // render desire bubble
-      if(globalRefs[pet.currentDesireType]){
-        context.drawImage(globalRefs.speechBubble, pet.x + 40, pet.y - 15, speechBubbleBaseSize, speechBubbleBaseSize)
-        context.drawImage(globalRefs[pet.currentDesireType], pet.x + 53, pet.y - 5, speechBubbleBaseSize /2 , speechBubbleBaseSize /2 )
+      if (globalRefs[pet.currentDesireType]) {
+        context.drawImage(
+          globalRefs.speechBubble,
+          pet.x + 40,
+          pet.y - 15,
+          speechBubbleBaseSize,
+          speechBubbleBaseSize
+        );
+        context.drawImage(
+          globalRefs[pet.currentDesireType],
+          pet.x + 53,
+          pet.y - 5,
+          speechBubbleBaseSize / 2,
+          speechBubbleBaseSize / 2
+        );
       }
     });
   }
 
-  startThePets = () => {
-    const { interval } = this.state;
-    if (!interval) {
-      const interval = setInterval(() => {
-        this.drawAllPets();
-      }, frameRate);
-
-      this.setState({ interval });
-    }
-  };
-
-  stopThePets = () => {
-    clearInterval(this.state.interval);
-    this.setState({ interval: null });
-  };
-
   render() {
     return (
       <div className="App">
-        <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} />
-          <div>
-            <div style={{ height: '50px' }}>
-              {pets.map(pet => <Duder key={pet.type} {...pet} />)}
-            </div>
-            <canvas
-              ref="petCanvas"
-              height={petTankSize}
-              width={petTankSize}
-              style={{ border: '1px solid #000' }}
-            />
-            <canvas
-              ref="codeCanvas"
-              height={petTankSize}
-              width={petTankSize / 2}
-              style={{ border: '1px solid #000' }}
-            />
+        <HeaderUI
+          globalRefs={globalRefs}
+          school={school}
+          cheeses={cheeses}
+          drawAllPets={() => this.drawAllPets()}
+        />
+
+        <button
+          onClick={() => {
+            const { interval } = this.state;
+            if (!interval) {
+              const interval = setInterval(() => {
+                this.drawAllPets();
+              }, frameRate);
+
+              this.setState({ interval });
+            }
+          }}
+        >
+          Start
+        </button>
+        <div>
+          <div style={{ height: "50px" }}>
+            {pets.map((pet) => (
+              <Duder key={pet.type} {...pet} />
+            ))}
           </div>
+          <canvas
+            ref="petCanvas"
+            height={petTankSize}
+            width={petTankSize}
+            style={{ border: "1px solid #000", background: `url(${theBackground})` }}
+          />
+          <canvas
+            ref="codeCanvas"
+            height={petTankSize}
+            width={petTankSize / 2}
+            style={{ border: "1px solid #000" }}
+          />
+        </div>
         {petFactory()}
         {backgroundFactory()}
         {otherFactory()}
@@ -160,4 +172,4 @@ class App extends Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(App)
+export default DragDropContext(HTML5Backend)(App);
