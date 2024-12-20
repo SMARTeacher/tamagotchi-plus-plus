@@ -1,13 +1,15 @@
-const processScript = (firstNode) => {
-    let node = firstNode;
-    while (node) {
-        node.perform();
-        // TODO: Add a pause
-        if (node.getNext()) {
-            node = node.getNext();
-        }
-    }
-}
+const script = (nodes) => {
+    return {
+        nodes: nodes,
+        nextNode: 0,
+        run: function () {
+            console.log(`${this.nodes} ${this.nextNode}`);
+            this.nodes[this.nextNode].perform();
+            this.nextNode++;
+            this.nextNode %= this.nodes.length;
+        },
+    };
+};
 
 const newActionNode = (actionFunction) => {
     return {
@@ -35,7 +37,7 @@ const newConditionalNode = (conditionalFunction, ifTrueNode, ifFalseNode) => {
 const newNoOpCommand = newActionNode(() => {});
 
 export {
-    processScript,
+    script,
     newActionNode,
     newConditionalNode,
     newNoOpCommand,

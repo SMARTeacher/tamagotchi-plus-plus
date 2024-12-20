@@ -10,7 +10,7 @@ import bck4 from "./assets/images/bck4.png";
 
 import "../src/assets/styles/App.css";
 import { addCheese, addPet } from "./operations";
-import { newActionNode, newConditionalNode } from "./operations/commands";
+import { script, newActionNode, newConditionalNode } from "./operations/commands";
 
 import { pets } from "./constants/petConstants";
 
@@ -30,6 +30,7 @@ const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
 
 const mapCommands = (commands) => {
+  const nodes = [];
   commands.forEach((command) => {
     if (command.type === "if") {
       const actors = school.filter(
@@ -38,10 +39,11 @@ const mapCommands = (commands) => {
           pet.currentDesire.type === command.desireName
       );
       if (actors.length) {
-        addCheese({ globalRefs, school, cheeses });
+        nodes.push(newActionNode(() => addCheese({ globalRefs, school, cheeses })));
       }
     }
   });
+  return script(nodes);
 };
 
 class App extends Component {
@@ -145,10 +147,11 @@ class App extends Component {
         <button
           onClick={() => {
             const { interval } = this.state;
+            const script = mapCommands(this.state.commands);
             if (!interval) {
               const interval = setInterval(() => {
                 if (Math.floor(Date.now() / 1000) % 5) {
-                  mapCommands(this.state.commands);
+                  script.run();
                 }
                 this.drawAllPets();
               }, frameRate);
