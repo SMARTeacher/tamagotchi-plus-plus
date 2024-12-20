@@ -156,13 +156,13 @@ class App extends Component {
             width={petTankSize}
             style={{ border: "1px solid #000", background: `url(${theBackground})` }}
           />
-          <IfBlock />
           <canvas
             ref="codeCanvas"
             height={petTankSize}
             width={petTankSize / 2}
             style={{ border: "1px solid #000" }}
           />
+          <IfBlock />
         </div>
         {petFactory()}
         {backgroundFactory()}
