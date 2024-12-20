@@ -1,43 +1,39 @@
 const script = (nodes) => {
-    return {
-        nodes: nodes,
-        nextNode: 0,
-        run: function () {
-            this.nodes[this.nextNode].perform();
-            this.nextNode++;
-            this.nextNode %= this.nodes.length;
-        },
-    };
+  return {
+    nodes: nodes,
+    nextNode: 0,
+    run: function () {
+      if (this.nodes[this.nextNode]) {
+        this.nodes[this.nextNode].perform();
+        this.nextNode++;
+        this.nextNode %= this.nodes.length;
+      }
+    },
+  };
 };
 
 const newActionNode = (actionFunction) => {
-    return {
-        type: "action",
-        perform: () => actionFunction(),
-        getNext: null
-    }
+  return {
+    type: "action",
+    perform: () => actionFunction(),
+    getNext: null,
+  };
 };
 
 const newConditionalNode = (conditionalFunction, ifTrueNode, ifFalseNode) => {
-    return {
-        type: "if",
-        perform: () => {
-            if (conditionalFunction()) {
-                this.getNext = () => ifTrueNode;
-            }
-            else {
-                this.getNext = () => ifFalseNode;
-            }
-        },
-        getNext: null,
-    }
-}
+  return {
+    type: "if",
+    perform: () => {
+      if (conditionalFunction()) {
+        this.getNext = () => ifTrueNode;
+      } else {
+        this.getNext = () => ifFalseNode;
+      }
+    },
+    getNext: null,
+  };
+};
 
 const newNoOpCommand = newActionNode(() => {});
 
-export {
-    script,
-    newActionNode,
-    newConditionalNode,
-    newNoOpCommand,
-};
+export { script, newActionNode, newConditionalNode, newNoOpCommand };
