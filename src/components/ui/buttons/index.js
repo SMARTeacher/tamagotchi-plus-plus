@@ -2,12 +2,12 @@ import TenX from './TenX';
 import Duder from './Duder';
 import AddPet from './AddPet';
 import AddCheese from './AddCheese';
-import AddBbq from './AddBbq';
+import AddBed from './AddBed';
 
 export {
     Duder,
     TenX,
     AddPet,
     AddCheese,
-    AddBbq
+    AddBed
     };

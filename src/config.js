@@ -3,7 +3,7 @@ const theDannyConstant = 1000;
 const frameRate = 30;
 
 const cheeseSize = 80;
-const bbqSize = 80;
+const bedSize = 80;
 
 const petTankSize = 550;
 const pointSize = 20;
@@ -14,7 +14,7 @@ const eatingThreshold = 50;
 const petEatingThreshold = 50;
 
 const cheeseEatingThreshold = 50;
-const bbqEatingThreshold = 50;
+const bedEatingThreshold = 50;
 
 export {
     petThreshold,
@@ -29,6 +29,6 @@ export {
     eatingThreshold,
     petEatingThreshold,
     cheeseEatingThreshold,
-    bbqEatingThreshold,
-    bbqSize
+    bedEatingThreshold,
+    bedSize
 };

@@ -22,11 +22,15 @@ import {
   objectOfDesire
 } from "./factories";
 
-import { petTankSize, cheeseSize, frameRate } from "./config";
+import { petTankSize, cheeseSize, frameRate,
+  bedSize,
+  
+} from "./config";
 
 let globalRefs;
 let school = [];
 let cheeses = [];
+let beds = [];
 const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
 
@@ -103,6 +107,18 @@ class App extends Component {
       );
     });
 
+    // Bed
+    beds.forEach((bed) => {
+      bed.updateBed();
+      context.drawImage(
+        bed.bed,
+        bed.x,
+        bed.y,
+        bedSize,
+        bedSize
+      );
+    });
+
     school.forEach((pet) => {
       if (pet.restingPeriod !== 0) pet.restingPeriod--;
       if (!pet.isBored()) {
@@ -140,6 +156,7 @@ class App extends Component {
           globalRefs={globalRefs}
           school={school}
           cheeses={cheeses}
+          beds={beds}
         />
 
         <button
