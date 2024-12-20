@@ -1,4 +1,4 @@
-import { redFish, blueFish, greenFish, orangeFish,
+import { pet_squawks, pet_charfoal, pet_pomprikle, pet_sprike,
   food,
   sleep,
   coins,
@@ -6,10 +6,10 @@ import { redFish, blueFish, greenFish, orangeFish,
  } from "../assets";
 
 const pets = [
-  { src: redFish, type: "redFish" },
-  { src: blueFish, type: "blueFish" },
-  { src: greenFish, type: "greenFish" },
-  { src: orangeFish, type: "orangeFish" },
+  { src: pet_squawks, type: "redFish" },
+  { src: pet_charfoal, type: "blueFish" },
+  { src: pet_pomprikle, type: "greenFish" },
+  { src: pet_sprike, type: "orangeFish" },
 ];
 
 const desires = [

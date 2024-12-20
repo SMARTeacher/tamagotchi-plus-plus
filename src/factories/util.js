@@ -2,7 +2,7 @@ import React from 'react';
 import {
     cheese,
     cheeseDeath,
-    skelly,
+    pet_wishie,
     bck1,
     bck2,
     bck3,
@@ -20,7 +20,7 @@ const backgrounds = [
 const otherAssets = [
   { src: cheese, type: 'cheese' },
   { src: cheeseDeath, type: 'cheeseDeath' },
-  { src: skelly, type: 'skelly' },
+  { src: pet_wishie, type: 'skelly' },
   { src: speechBubble, type: 'speechBubble' }
 ];
 
