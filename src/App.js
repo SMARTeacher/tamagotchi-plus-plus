@@ -85,9 +85,9 @@ class App extends Component {
   }
 
   drawAllPets() {
-    const canvas = this.refs.canvas;
-    const context = canvas.getContext('2d');
-    context.drawImage(theBackground, 0, 0, canvas.width, canvas.height);
+    const petCanvas = this.refs.petCanvas;
+    const context = petCanvas.getContext('2d');
+    context.drawImage(theBackground, 0, 0, petCanvas.width, petCanvas.height);
 
     if (this.state.turnOff) return;
     // Cheese
@@ -139,9 +139,15 @@ class App extends Component {
               {pets.map(pet => <Duder key={pet.type} {...pet} />)}
             </div>
             <canvas
-              ref="canvas"
+              ref="petCanvas"
               height={petTankSize}
               width={petTankSize}
+              style={{ border: '1px solid #000' }}
+            />
+            <canvas
+              ref="codeCanvas"
+              height={petTankSize}
+              width={petTankSize / 2}
               style={{ border: '1px solid #000' }}
             />
           </div>
