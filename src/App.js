@@ -146,12 +146,16 @@ class App extends Component {
 
         <button
           onClick={() => {
+            const secondsBetweenUpdates = 1;
             const { interval } = this.state;
             const script = mapCommands(this.state.commands);
+            let lastUpdate = 0;
             if (!interval) {
               const interval = setInterval(() => {
-                if (Math.floor(Date.now() / 1000) % 5) {
+                let currSec = Math.floor(Date.now() / 1000);
+                if (currSec % secondsBetweenUpdates === 0 && currSec > lastUpdate) {
                   script.run();
+                  lastUpdate = currSec;
                 }
                 this.drawAllPets();
               }, frameRate);

@@ -3,7 +3,6 @@ const script = (nodes) => {
         nodes: nodes,
         nextNode: 0,
         run: function () {
-            console.log(`${this.nodes} ${this.nextNode}`);
             this.nodes[this.nextNode].perform();
             this.nextNode++;
             this.nextNode %= this.nodes.length;
