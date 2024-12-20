@@ -1,37 +1,34 @@
-import { fishTypes, fishPersonalities } from "../constants/fishConstants";
+import { petTypes, petPersonalities } from "../constants/petConstants";
 
 import {
-  fishTankSize,
+  petTankSize,
   boredomRadius,
-  fishWaitingPeriod,
-  fishThreshold,
+  petWaitingPeriod,
   theDannyConstant,
 } from "../config";
 import {
   coinFlip,
-  sortDesiresByDistance,
-  getSmallDistance,
   clamp,
 } from "./helpers";
 
 let id = 1;
 
-const addFish = (options) => {
-  const { school, globalRefs, fishType: type, cheeses } = options;
+const addPet = (options) => {
+  const { school, globalRefs, petType: type, cheeses } = options;
   if (school.length >= theDannyConstant) return;
   if (globalRefs === undefined) return;
   //all types
-  const fishType =
-    type || fishTypes[Math.floor(Math.random() * (fishTypes.length - 1))];
+  const petType =
+    type || petTypes[Math.floor(Math.random() * (petTypes.length - 1))];
   const speedModifier = 2;
-  console.log("New Fish!");
-  const newFish = {
-    id: `${fishType}${id}`,
-    fish: globalRefs[fishType],
-    type: fishType,
-    personality: fishPersonalities[fishType],
-    x: Math.floor(Math.random() * (fishTankSize - 40)),
-    y: Math.floor(Math.random() * (fishTankSize - 40)),
+  console.log("New pet!");
+  const newPet = {
+    id: `${petType}${id}`,
+    pet: globalRefs[petType],
+    type: petType,
+    personality: petPersonalities[petType],
+    x: Math.floor(Math.random() * (petTankSize - 40)),
+    y: Math.floor(Math.random() * (petTankSize - 40)),
     desireX: 225,
     desireY: 225,
     currentDesireType: null,
@@ -55,7 +52,7 @@ const addFish = (options) => {
       this.desireY = coinFlip()
         ? this.y + boredomRadius
         : this.y - boredomRadius;
-      this.restingPeriod = fishWaitingPeriod;
+      this.restingPeriod = petWaitingPeriod;
     },
     moveToDesire: function () {
       // X movement
@@ -96,13 +93,13 @@ const addFish = (options) => {
         }
       }
 
-      this.desireX = clamp(this.desireX, 0, fishTankSize - this.size);
-      this.desireY = clamp(this.desireY, 0, fishTankSize - this.size);
+      this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
+      this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
     },
   };
   id++;
-  newFish.setNewDesire(false);
-  school.push(newFish);
+  newPet.setNewDesire(false);
+  school.push(newPet);
 };
 
-export default addFish;
+export default addPet;

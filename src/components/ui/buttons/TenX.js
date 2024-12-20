@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import {
-    addFish
+    addPet
 } from '../../../operations';
 
 class TenX extends Component {
@@ -10,17 +10,17 @@ class TenX extends Component {
     }
 
     tenEx = () => {
-      this.props.school.forEach(fish => {
+      this.props.school.forEach(pet => {
         let index;
         for (index = 0; index < 9; index++) {
-          addFish({globalRefs: this.props.globalRefs, school: this.props.school, cheeses: this.props.cheeses });
+          addPet({globalRefs: this.props.globalRefs, school: this.props.school, cheeses: this.props.cheeses });
         }
       });
     };
 
     render() {
         return (
-            <button onClick={this.tenEx}>10X the fish</button>
+            <button onClick={this.tenEx}>10X the pets</button>
         );
     }
 };

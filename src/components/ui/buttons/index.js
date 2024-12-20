@@ -1,11 +1,11 @@
 import TenX from './TenX';
 import Duder from './Duder';
-import AddFish from './AddFish';
+import AddPet from './AddPet';
 import AddCheese from './AddCheese';
 
 export {
     Duder,
     TenX,
-    AddFish,
+    AddPet,
     AddCheese,
     };

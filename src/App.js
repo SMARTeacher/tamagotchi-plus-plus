@@ -9,22 +9,22 @@ import {
 
 import '../src/assets/styles/App.css';
 import {
-  addFish,
+  addPet,
 } from './operations';
 
 
 
-import { fishes } from './constants/fishConstants';
+import { pets } from './constants/petConstants';
 
 import {
-  fishFactory,
+  petFactory,
   backgroundFactory,
   otherFactory, 
   desireFactory
 } from './factories';
 
 import {
-  fishTankSize,
+  petTankSize,
   cheeseSize,
   frameRate,
 } from './config';
@@ -67,24 +67,24 @@ class App extends Component {
       bck3Ref,
       bck4Ref
     ]).then(() => {
-      addFish({ globalRefs, school, fishType: 'redFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'redFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'redFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'blueFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'blueFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'blueFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'greenFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'greenFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'greenFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'orangeFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'orangeFish', cheeses });
-      addFish({ globalRefs, school, fishType: 'orangeFish', cheeses });
+      addPet({ globalRefs, school, petType: 'redFish', cheeses });
+      addPet({ globalRefs, school, petType: 'redFish', cheeses });
+      addPet({ globalRefs, school, petType: 'redFish', cheeses });
+      addPet({ globalRefs, school, petType: 'blueFish', cheeses });
+      addPet({ globalRefs, school, petType: 'blueFish', cheeses });
+      addPet({ globalRefs, school, petType: 'blueFish', cheeses });
+      addPet({ globalRefs, school, petType: 'greenFish', cheeses });
+      addPet({ globalRefs, school, petType: 'greenFish', cheeses });
+      addPet({ globalRefs, school, petType: 'greenFish', cheeses });
+      addPet({ globalRefs, school, petType: 'orangeFish', cheeses });
+      addPet({ globalRefs, school, petType: 'orangeFish', cheeses });
+      addPet({ globalRefs, school, petType: 'orangeFish', cheeses });
       theBackground = globalRefs[`bck${Math.floor(Math.random() * 4) + 1}`];
-      this.startTheFish();
+      this.startThePets();
     });
   }
 
-  drawAllFish() {
+  drawAllPets() {
     const canvas = this.refs.canvas;
     const context = canvas.getContext('2d');
     context.drawImage(theBackground, 0, 0, canvas.width, canvas.height);
@@ -96,36 +96,36 @@ class App extends Component {
       context.drawImage(cheese.cheese, cheese.x, cheese.y, cheeseSize, cheeseSize);
     });
 
-    school.forEach(fish => {
-      if (fish.restingPeriod !== 0) fish.restingPeriod--;
-      if (!fish.isBored()) {
-        fish.moveToDesire();
+    school.forEach(pet => {
+      if (pet.restingPeriod !== 0) pet.restingPeriod--;
+      if (!pet.isBored()) {
+        pet.moveToDesire();
       } else {
-        fish.setNewDesire();
+        pet.setNewDesire();
       }
 
-      context.drawImage(fish.fish, fish.x, fish.y, fish.size, fish.size);
+      context.drawImage(pet.pet, pet.x, pet.y, pet.size, pet.size);
 
       // render desire bubble
-      if(globalRefs[fish.currentDesireType]){
-        context.drawImage(globalRefs.speechBubble, fish.x + 40, fish.y - 15, speechBubbleBaseSize, speechBubbleBaseSize)
-        context.drawImage(globalRefs[fish.currentDesireType], fish.x + 53, fish.y - 5, speechBubbleBaseSize /2 , speechBubbleBaseSize /2 )
+      if(globalRefs[pet.currentDesireType]){
+        context.drawImage(globalRefs.speechBubble, pet.x + 40, pet.y - 15, speechBubbleBaseSize, speechBubbleBaseSize)
+        context.drawImage(globalRefs[pet.currentDesireType], pet.x + 53, pet.y - 5, speechBubbleBaseSize /2 , speechBubbleBaseSize /2 )
       }
     });
   }
 
-  startTheFish = () => {
+  startThePets = () => {
     const { interval } = this.state;
     if (!interval) {
       const interval = setInterval(() => {
-        this.drawAllFish();
+        this.drawAllPets();
       }, frameRate);
 
       this.setState({ interval });
     }
   };
 
-  stopTheFish = () => {
+  stopThePets = () => {
     clearInterval(this.state.interval);
     this.setState({ interval: null });
   };
@@ -136,16 +136,16 @@ class App extends Component {
         <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} />
           <div>
             <div style={{ height: '50px' }}>
-              {fishes.map(fish => <Duder key={fish.type} {...fish} />)}
+              {pets.map(pet => <Duder key={pet.type} {...pet} />)}
             </div>
             <canvas
               ref="canvas"
-              height={fishTankSize}
-              width={fishTankSize}
+              height={petTankSize}
+              width={petTankSize}
               style={{ border: '1px solid #000' }}
             />
           </div>
-        {fishFactory()}
+        {petFactory()}
         {backgroundFactory()}
         {otherFactory()}
         {desireFactory()}

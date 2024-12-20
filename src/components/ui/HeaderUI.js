@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import {
-  AddFish,
+  AddPet,
   AddCheese,
   TenX
 } from './buttons';
@@ -14,7 +14,7 @@ class HeaderUI extends Component {
               Tamagotchi++
             </h1>
             <AddCheese school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
-            <AddFish school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
+            <AddPet school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
             <TenX school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
           </header>
         );

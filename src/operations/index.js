@@ -1,9 +1,9 @@
-import addFish from './addFish';
+import addPet from './addPet';
 import addCheese from './addCheese';
-import killFish from './killFish';
+import killPet from './killPet';
 
 export {
-    addFish,
+    addPet,
     addCheese,
-    killFish
+    killPet
 };

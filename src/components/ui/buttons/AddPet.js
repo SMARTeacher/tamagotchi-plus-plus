@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
 import {
-    addFish
+    addPet
 } from '../../../operations';
 
-class AddFish extends Component {
+class AddPet extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,15 +13,15 @@ class AddFish extends Component {
     
     }
 
-    addFish = () => {
-        addFish({globalRefs: this.props.globalRefs, school: this.props.school, cheeses: this.props.cheeses });
+    addPet = () => {
+        addPet({globalRefs: this.props.globalRefs, school: this.props.school, cheeses: this.props.cheeses });
       };
 
     render() {
         return (
-            <button onClick={this.addFish}>Add a Fish</button>
+            <button onClick={this.addPet}>Add a Pet</button>
         );
     }
 };
 
-export default AddFish;
+export default AddPet;

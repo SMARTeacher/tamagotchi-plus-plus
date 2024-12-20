@@ -1,11 +1,11 @@
 import {
     cheeseSize,
-    fishTankSize,
+    petTankSize,
     pointSize,
     cheeseEatingThreshold,
 } from '../config';
 
-import { addFish } from './index';
+import { addPet } from './index';
 
 let id = 1;
 
@@ -17,15 +17,15 @@ const addCheese = options => {
       type: 'cheese',
       cheese: globalRefs.cheese,
       health: 1000,
-      x: Math.floor(Math.random() * (fishTankSize - cheeseSize)),
-      y: Math.floor(Math.random() * (fishTankSize - cheeseSize)),
+      x: Math.floor(Math.random() * (petTankSize - cheeseSize)),
+      y: Math.floor(Math.random() * (petTankSize - cheeseSize)),
       size: pointSize,
       updateCheese: function() {
         if (this.health > 0) {
           let nibble = 0;
-          school.forEach(fish => {
+          school.forEach(pet => {
             if (
-              Math.sqrt((fish.x - this.x) ** 2) + Math.sqrt((fish.y - this.y) ** 2) <
+              Math.sqrt((pet.x - this.x) ** 2) + Math.sqrt((pet.y - this.y) ** 2) <
                 cheeseEatingThreshold
             ) {
               nibble++;
@@ -37,7 +37,7 @@ const addCheese = options => {
             setTimeout(() => {
               const index = cheeses.findIndex(cheese => cheese.id === this.id);
               cheeses.splice(index, 1);
-              addFish({globalRefs, school, cheeses });
+              addPet({globalRefs, school, cheeses });
             }, 5000);
           }
         }

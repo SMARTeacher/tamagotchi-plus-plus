@@ -1,11 +1,11 @@
 import { backgroundFactory } from "./backgroundFactory";
-import { fishFactory } from "./fishFactory";
+import { petFactory } from "./petFactory";
 import { otherFactory } from "./otherFactory";
 import { desireFactory } from "./desireFactory";
 
 export { 
     backgroundFactory, 
-    fishFactory, 
+    petFactory, 
     otherFactory, 
     desireFactory 
 };

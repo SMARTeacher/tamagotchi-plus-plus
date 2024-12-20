@@ -4,6 +4,6 @@ import {
 
 import {
     desires
-} from '../constants/fishConstants';
+} from '../constants/petConstants';
 
 export const desireFactory = () => desires.map(desire => buildImg({ ...desire, size: 128 }));

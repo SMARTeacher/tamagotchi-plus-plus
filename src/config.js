@@ -1,27 +1,27 @@
-const fishThreshold = 10;
+const petThreshold = 10;
 const theDannyConstant = 1000;
 const frameRate = 30;
 const cheeseSize = 80;
-const fishTankSize = 550;
+const petTankSize = 550;
 const pointSize = 20;
 const pointRadius = 50;
-const fishWaitingPeriod = 200;
+const petWaitingPeriod = 200;
 const boredomRadius = 30;
 const eatingThreshold = 50;
-const fishEatingThreshold = 50;
+const petEatingThreshold = 50;
 const cheeseEatingThreshold = 50;
 
 export {
-    fishThreshold,
+    petThreshold,
     theDannyConstant,
     frameRate,
     cheeseSize,
-    fishTankSize,
+    petTankSize,
     pointSize,
     pointRadius,
-    fishWaitingPeriod,
+    petWaitingPeriod,
     boredomRadius,
     eatingThreshold,
-    fishEatingThreshold,
+    petEatingThreshold,
     cheeseEatingThreshold,
-    };
+};

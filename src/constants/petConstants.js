@@ -5,7 +5,7 @@ import { redFish, blueFish, greenFish, orangeFish,
   water
  } from "../assets";
 
-const fishes = [
+const pets = [
   { src: redFish, type: "redFish" },
   { src: blueFish, type: "blueFish" },
   { src: greenFish, type: "greenFish" },
@@ -19,9 +19,9 @@ const desires = [
   { src: water, type: "water" },
 ];
 
-const fishTypes = fishes.map((fish) => fish.type);
+const petTypes = pets.map((pet) => pet.type);
 
-const fishPersonalities = {
+const petPersonalities = {
   redFish: [
     { type: "food", desirePoints: 40 },
     { type: "sleep", desirePoints: 10 },
@@ -48,4 +48,4 @@ const fishPersonalities = {
   ],
 };
 
-export { fishTypes, fishPersonalities, fishes, desires };
+export { petTypes, petPersonalities, pets, desires };
