@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import HTML5Backend from "react-dnd-html5-backend";
-import { DragDropContext } from "react-dnd";
+import React, { Component, render } from "react";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndContext } from "react-dnd";
 
 import { Duder, HeaderUI } from "./components";
 import bck1 from "./assets/images/bck1.png";
@@ -172,4 +172,4 @@ class App extends Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(App);
+export default App;
