@@ -36,17 +36,41 @@ const getActionOptions = () => {
 };
 
 class IfBlock extends Component {
+  state = {
+    selectedPet: null,
+  };
+
   render() {
     return (
       <span
-        style={{ display: "flex", flexDirection: "row", alignItems: "center", marginTop: "10px" }}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: "10px",
+        }}
       >
         <strong style={{ width: "50px" }}>IF</strong>
-        <Select options={getPetOptions()} />
+        <Select
+          options={getPetOptions()}
+          onSelect={(option) => {
+            this.props.command.petName = option.name;
+          }}
+        />
         <strong style={{ width: "50px" }}>IS</strong>
-        <Select options={getDesireOptions()} />
+        <Select
+          options={getDesireOptions()}
+          onSelect={(option) => {
+            this.props.command.desireName = option.name;
+          }}
+        />
         <strong style={{ width: "50px" }}>THEN</strong>
-        <Select options={getActionOptions()} />
+        <Select
+          options={getActionOptions()}
+          onSelect={(option) => {
+            this.props.command.actionName = option.name;
+          }}
+        />
       </span>
     );
   }

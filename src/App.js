@@ -25,12 +25,13 @@ import { petTankSize, cheeseSize, frameRate } from "./config";
 let globalRefs;
 let school = [];
 let cheeses = [];
-const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)]
+const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
 
 class App extends Component {
   state = {
     interval: null,
+    commands: [{ type: "if" }, { type: "if" }, { type: "if" }],
   };
   componentDidMount() {
     const blueFishRef = this.refs.blueFish;
@@ -144,28 +145,53 @@ class App extends Component {
         >
           Start
         </button>
+        <button
+          onClick={() => {
+            console.log(this.state);
+          }}
+        >
+          Debug
+        </button>
         <div>
           <div style={{ height: "50px" }}>
             {pets.map((pet) => (
               <Duder key={pet.type} {...pet} />
             ))}
           </div>
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                <canvas
-                  ref="petCanvas"
-                  height={petTankSize}
-                  width={petTankSize}
-                  style={{ border: "1px solid #000", background: `url(${theBackground})` }}
-                />
-                <div
-                  ref="codeSection"
-                  style={{ display: "inline-block", border: "1px solid #000", height: petTankSize, padding: "10px" }}
-                >
-                <IfBlock />
-                <IfBlock />
-                <IfBlock />
-              </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <canvas
+              ref="petCanvas"
+              height={petTankSize}
+              width={petTankSize}
+              style={{
+                border: "1px solid #000",
+                background: `url(${theBackground})`,
+              }}
+            />
+            <div
+              ref="codeSection"
+              style={{
+                display: "inline-block",
+                border: "1px solid #000",
+                height: petTankSize,
+                padding: "10px",
+              }}
+            >
+              {this.state.commands.map((command, index) => {
+                if (command.type === "if") {
+                  return <IfBlock command={command} key={index} />;
+                }
+                return null;
+              })}
             </div>
+          </div>
         </div>
         {petFactory()}
         {backgroundFactory()}

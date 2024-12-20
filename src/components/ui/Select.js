@@ -7,7 +7,9 @@ class Select extends Component {
   };
 
   componentDidMount() {
-    this.setState({ selectedOption: this.props.options[0] });
+    const option = this.props.options[0];
+    this.setState({ selectedOption: option });
+    this.props.onSelect(option);
   }
 
   render() {
@@ -40,6 +42,7 @@ class Select extends Component {
         {this.state.menuOpen &&
           this.props.options.map((option) => (
             <img
+              key={option.name}
               src={option.img}
               style={{
                 width: "50px",
@@ -56,6 +59,8 @@ class Select extends Component {
                   menuOpen: !this.state.menuOpen,
                   selectedOption: option,
                 });
+
+                this.props.onSelect(option);
               }}
             />
           ))}
