@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import HTML5Backend from "react-dnd-html5-backend";
 import { DragDropContext } from "react-dnd";
 
-import { Duder, HeaderUI } from "./components";
+import { Duder, HeaderUI, IfBlock } from "./components";
 import bck1 from "./assets/images/bck1.png";
 import bck2 from "./assets/images/bck2.png";
 import bck3 from "./assets/images/bck3.png";
@@ -156,6 +156,7 @@ class App extends Component {
             width={petTankSize}
             style={{ border: "1px solid #000", background: `url(${theBackground})` }}
           />
+          <IfBlock />
           <canvas
             ref="codeCanvas"
             height={petTankSize}
