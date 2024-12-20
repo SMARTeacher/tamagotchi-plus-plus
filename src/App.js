@@ -10,6 +10,7 @@ import bck4 from "./assets/images/bck4.png";
 
 import "../src/assets/styles/App.css";
 import { addPet } from "./operations";
+import { newActionNode, newConditionalNode } from "./operations/commands";
 
 import { pets } from "./constants/petConstants";
 
@@ -26,20 +27,29 @@ import { petTankSize, cheeseSize, frameRate } from "./config";
 let globalRefs;
 let school = [];
 let cheeses = [];
-let bbqs = [];
-
-const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)]
+const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
+
+
+const mapCommands = (commands) => {
+  commands.forEach((command) => {
+    if (command.type === "if") {
+      // school.find((pet) => 
+      // newConditionalNode
+    }
+  });
+}
 
 class App extends Component {
   state = {
     interval: null,
+    commands: [{ type: "if" }, { type: "if" }, { type: "if" }],
   };
   componentDidMount() {
-    const blueFishRef = this.refs.blueFish;
-    const greenFishRef = this.refs.greenFish;
-    const redFishRef = this.refs.redFish;
-    const orangeFishRef = this.refs.orangeFish;
+    const pet_charfoalRef = this.refs.pet_charfoal;
+    const pet_pomprikleRef = this.refs.pet_pomprikle;
+    const pet_squawksRef = this.refs.pet_squawks;
+    const pet_sprikeRef = this.refs.pet_sprike;
     const cheeseRef = this.refs.cheese;
     const skellyRef = this.refs.skelly;
     const cheeseDeathRef = this.refs.cheeseDeath;
@@ -49,10 +59,10 @@ class App extends Component {
     const bck4Ref = this.refs.bck4;
     globalRefs = this.refs;
     Promise.all([
-      blueFishRef,
-      greenFishRef,
-      redFishRef,
-      orangeFishRef,
+      pet_charfoalRef,
+      pet_pomprikleRef,
+      pet_squawksRef,
+      pet_sprikeRef,
       cheeseRef,
       skellyRef,
       cheeseDeathRef,
@@ -61,18 +71,18 @@ class App extends Component {
       bck3Ref,
       bck4Ref,
     ]).then(() => {
-      addPet({ globalRefs, school, petType: "redFish", cheeses });
-      addPet({ globalRefs, school, petType: "redFish", cheeses });
-      addPet({ globalRefs, school, petType: "redFish", cheeses });
-      addPet({ globalRefs, school, petType: "blueFish", cheeses });
-      addPet({ globalRefs, school, petType: "blueFish", cheeses });
-      addPet({ globalRefs, school, petType: "blueFish", cheeses });
-      addPet({ globalRefs, school, petType: "greenFish", cheeses });
-      addPet({ globalRefs, school, petType: "greenFish", cheeses });
-      addPet({ globalRefs, school, petType: "greenFish", cheeses });
-      addPet({ globalRefs, school, petType: "orangeFish", cheeses });
-      addPet({ globalRefs, school, petType: "orangeFish", cheeses });
-      addPet({ globalRefs, school, petType: "orangeFish", cheeses });
+      addPet({ globalRefs, school, petType: "pet_squawks", cheeses });
+      addPet({ globalRefs, school, petType: "pet_squawks", cheeses });
+      addPet({ globalRefs, school, petType: "pet_squawks", cheeses });
+      addPet({ globalRefs, school, petType: "pet_charfoal", cheeses });
+      addPet({ globalRefs, school, petType: "pet_charfoal", cheeses });
+      addPet({ globalRefs, school, petType: "pet_charfoal", cheeses });
+      addPet({ globalRefs, school, petType: "pet_pomprikle", cheeses });
+      addPet({ globalRefs, school, petType: "pet_pomprikle", cheeses });
+      addPet({ globalRefs, school, petType: "pet_pomprikle", cheeses });
+      addPet({ globalRefs, school, petType: "pet_sprike", cheeses });
+      addPet({ globalRefs, school, petType: "pet_sprike", cheeses });
+      addPet({ globalRefs, school, petType: "pet_sprike", cheeses });
     });
   }
 
@@ -130,8 +140,6 @@ class App extends Component {
           globalRefs={globalRefs}
           school={school}
           cheeses={cheeses}
-          bbqs={bbqs}
-          drawAllPets={() => this.drawAllPets()}
         />
 
         <button
@@ -139,6 +147,7 @@ class App extends Component {
             const { interval } = this.state;
             if (!interval) {
               const interval = setInterval(() => {
+                mapCommands(this.state.commands)
                 this.drawAllPets();
               }, frameRate);
 
@@ -148,28 +157,54 @@ class App extends Component {
         >
           Start
         </button>
+        <button
+          onClick={() => {
+            console.log(this.state);
+            console.log(school);
+          }}
+        >
+          Debug
+        </button>
         <div>
           <div style={{ height: "50px" }}>
             {pets.map((pet) => (
               <Duder key={pet.type} {...pet} />
             ))}
           </div>
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                <canvas
-                  ref="petCanvas"
-                  height={petTankSize}
-                  width={petTankSize}
-                  style={{ border: "1px solid #000", background: `url(${theBackground})` }}
-                />
-                <div
-                  ref="codeSection"
-                  style={{ display: "inline-block", border: "1px solid #000", height: petTankSize, padding: "10px" }}
-                >
-                <IfBlock />
-                <IfBlock />
-                <IfBlock />
-              </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <canvas
+              ref="petCanvas"
+              height={petTankSize}
+              width={petTankSize}
+              style={{
+                border: "1px solid #000",
+                background: `url(${theBackground})`,
+              }}
+            />
+            <div
+              ref="codeSection"
+              style={{
+                display: "inline-block",
+                border: "1px solid #000",
+                height: petTankSize,
+                padding: "10px",
+              }}
+            >
+              {this.state.commands.map((command, index) => {
+                if (command.type === "if") {
+                  return <IfBlock command={command} key={index} />;
+                }
+                return null;
+              })}
             </div>
+          </div>
         </div>
         {petFactory()}
         {backgroundFactory()}
