@@ -9,7 +9,7 @@ import bck3 from "./assets/images/bck3.png";
 import bck4 from "./assets/images/bck4.png";
 
 import "../src/assets/styles/App.css";
-import { addPet } from "./operations";
+import { addCheese, addPet } from "./operations";
 import { newActionNode, newConditionalNode } from "./operations/commands";
 
 import { pets } from "./constants/petConstants";
@@ -29,15 +29,20 @@ let cheeses = [];
 const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
 
-
 const mapCommands = (commands) => {
   commands.forEach((command) => {
     if (command.type === "if") {
-      // school.find((pet) => 
-      // newConditionalNode
+      const actors = school.filter(
+        (pet) =>
+          pet.type === command.petName &&
+          pet.currentDesire.type === command.desireName
+      );
+      if (actors.length) {
+        addCheese({ globalRefs, school, cheeses });
+      }
     }
   });
-}
+};
 
 class App extends Component {
   state = {
@@ -135,18 +140,16 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <HeaderUI
-          globalRefs={globalRefs}
-          school={school}
-          cheeses={cheeses}
-        />
+        <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} />
 
         <button
           onClick={() => {
             const { interval } = this.state;
             if (!interval) {
               const interval = setInterval(() => {
-                mapCommands(this.state.commands)
+                if (Math.floor(Date.now() / 1000) % 5) {
+                  mapCommands(this.state.commands);
+                }
                 this.drawAllPets();
               }, frameRate);
 
