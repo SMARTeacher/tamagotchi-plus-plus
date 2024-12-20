@@ -2,7 +2,12 @@ import { pet_squawks, pet_charfoal, pet_pomprikle, pet_sprike,
   food,
   sleep,
   coins,
-  water
+  water,
+
+  bbq,
+  bed,
+  office,
+  fountain
  } from "../assets";
 
 const pets = [
@@ -18,6 +23,13 @@ const desires = [
   { src: coins, type: "coins" },
   { src: water, type: "water" },
 ];
+
+const objectsOfDesire = [
+  { src: bbq, type: "bbq" },
+  { src: bed, type: "bed" },
+  { src: office, type: "office" },
+  { src: fountain, type: "fountain" },
+]
 
 const petTypes = pets.map((pet) => pet.type);
 
@@ -48,4 +60,4 @@ const petPersonalities = {
   ],
 };
 
-export { petTypes, petPersonalities, pets, desires };
+export { petTypes, petPersonalities, pets, desires, objectsOfDesire };

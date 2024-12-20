@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import {
   AddPet,
   AddCheese,
-  TenX
+  TenX,
+  AddBbq
 } from './buttons';
 
 class HeaderUI extends Component {
@@ -14,6 +15,7 @@ class HeaderUI extends Component {
               Tamagotchi++
             </h1>
             <AddCheese school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
+            <AddBbq school={this.props.school} globalRefs={this.props.globalRefs} bbqs={this.props.bbqs} />
             <AddPet school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
             <TenX school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
           </header>

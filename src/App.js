@@ -18,6 +18,7 @@ import {
   backgroundFactory,
   otherFactory,
   desireFactory,
+  objectOfDesire
 } from "./factories";
 
 import { petTankSize, cheeseSize, frameRate } from "./config";
@@ -25,6 +26,8 @@ import { petTankSize, cheeseSize, frameRate } from "./config";
 let globalRefs;
 let school = [];
 let cheeses = [];
+let bbqs = [];
+
 const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)]
 const speechBubbleBaseSize = 45;
 
@@ -127,6 +130,7 @@ class App extends Component {
           globalRefs={globalRefs}
           school={school}
           cheeses={cheeses}
+          bbqs={bbqs}
           drawAllPets={() => this.drawAllPets()}
         />
 
@@ -171,6 +175,7 @@ class App extends Component {
         {backgroundFactory()}
         {otherFactory()}
         {desireFactory()}
+        {objectOfDesire()}
       </div>
     );
   }
