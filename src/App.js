@@ -236,8 +236,10 @@ class App extends Component {
               style={{
                 display: "inline-block",
                 border: "1px solid #000",
-                height: petTankSize,
+                height: petTankSize - 20,
                 padding: "10px",
+                width: "320px",
+                overflowY: "scroll",
               }}
             >
               {this.state.commands.map((command, index) => {
