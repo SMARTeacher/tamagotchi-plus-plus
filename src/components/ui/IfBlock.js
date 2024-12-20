@@ -39,7 +39,7 @@ class IfBlock extends Component {
   render() {
     return (
       <span
-        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+        style={{ display: "flex", flexDirection: "row", alignItems: "center", marginTop: "10px" }}
       >
         <strong style={{ width: "50px" }}>IF</strong>
         <Select options={getPetOptions()} />

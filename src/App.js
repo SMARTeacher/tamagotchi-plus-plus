@@ -150,19 +150,22 @@ class App extends Component {
               <Duder key={pet.type} {...pet} />
             ))}
           </div>
-          <canvas
-            ref="petCanvas"
-            height={petTankSize}
-            width={petTankSize}
-            style={{ border: "1px solid #000", background: `url(${theBackground})` }}
-          />
-          <canvas
-            ref="codeCanvas"
-            height={petTankSize}
-            width={petTankSize / 2}
-            style={{ border: "1px solid #000" }}
-          />
-          <IfBlock />
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                <canvas
+                  ref="petCanvas"
+                  height={petTankSize}
+                  width={petTankSize}
+                  style={{ border: "1px solid #000", background: `url(${theBackground})` }}
+                />
+                <div
+                  ref="codeSection"
+                  style={{ display: "inline-block", border: "1px solid #000", height: petTankSize, padding: "10px" }}
+                >
+                <IfBlock />
+                <IfBlock />
+                <IfBlock />
+              </div>
+            </div>
         </div>
         {petFactory()}
         {backgroundFactory()}
