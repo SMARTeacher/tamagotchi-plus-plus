@@ -1,4 +1,4 @@
-import { petTypes, petPersonalities } from "../constants/petConstants";
+import { petTypes, petPersonalities, desires } from "../constants/petConstants";
 
 import {
   petTankSize,
@@ -29,6 +29,7 @@ const addPet = (options) => {
     personality: petPersonalities[petType],
     x: Math.floor(Math.random() * (petTankSize - 40)),
     y: Math.floor(Math.random() * (petTankSize - 40)),
+    currentDesire: null,
     desireX: 225,
     desireY: 225,
     currentDesireType: null,
@@ -93,8 +94,14 @@ const addPet = (options) => {
         }
       }
 
-      this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
-      this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
+      if (this.currentDesireType) {
+        this.currentDesire = desires.filter((desire) => desire.type === this.currentDesireType)[0];
+        
+        // TODO find the object of the pet's desire
+  
+        this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
+        this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
+      }
     },
   };
   id++;
