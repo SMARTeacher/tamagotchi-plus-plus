@@ -10,7 +10,11 @@ import bck4 from "./assets/images/bck4.png";
 
 import "../src/assets/styles/App.css";
 import { addCheese, addPet } from "./operations";
-import { script, newActionNode, newConditionalNode } from "./operations/commands";
+import {
+  script,
+  newActionNode,
+  newConditionalNode,
+} from "./operations/commands";
 
 import { pets } from "./constants/petConstants";
 
@@ -39,7 +43,9 @@ const mapCommands = (commands) => {
           pet.currentDesire.type === command.desireName
       );
       if (actors.length) {
-        nodes.push(newActionNode(() => addCheese({ globalRefs, school, cheeses })));
+        nodes.push(
+          newActionNode(() => addCheese({ globalRefs, school, cheeses }))
+        );
       }
     }
   });
@@ -49,7 +55,7 @@ const mapCommands = (commands) => {
 class App extends Component {
   state = {
     interval: null,
-    commands: [{ type: "if" }, { type: "if" }, { type: "if" }],
+    commands: [],
   };
   componentDidMount() {
     const pet_charfoalRef = this.refs.pet_charfoal;
@@ -143,7 +149,15 @@ class App extends Component {
     return (
       <div className="App">
         <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} />
-
+        <button
+          onClick={() => {
+            this.setState({
+              commands: [...this.state.commands, { type: "if" }],
+            })
+          }}
+        >
+          Add IF Block
+        </button>
         <button
           onClick={() => {
             const secondsBetweenUpdates = 1;
@@ -153,7 +167,10 @@ class App extends Component {
             if (!interval) {
               const interval = setInterval(() => {
                 let currSec = Math.floor(Date.now() / 1000);
-                if (currSec % secondsBetweenUpdates === 0 && currSec > lastUpdate) {
+                if (
+                  currSec % secondsBetweenUpdates === 0 &&
+                  currSec > lastUpdate
+                ) {
                   script.run();
                   lastUpdate = currSec;
                 }
