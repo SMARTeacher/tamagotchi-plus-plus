@@ -32,7 +32,7 @@ const newConditionalNode = (conditionalFunction, ifTrueNode, ifFalseNode) => {
     }
 }
 
-const newNoOpCommand = newActionCommand(() => {});
+const newNoOpCommand = newActionNode(() => {});
 
 export {
     processScript,

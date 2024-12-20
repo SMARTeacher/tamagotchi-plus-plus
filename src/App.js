@@ -10,6 +10,7 @@ import bck4 from "./assets/images/bck4.png";
 
 import "../src/assets/styles/App.css";
 import { addPet } from "./operations";
+import { newActionNode, newConditionalNode } from "./operations/commands";
 
 import { pets } from "./constants/petConstants";
 
@@ -28,16 +29,26 @@ let cheeses = [];
 const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
 
+
+const mapCommands = (commands) => {
+  commands.forEach((command) => {
+    if (command.type === "if") {
+      // school.find((pet) => 
+      // newConditionalNode
+    }
+  });
+}
+
 class App extends Component {
   state = {
     interval: null,
     commands: [{ type: "if" }, { type: "if" }, { type: "if" }],
   };
   componentDidMount() {
-    const blueFishRef = this.refs.blueFish;
-    const greenFishRef = this.refs.greenFish;
-    const redFishRef = this.refs.redFish;
-    const orangeFishRef = this.refs.orangeFish;
+    const pet_charfoalRef = this.refs.pet_charfoal;
+    const pet_pomprikleRef = this.refs.pet_pomprikle;
+    const pet_squawksRef = this.refs.pet_squawks;
+    const pet_sprikeRef = this.refs.pet_sprike;
     const cheeseRef = this.refs.cheese;
     const skellyRef = this.refs.skelly;
     const cheeseDeathRef = this.refs.cheeseDeath;
@@ -47,10 +58,10 @@ class App extends Component {
     const bck4Ref = this.refs.bck4;
     globalRefs = this.refs;
     Promise.all([
-      blueFishRef,
-      greenFishRef,
-      redFishRef,
-      orangeFishRef,
+      pet_charfoalRef,
+      pet_pomprikleRef,
+      pet_squawksRef,
+      pet_sprikeRef,
       cheeseRef,
       skellyRef,
       cheeseDeathRef,
@@ -59,18 +70,18 @@ class App extends Component {
       bck3Ref,
       bck4Ref,
     ]).then(() => {
-      addPet({ globalRefs, school, petType: "redFish", cheeses });
-      addPet({ globalRefs, school, petType: "redFish", cheeses });
-      addPet({ globalRefs, school, petType: "redFish", cheeses });
-      addPet({ globalRefs, school, petType: "blueFish", cheeses });
-      addPet({ globalRefs, school, petType: "blueFish", cheeses });
-      addPet({ globalRefs, school, petType: "blueFish", cheeses });
-      addPet({ globalRefs, school, petType: "greenFish", cheeses });
-      addPet({ globalRefs, school, petType: "greenFish", cheeses });
-      addPet({ globalRefs, school, petType: "greenFish", cheeses });
-      addPet({ globalRefs, school, petType: "orangeFish", cheeses });
-      addPet({ globalRefs, school, petType: "orangeFish", cheeses });
-      addPet({ globalRefs, school, petType: "orangeFish", cheeses });
+      addPet({ globalRefs, school, petType: "pet_squawks", cheeses });
+      addPet({ globalRefs, school, petType: "pet_squawks", cheeses });
+      addPet({ globalRefs, school, petType: "pet_squawks", cheeses });
+      addPet({ globalRefs, school, petType: "pet_charfoal", cheeses });
+      addPet({ globalRefs, school, petType: "pet_charfoal", cheeses });
+      addPet({ globalRefs, school, petType: "pet_charfoal", cheeses });
+      addPet({ globalRefs, school, petType: "pet_pomprikle", cheeses });
+      addPet({ globalRefs, school, petType: "pet_pomprikle", cheeses });
+      addPet({ globalRefs, school, petType: "pet_pomprikle", cheeses });
+      addPet({ globalRefs, school, petType: "pet_sprike", cheeses });
+      addPet({ globalRefs, school, petType: "pet_sprike", cheeses });
+      addPet({ globalRefs, school, petType: "pet_sprike", cheeses });
     });
   }
 
@@ -128,7 +139,6 @@ class App extends Component {
           globalRefs={globalRefs}
           school={school}
           cheeses={cheeses}
-          drawAllPets={() => this.drawAllPets()}
         />
 
         <button
@@ -136,6 +146,7 @@ class App extends Component {
             const { interval } = this.state;
             if (!interval) {
               const interval = setInterval(() => {
+                mapCommands(this.state.commands)
                 this.drawAllPets();
               }, frameRate);
 
@@ -148,6 +159,7 @@ class App extends Component {
         <button
           onClick={() => {
             console.log(this.state);
+            console.log(school);
           }}
         >
           Debug
