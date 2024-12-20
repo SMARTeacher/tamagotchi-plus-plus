@@ -4,6 +4,7 @@ const frameRate = 30;
 
 const cheeseSize = 80;
 const bedSize = 80;
+const officeSize = 80;
 
 const petTankSize = 550;
 const pointSize = 20;
@@ -15,6 +16,7 @@ const petEatingThreshold = 50;
 
 const cheeseEatingThreshold = 50;
 const bedEatingThreshold = 50;
+const officeEatingThreshold = 50;
 
 export {
     petThreshold,
@@ -30,5 +32,7 @@ export {
     petEatingThreshold,
     cheeseEatingThreshold,
     bedEatingThreshold,
-    bedSize
+    bedSize,
+    officeSize,
+    officeEatingThreshold
 };

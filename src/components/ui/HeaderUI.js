@@ -4,7 +4,8 @@ import {
   AddPet,
   AddCheese,
   TenX,
-  AddBed
+  AddBed,
+  AddOffice,
 } from './buttons';
 
 class HeaderUI extends Component {
@@ -14,8 +15,11 @@ class HeaderUI extends Component {
             <h1 className="App-title" style={{ margin: 0 }}>
               Tamagotchi++
             </h1>
-            <AddCheese school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
-            <AddBed school={this.props.school} globalRefs={this.props.globalRefs} beds={this.props.beds} />
+            <AddCheese school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} beds={this.props.beds}  offices={this.props.offices} />
+            <AddBed school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} beds={this.props.beds}  offices={this.props.offices} />
+
+            <AddOffice school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} beds={this.props.beds} offices={this.props.offices} />
+
             <AddPet school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
             <TenX school={this.props.school} globalRefs={this.props.globalRefs} cheeses={this.props.cheeses} />
           </header>

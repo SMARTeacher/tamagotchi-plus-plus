@@ -28,6 +28,7 @@ import {
 
 import { petTankSize, cheeseSize, frameRate,
   bedSize,
+  officeSize,
   
 } from "./config";
 
@@ -35,6 +36,8 @@ let globalRefs;
 let school = [];
 let cheeses = [];
 let beds = [];
+let offices = [];
+
 const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
 
@@ -132,6 +135,18 @@ class App extends Component {
       );
     });
 
+    // Office
+    offices.forEach((office) => {
+      office.updateOffice();
+      context.drawImage(
+        office.office,
+        office.x,
+        office.y,
+        officeSize,
+        officeSize
+      );
+    });
+
     school.forEach((pet) => {
       if (pet.restingPeriod !== 0) pet.restingPeriod--;
       if (!pet.isBored()) {
@@ -165,7 +180,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} />
+        <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} beds={beds} offices={offices} />
         <button
           onClick={() => {
             this.setState({
