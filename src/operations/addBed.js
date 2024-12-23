@@ -15,7 +15,7 @@ const addBed = () => {
       id: `bed${id}`,
       type: 'bed',
       bed: refs.bed,
-      health: 10,
+      health: 100,
       x: Math.floor(Math.random() * (petTankSize - bedSize)),
       y: Math.floor(Math.random() * (petTankSize - bedSize)),
       size: pointSize,
@@ -25,7 +25,7 @@ const addBed = () => {
           school.forEach(pet => {
             if (
               Math.sqrt((pet.x - this.x) ** 2) + Math.sqrt((pet.y - this.y) ** 2) <
-              bedEatingThreshold
+              bedEatingThreshold && pet.currentDesireType === 'sleep'
             ) {
               nibble++;
             }

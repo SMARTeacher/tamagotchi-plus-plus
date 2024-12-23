@@ -34,7 +34,7 @@ const mapCommands = (commands) => {
       const actors = school.filter(
         (pet) =>
           pet.type === command.petName &&
-          pet.currentDesire.type === command.desireName
+          pet.currentDesireType === command.desireName
       );
       if (actors.length) {
         if (command.actionName === "cheese") {

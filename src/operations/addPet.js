@@ -11,24 +11,12 @@ import { refs, beds, cheeses, school } from "../constants/state";
 
 let id = 1;
 
-// TODO Move this in a proper place
-const findTheObjectOfMyDesire = (pet, objs) => {
-  if (pet.currentDesire.type === "food" && objs.length > 0) {
-    // Get closest CHEESE
-    const targetObj = objs[0];
-
-    // Set desire pos to closest CHEESE
-    pet.desireX = targetObj.x;
-    pet.desireY = targetObj.y;
-
-    // Return target found.
-    console.log(`FATHER I CRAVE THE FORBIDDEN ${pet.currentDesire.type}`);
-    return true;
-  }
-
-  // No object of my desire was found :(
-  return false;
+const getRandomElement = (array) => {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
 };
+
+const getRandomSafeCoord = () => Math.floor(Math.random() * (petTankSize - 40));
 
 const addPet = (options = {}) => {
   const { petType: type } = options;
@@ -48,11 +36,10 @@ const addPet = (options = {}) => {
     pet: refs[petType],
     type: petType,
     personality: petPersonalities[petType],
-    x: Math.floor(Math.random() * (petTankSize - 40)),
-    y: Math.floor(Math.random() * (petTankSize - 40)),
-    currentDesire: null,
-    desireX: 225,
-    desireY: 225,
+    x: getRandomSafeCoord(),
+    y: getRandomSafeCoord(),
+    desireX: getRandomSafeCoord(),
+    desireY: getRandomSafeCoord(),
     currentDesireType: null,
     restingPeriod: 0,
     size: 75,
@@ -110,30 +97,26 @@ const addPet = (options = {}) => {
           sum += personalityRow.desirePoints;
           if (sum - desireRoll >= 0) {
             this.currentDesireType = personalityRow.type;
+            this.setDesireObj();
+
             break;
           }
         }
       }
+    },
 
-      if (this.currentDesireType) {
-        this.currentDesire = desires.filter(
-          (desire) => desire.type === this.currentDesireType
-        )[0];
-
-        if (!findTheObjectOfMyDesire(this, cheeses)) {
-          this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
-          this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
-        }
+    setDesireObj: function () {
+      let objs = [];
+      if (this.currentDesireType === "food") {
+        objs = cheeses;
+      } else if (this.currentDesireType === "sleep") {
+        objs = beds;
       }
 
-      if (
-        this.currentDesire === "bed" &&
-        !findTheObjectOfMyDesire(this, beds)
-      ) {
-        console.log(`I could not find any ${this.currentDesire.type}`);
-        this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
-        this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
-      }
+      if (objs.length === 0) return;
+      const obj = getRandomElement(objs);
+      this.desireX = clamp(obj.x, 0, petTankSize - this.size);
+      this.desireY = clamp(obj.y, 0, petTankSize - this.size);
     },
   };
   id++;

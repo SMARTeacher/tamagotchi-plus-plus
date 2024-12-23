@@ -16,7 +16,7 @@ const addCheese = () => {
       id: `cheese${id}`,
       type: 'cheese',
       cheese: refs.cheese,
-      health: 1000,
+      health: 100,
       x: Math.floor(Math.random() * (petTankSize - cheeseSize)),
       y: Math.floor(Math.random() * (petTankSize - cheeseSize)),
       size: pointSize,
@@ -26,7 +26,7 @@ const addCheese = () => {
           school.forEach(pet => {
             if (
               Math.sqrt((pet.x - this.x) ** 2) + Math.sqrt((pet.y - this.y) ** 2) <
-                cheeseEatingThreshold
+                cheeseEatingThreshold && pet.currentDesireType === 'food'
             ) {
               nibble++;
             }
