@@ -33,6 +33,7 @@ class Select extends Component {
             {this.state.selectedOption && (
               <img
                 src={this.state.selectedOption.img}
+                alt={this.state.selectedOption.name}
                 style={{
                   width: "50px",
                   height: "50px",
@@ -49,6 +50,7 @@ class Select extends Component {
             <img
               key={option.name}
               src={option.img}
+              alt={option.name}
               style={{
                 width: "50px",
                 height: "50px",

@@ -6,7 +6,7 @@ import {
 } from '../config';
 
 import { addPet } from './index';
-import { beds, cheeses, refs, school} from '../constants/state';
+import { cheeses, refs, school} from '../constants/state';
 
 let id = 1;
 

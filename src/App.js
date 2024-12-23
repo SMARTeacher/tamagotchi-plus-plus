@@ -45,6 +45,8 @@ const mapCommands = (commands) => {
       }
 
       return newActionNode(() => {});
+    } else {
+      throw new Error("Not implemented");
     }
   });
   return script(nodes);

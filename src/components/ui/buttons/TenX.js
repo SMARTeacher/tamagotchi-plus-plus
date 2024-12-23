@@ -4,10 +4,6 @@ import { addPet } from "../../../operations";
 import { school } from "../../../constants/state";
 
 class TenX extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   tenEx = () => {
     school.forEach((pet) => {
       let index;
