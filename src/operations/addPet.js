@@ -6,16 +6,10 @@ import {
   petWaitingPeriod,
   theDannyConstant,
 } from "../config";
-import { coinFlip, clamp } from "./helpers";
+import { coinFlip, clamp, getRandomElement } from "./helpers";
 import { refs, beds, cheeses, school } from "../constants/state";
 
 let id = 1;
-
-const getRandomElement = (array) => {
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
-};
-
 const getRandomSafeCoord = () => Math.floor(Math.random() * (petTankSize - 40));
 
 const addPet = (options = {}) => {

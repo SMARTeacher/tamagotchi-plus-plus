@@ -1,9 +1,5 @@
 import React, { Component } from "react";
-
-const getRandomElement = (array) => {
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
-};
+import { getRandomElement } from "../../operations/helpers";
 
 class Select extends Component {
   state = {
