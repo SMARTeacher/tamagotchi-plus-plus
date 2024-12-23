@@ -1,5 +1,10 @@
 import React, { Component } from "react";
 
+const getRandomElement = (array) => {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+};
+
 class Select extends Component {
   state = {
     selectedOption: null,
@@ -7,7 +12,7 @@ class Select extends Component {
   };
 
   componentDidMount() {
-    const option = this.props.options[0];
+    const option = getRandomElement(this.props.options);
     this.setState({ selectedOption: option });
     this.props.onSelect(option);
   }
