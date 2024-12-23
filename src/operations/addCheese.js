@@ -6,16 +6,16 @@ import {
 } from '../config';
 
 import { addPet } from './index';
+import { beds, cheeses, refs, school} from '../constants/state';
 
 let id = 1;
 
-const addCheese = options => {
-    const { globalRefs, school, cheeses } = options;
-    if (globalRefs === undefined) return;
+const addCheese = () => {
+    if (!refs.cheese) return;
     const newCheese = {
       id: `cheese${id}`,
       type: 'cheese',
-      cheese: globalRefs.cheese,
+      cheese: refs.cheese,
       health: 1000,
       x: Math.floor(Math.random() * (petTankSize - cheeseSize)),
       y: Math.floor(Math.random() * (petTankSize - cheeseSize)),
@@ -33,11 +33,11 @@ const addCheese = options => {
           });
           this.health -= nibble;
           if (this.health <= 0) {
-            this.cheese = globalRefs.cheeseDeath;
+            this.cheese = refs.cheeseDeath;
             setTimeout(() => {
               const index = cheeses.findIndex(cheese => cheese.id === this.id);
               cheeses.splice(index, 1);
-              addPet({globalRefs, school, cheeses });
+              addPet();
             }, 5000);
           }
         }

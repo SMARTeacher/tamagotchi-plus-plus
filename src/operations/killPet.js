@@ -1,6 +1,8 @@
-const killPet = (globalRefs, school, pet) => {
-    if (!pet.type !== 'skelly') {
-      pet.pet = globalRefs.skelly;
+import { refs, school } from '../constants/state';
+
+const killPet = (pet) => {
+  if (!pet.type !== 'skelly') {
+      pet.pet = refs.skelly;
       pet.type = 'skelly';
       pet.desireX = pet.x;
       pet.desireY = pet.y;

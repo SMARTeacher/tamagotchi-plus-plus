@@ -11,6 +11,7 @@ import {
   coins,
   water,
   cheese,
+  bed,
 } from "../../assets";
 
 const getPetOptions = () => {
@@ -32,7 +33,10 @@ const getDesireOptions = () => {
 };
 
 const getActionOptions = () => {
-  return [{ img: cheese, name: "cheese" }];
+  return [
+    { img: cheese, name: "cheese" },
+    { img: bed, name: "sleep" },
+  ];
 };
 
 class IfBlock extends Component {

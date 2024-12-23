@@ -6,10 +6,8 @@ import {
   petWaitingPeriod,
   theDannyConstant,
 } from "../config";
-import {
-  coinFlip,
-  clamp,
-} from "./helpers";
+import { coinFlip, clamp } from "./helpers";
+import { refs, beds, cheeses, school } from "../constants/state";
 
 let id = 1;
 
@@ -22,9 +20,9 @@ const findTheObjectOfMyDesire = (pet, objs) => {
     // Set desire pos to closest CHEESE
     pet.desireX = targetObj.x;
     pet.desireY = targetObj.y;
-    
+
     // Return target found.
-    console.log(`FATHER I CRAVE THE FORBIDDEN ${pet.currentDesire.type}`)
+    console.log(`FATHER I CRAVE THE FORBIDDEN ${pet.currentDesire.type}`);
     return true;
   }
 
@@ -32,18 +30,22 @@ const findTheObjectOfMyDesire = (pet, objs) => {
   return false;
 };
 
-const addPet = (options) => {
-  const { school, globalRefs, petType: type, cheeses, beds } = options;
-  if (school.length >= theDannyConstant) return;
-  if (globalRefs === undefined) return;
+const addPet = (options = {}) => {
+  const { petType: type } = options;
+
   //all types
   const petType =
     type || petTypes[Math.floor(Math.random() * (petTypes.length - 1))];
+
+  if (school.length >= theDannyConstant) return;
+  if (!refs[petType]) return;
+
   const speedModifier = 2;
   console.log("New pet!");
+
   const newPet = {
     id: `${petType}${id}`,
-    pet: globalRefs[petType],
+    pet: refs[petType],
     type: petType,
     personality: petPersonalities[petType],
     x: Math.floor(Math.random() * (petTankSize - 40)),
@@ -114,16 +116,21 @@ const addPet = (options) => {
       }
 
       if (this.currentDesireType) {
-        this.currentDesire = desires.filter((desire) => desire.type === this.currentDesireType)[0];
-        
+        this.currentDesire = desires.filter(
+          (desire) => desire.type === this.currentDesireType
+        )[0];
+
         if (!findTheObjectOfMyDesire(this, cheeses)) {
           this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
           this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
         }
       }
 
-      if (this.currentDesire === 'bed' && !findTheObjectOfMyDesire(this, beds)) {
-        console.log(`I could not find any ${this.currentDesire.type}`)
+      if (
+        this.currentDesire === "bed" &&
+        !findTheObjectOfMyDesire(this, beds)
+      ) {
+        console.log(`I could not find any ${this.currentDesire.type}`);
         this.desireX = clamp(this.desireX, 0, petTankSize - this.size);
         this.desireY = clamp(this.desireY, 0, petTankSize - this.size);
       }

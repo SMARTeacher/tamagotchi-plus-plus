@@ -9,38 +9,27 @@ import bck3 from "./assets/images/bck3.png";
 import bck4 from "./assets/images/bck4.png";
 
 import "../src/assets/styles/App.css";
-import { addCheese, addPet } from "./operations";
-import {
-  script,
-  newActionNode,
-  newConditionalNode,
-} from "./operations/commands";
+import { addCheese, addBed, addPet } from "./operations";
+import { script, newActionNode } from "./operations/commands";
 
 import { pets } from "./constants/petConstants";
+import { refs, beds, cheeses, school } from "./constants/state";
 
 import {
   petFactory,
   backgroundFactory,
   otherFactory,
   desireFactory,
-  objectOfDesire
+  objectOfDesire,
 } from "./factories";
 
-import { petTankSize, cheeseSize, frameRate,
-  bedSize,
-  
-} from "./config";
+import { petTankSize, cheeseSize, frameRate, bedSize } from "./config";
 
-let globalRefs;
-let school = [];
-let cheeses = [];
-let beds = [];
 const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
 
 const mapCommands = (commands) => {
-  const nodes = [];
-  commands.forEach((command) => {
+  const nodes = commands.map((command) => {
     if (command.type === "if") {
       const actors = school.filter(
         (pet) =>
@@ -48,10 +37,14 @@ const mapCommands = (commands) => {
           pet.currentDesire.type === command.desireName
       );
       if (actors.length) {
-        nodes.push(
-          newActionNode(() => addCheese({ globalRefs, school, cheeses }))
-        );
+        if (command.actionName === "cheese") {
+          return newActionNode(() => addCheese());
+        } else if (command.actionName === "sleep") {
+          return newActionNode(() => addBed());
+        }
       }
+
+      return newActionNode(() => {});
     }
   });
   return script(nodes);
@@ -74,7 +67,8 @@ class App extends Component {
     const bck2Ref = this.refs.bck2;
     const bck3Ref = this.refs.bck3;
     const bck4Ref = this.refs.bck4;
-    globalRefs = this.refs;
+    console.log(this.refs);
+    // refs = { ...this.refs };
     Promise.all([
       pet_charfoalRef,
       pet_pomprikleRef,
@@ -88,23 +82,27 @@ class App extends Component {
       bck3Ref,
       bck4Ref,
     ]).then(() => {
-      addPet({ globalRefs, school, petType: "pet_squawks", cheeses });
-      addPet({ globalRefs, school, petType: "pet_squawks", cheeses });
-      addPet({ globalRefs, school, petType: "pet_squawks", cheeses });
-      addPet({ globalRefs, school, petType: "pet_charfoal", cheeses });
-      addPet({ globalRefs, school, petType: "pet_charfoal", cheeses });
-      addPet({ globalRefs, school, petType: "pet_charfoal", cheeses });
-      addPet({ globalRefs, school, petType: "pet_pomprikle", cheeses });
-      addPet({ globalRefs, school, petType: "pet_pomprikle", cheeses });
-      addPet({ globalRefs, school, petType: "pet_pomprikle", cheeses });
-      addPet({ globalRefs, school, petType: "pet_sprike", cheeses });
-      addPet({ globalRefs, school, petType: "pet_sprike", cheeses });
-      addPet({ globalRefs, school, petType: "pet_sprike", cheeses });
+      Object.keys(this.refs).forEach((key) => {
+        refs[key] = this.refs[key];
+      });
+
+      addPet({ petType: "pet_squawks" });
+      addPet({ petType: "pet_squawks" });
+      addPet({ petType: "pet_squawks" });
+      addPet({ petType: "pet_charfoal" });
+      addPet({ petType: "pet_charfoal" });
+      addPet({ petType: "pet_charfoal" });
+      addPet({ petType: "pet_pomprikle" });
+      addPet({ petType: "pet_pomprikle" });
+      addPet({ petType: "pet_pomprikle" });
+      addPet({ petType: "pet_sprike" });
+      addPet({ petType: "pet_sprike" });
+      addPet({ petType: "pet_sprike" });
     });
   }
 
   drawAllPets() {
-    const petCanvas = globalRefs.petCanvas;
+    const petCanvas = refs.petCanvas;
     const context = petCanvas.getContext("2d");
     context.clearRect(0, 0, petCanvas.width, petCanvas.height);
 
@@ -123,13 +121,7 @@ class App extends Component {
     // Bed
     beds.forEach((bed) => {
       bed.updateBed();
-      context.drawImage(
-        bed.bed,
-        bed.x,
-        bed.y,
-        bedSize,
-        bedSize
-      );
+      context.drawImage(bed.bed, bed.x, bed.y, bedSize, bedSize);
     });
 
     school.forEach((pet) => {
@@ -143,16 +135,16 @@ class App extends Component {
       context.drawImage(pet.pet, pet.x, pet.y, pet.size, pet.size);
 
       // render desire bubble
-      if (globalRefs[pet.currentDesireType]) {
+      if (refs[pet.currentDesireType]) {
         context.drawImage(
-          globalRefs.speechBubble,
+          refs.speechBubble,
           pet.x + 40,
           pet.y - 15,
           speechBubbleBaseSize,
           speechBubbleBaseSize
         );
         context.drawImage(
-          globalRefs[pet.currentDesireType],
+          refs[pet.currentDesireType],
           pet.x + 53,
           pet.y - 5,
           speechBubbleBaseSize / 2,
@@ -165,12 +157,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <HeaderUI globalRefs={globalRefs} school={school} cheeses={cheeses} />
+        <HeaderUI />
         <button
           onClick={() => {
             this.setState({
               commands: [...this.state.commands, { type: "if" }],
-            })
+            });
           }}
         >
           Add IF Block
