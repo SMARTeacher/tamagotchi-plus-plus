@@ -74,6 +74,20 @@ const addPet = (options = {}) => {
           : (this.y -= this.speedModifier);
       }
     },
+    updatePet: function () {
+      if (this.restingPeriod !== 0) this.restingPeriod--;
+      if (!this.isBored()) {
+        this.moveToDesire();
+      } else {
+        if (coinFlip()) {
+          this.setNewDesire();
+        } else {
+          // just hang out
+          this.currentDesireType = null;
+          this.fidget();
+        }
+      }
+    },
     setNewDesire: function (canFidget = true) {
       //reset speed
       this.speedModifier = 1;

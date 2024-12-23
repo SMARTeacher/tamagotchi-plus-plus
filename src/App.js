@@ -11,6 +11,7 @@ import bck4 from "./assets/images/bck4.png";
 import "../src/assets/styles/App.css";
 import { addCheese, addBed, addPet } from "./operations";
 import { script, newActionNode } from "./operations/commands";
+import { coinFlip } from "./operations/helpers";
 
 import { pets } from "./constants/petConstants";
 import { refs, beds, cheeses, school } from "./constants/state";
@@ -127,13 +128,7 @@ class App extends Component {
     });
 
     school.forEach((pet) => {
-      if (pet.restingPeriod !== 0) pet.restingPeriod--;
-      if (!pet.isBored()) {
-        pet.moveToDesire();
-      } else {
-        pet.setNewDesire();
-      }
-
+      pet.updatePet();
       context.drawImage(pet.pet, pet.x, pet.y, pet.size, pet.size);
 
       // render desire bubble
