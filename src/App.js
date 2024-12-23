@@ -9,9 +9,8 @@ import bck3 from "./assets/images/bck3.png";
 import bck4 from "./assets/images/bck4.png";
 
 import "../src/assets/styles/App.css";
-import { addCheese, addBed, addPet } from "./operations";
+import { addCheese, addBed, addPet, killPet } from "./operations";
 import { script, newActionNode } from "./operations/commands";
-import { coinFlip } from "./operations/helpers";
 
 import { pets } from "./constants/petConstants";
 import { refs, beds, cheeses, school } from "./constants/state";
@@ -28,6 +27,15 @@ import { petTankSize, cheeseSize, frameRate, bedSize } from "./config";
 
 const theBackground = [bck1, bck2, bck3, bck4][Math.floor(Math.random() * 4)];
 const speechBubbleBaseSize = 45;
+
+function drawFlippedImage(context, pet) {
+  const { pet: image, x, y, size } = pet;
+  context.save();
+  context.translate(x + size / 2, y + size / 2);
+  context.scale(1, -1);
+  context.drawImage(image, -size / 2, -size / 2, size, size);
+  context.restore();
+}
 
 const mapCommands = (commands) => {
   const nodes = commands.map((command) => {
@@ -70,8 +78,6 @@ class App extends Component {
     const bck2Ref = this.refs.bck2;
     const bck3Ref = this.refs.bck3;
     const bck4Ref = this.refs.bck4;
-    console.log(this.refs);
-    // refs = { ...this.refs };
     Promise.all([
       pet_charfoalRef,
       pet_pomprikleRef,
@@ -129,7 +135,12 @@ class App extends Component {
 
     school.forEach((pet) => {
       pet.updatePet();
-      context.drawImage(pet.pet, pet.x, pet.y, pet.size, pet.size);
+      if (pet.isDead()) {
+        killPet(pet);
+        drawFlippedImage(context, pet);
+      } else {
+        context.drawImage(pet.pet, pet.x, pet.y, pet.size, pet.size);
+      }
 
       // render desire bubble
       if (refs[pet.currentDesireType]) {

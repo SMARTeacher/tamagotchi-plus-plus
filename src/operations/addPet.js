@@ -22,9 +22,6 @@ const addPet = (options = {}) => {
   if (school.length >= theDannyConstant) return;
   if (!refs[petType]) return;
 
-  const speedModifier = 2;
-  console.log("New pet!");
-
   const newPet = {
     id: `${petType}${id}`,
     pet: refs[petType],
@@ -37,7 +34,14 @@ const addPet = (options = {}) => {
     currentDesireType: null,
     restingPeriod: 0,
     size: 75,
-    speedModifier,
+    health: 200,
+    speedModifier: 2, // this is stupidly named its more like "acceptably close to desire radius"
+    isDead: function () {
+      return this.health <= 0;
+    },
+    modifyHealth: function (amount) {
+      this.health = clamp(this.health + amount, 0, 250);
+    },
     isBored: function () {
       const xDiff = Math.abs(this.x - this.desireX);
       const yDiff = Math.abs(this.y - this.desireY);
@@ -64,6 +68,12 @@ const addPet = (options = {}) => {
         moveX > 0
           ? (this.x += this.speedModifier)
           : (this.x -= this.speedModifier);
+
+        this.modifyHealth(-1);
+      } else {
+        if (this.currentDesireType !== null) {
+          this.modifyHealth(1);
+        }
       }
 
       // Y movement
@@ -72,6 +82,12 @@ const addPet = (options = {}) => {
         moveY > 0
           ? (this.y += this.speedModifier)
           : (this.y -= this.speedModifier);
+
+        this.modifyHealth(-1);
+      } else {
+        if (this.currentDesireType !== null) {
+          this.modifyHealth(1);
+        }
       }
     },
     updatePet: function () {
@@ -79,19 +95,16 @@ const addPet = (options = {}) => {
       if (!this.isBored()) {
         this.moveToDesire();
       } else {
-        if (coinFlip()) {
-          this.setNewDesire();
-        } else {
+        if (coinFlip() && coinFlip()) {
           // just hang out
           this.currentDesireType = null;
           this.fidget();
+        } else {
+          this.setNewDesire();
         }
       }
     },
     setNewDesire: function (canFidget = true) {
-      //reset speed
-      this.speedModifier = 1;
-
       if (canFidget && coinFlip()) {
         this.fidget();
       } else {
